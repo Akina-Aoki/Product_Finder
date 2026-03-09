@@ -107,7 +107,8 @@ POSTGRES_DB
 ## User Story
 
 As a data engineer,  
-I want a JSONL dataset that simulates container inventory across stores  
+I want a JSONL dataset that simulates container i
+nventory across stores  
 so that we can test our data platform pipeline.
 
 ---
