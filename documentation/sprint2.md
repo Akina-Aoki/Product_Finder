@@ -107,8 +107,7 @@ POSTGRES_DB
 ## User Story
 
 As a data engineer,  
-I want a JSONL dataset that simulates container i
-nventory across stores  
+I want a JSONL dataset that simulates inventory across our 2 stores  
 so that we can test our data platform pipeline.
 
 ---
@@ -119,15 +118,13 @@ Each line represents **one product in one store**.
 
 ```json
 {
-  "product_id": "C1001",
-  "product_name": "Plastic Storage Box 20L",
-  "category": "container",
-  "material": "plastic",
-  "color": "transparent",
-  "size_liters": 20,
-  "price": 59.90,
-  "store_id": "RUSTA_001",
-  "store_name": "Rusta Kungens Kurva",
+  "product_id": "...",
+  "product_name": "...",
+  "category": "jacket",
+  "color": "black",
+  "price": 100,
+  "store_id": "STO02",
+  "store_name": "Liljeholmen Centrum",
   "city": "Stockholm",
   "stock_quantity": 34,
   "last_updated": "2026-03-07T10:30:00Z"
@@ -142,8 +139,7 @@ Each line represents **one product in one store**.
 2. Create a synthetic JSONL dataset
 3. Generate **300–1000 rows of data**
 4. Include variation in:
-   - product sizes
-   - materials
+   - sizes
    - colors
    - store locations
 5. Save dataset in repository
@@ -197,11 +193,13 @@ city
 
 ```
 product_id (PK)
+product_brand
 product_name
 category
-material
 color
-size_liters
+size
+gender
+price_sek
 ```
 
 ---
@@ -214,19 +212,19 @@ product_id (FK)
 store_id (FK)
 price
 stock_quantity
-last_updated
+created_at
 ```
 
 ---
 
 ## Tasks
 
-1. Draw ERD diagram
+1. Draw ERD diagram (logical/physical)
 2. Write SQL DDL scripts
 3. Define primary keys
 4. Define foreign keys
 5. Add constraints
-6. Add indexes for performance
+6. Add indexes
 
 Example index:
 
@@ -337,7 +335,7 @@ WHERE stock_quantity = 0;
 
 ---
 
-### Which containers have the highest stock?
+### Which products have the highest stock?
 
 ```sql
 SELECT product_name, SUM(stock_quantity)

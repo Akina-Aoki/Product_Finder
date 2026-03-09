@@ -12,7 +12,7 @@
             "category": "string",
             "purchase_cost": "number",
             "quantity_change": "integer",
-            "stock_after_event": "integer",
+            "stock_after_event": "integer", # Rikard refactor
             "warehouse_id": "integer"
         }
     ]
