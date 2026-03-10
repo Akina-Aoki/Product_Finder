@@ -1,111 +1,21 @@
-product_id;product_brand;product_name;category;color;size;gender;price_sek
-01PUMSRRXLF;Puma;Puma Velocity Shirt;shirt;red;XL;female;445
-02NIKUWGXLF;Nike;Nike Dri-FIT Underwear;underwear;green;XL;female;123
-03ADITSBXSM;Adidas;Adidas Essentials T-Shirt;t-shirt;black;XS;male;333
-04TNFTSGSF;The North Face;The North Face Explorer T-Shirt;t-shirt;green;S;female;175
-05PUMUWGLF;Puma;Puma Essential Underwear;underwear;green;L;female;245
-06PEPSRULM;Peak Performance;Peak Performance Trail Shirt;shirt;blue;L;male;303
-07NIKUWBLM;Nike;Nike Pro Underwear;underwear;black;L;male;204
-08TNFPTGXSM;The North Face;The North Face Outdoor Pants;pants;green;XS;male;702
-09PUMSORXSF;Puma;Puma Sport Socks;socks;red;XS;female;173
-10ADISSGLF;Adidas;Adidas Active Shoes;shoes;green;L;female;1020
-11ADITSBMM;Adidas;Adidas Active T-Shirt;t-shirt;black;M;male;187
-12PEPUWRSF;Peak Performance;Peak Performance Trail Underwear;underwear;red;S;female;228
-13NIKSRGXSF;Nike;Nike Pro Shirt;shirt;green;XS;female;362
-14TNFSOBMF;The North Face;The North Face Mountain Socks;socks;black;M;female;238
-15PEPSHUSF;Peak Performance;Peak Performance Active Shorts;shorts;blue;S;female;330
-16NIKTSWMF;Nike;Nike Run T-Shirt;t-shirt;white;M;female;162
-17ADISRGSF;Adidas;Adidas Sport Shirt;shirt;green;S;female;304
-18NIKSKUXLM;Nike;Nike Dri-FIT Skirt;skirt;blue;XL;male;873
-19NIKSSGXLF;Nike;Nike Dri-FIT Shoes;shoes;green;XL;female;1514
-20NIKSRWLF;Nike;Nike Dri-FIT Shirt;shirt;white;L;female;443
-21PEPTSWXLM;Peak Performance;Peak Performance Outdoor T-Shirt;t-shirt;white;XL;male;172
-22PUMSKGLF;Puma;Puma Velocity Skirt;skirt;green;L;female;368
-23NIKSRGXSF;Nike;Nike Air Shirt;shirt;green;XS;female;430
-24TNFTSUXSF;The North Face;The North Face Summit T-Shirt;t-shirt;blue;XS;female;164
-25PEPSHBXSM;Peak Performance;Peak Performance Alpine Shorts;shorts;black;XS;male;357
-26NIKSKWMM;Nike;Nike Flex Skirt;skirt;white;M;male;808
-27ADISHULM;Adidas;Adidas Active Shorts;shorts;blue;L;male;296
-28ADIPTWXLM;Adidas;Adidas Sport Pants;pants;white;XL;male;521
-29PUMSSGXSM;Puma;Puma Core Shoes;shoes;green;XS;male;1436
-30TNFUWRXSM;The North Face;The North Face Explorer Underwear;underwear;red;XS;male;280
-31PUMUWGMF;Puma;Puma Essential Underwear;underwear;green;M;female;232
-32NIKSHBXLM;Nike;Nike Dri-FIT Shorts;shorts;black;XL;male;507
-33TNFTSRSM;The North Face;The North Face Explorer T-Shirt;t-shirt;red;S;male;300
-34TNFSKWLM;The North Face;The North Face Mountain Skirt;skirt;white;L;male;874
-35NIKSOWXLM;Nike;Nike Air Socks;socks;white;XL;male;200
-36ADIUWBXLM;Adidas;Adidas Performance Underwear;underwear;black;XL;male;266
-37NIKSKGXSM;Nike;Nike Run Skirt;skirt;green;XS;male;624
-38NIKUWRXSM;Nike;Nike Run Underwear;underwear;red;XS;male;293
-39PUMSSULF;Puma;Puma Motion Shoes;shoes;blue;L;female;1664
-40PUMUWWXSF;Puma;Puma Essential Underwear;underwear;white;XS;female;333
-41NIKSSGXSF;Nike;Nike Run Shoes;shoes;green;XS;female;742
-42ADIUWUSM;Adidas;Adidas Active Underwear;underwear;blue;S;male;147
-43PUMSHRLF;Puma;Puma Core Shorts;shorts;red;L;female;517
-44ADISRRXLF;Adidas;Adidas Performance Shirt;shirt;red;XL;female;430
-45NIKSOGXSM;Nike;Nike Run Socks;socks;green;XS;male;153
-46PEPSRUXSF;Peak Performance;Peak Performance Outdoor Shirt;shirt;blue;XS;female;723
-47NIKUWWSM;Nike;Nike Flex Underwear;underwear;white;S;male;183
-48NIKSORMM;Nike;Nike Flex Socks;socks;red;M;male;155
-49PUMUWUXSM;Puma;Puma Motion Underwear;underwear;blue;XS;male;132
-50ADISKRSF;Adidas;Adidas Essentials Skirt;skirt;red;S;female;309
-51NIKSSGSM;Nike;Nike Dri-FIT Shoes;shoes;green;S;male;1028
-52TNFTSGXLM;The North Face;The North Face Explorer T-Shirt;t-shirt;green;XL;male;377
-53PEPSOWMF;Peak Performance;Peak Performance Active Socks;socks;white;M;female;102
-54ADISKWMF;Adidas;Adidas Essentials Skirt;skirt;white;M;female;544
-55PUMSOGMM;Puma;Puma Essential Socks;socks;green;M;male;93
-56ADISOWXSF;Adidas;Adidas Sport Socks;socks;white;XS;female;194
-57PUMSOUXSM;Puma;Puma Motion Socks;socks;blue;XS;male;125
-58PEPSSUXLM;Peak Performance;Peak Performance Alpine Shoes;shoes;blue;XL;male;1205
-59TNFUWRLF;The North Face;The North Face Summit Underwear;underwear;red;L;female;312
-60NIKSOWMF;Nike;Nike Run Socks;socks;white;M;female;124
-61PUMSRWXLF;Puma;Puma Velocity Shirt;shirt;white;XL;female;469
-62PEPSHWMM;Peak Performance;Peak Performance Alpine Shorts;shorts;white;M;male;587
-63ADISOBLM;Adidas;Adidas Sport Socks;socks;black;L;male;184
-64NIKSSRLM;Nike;Nike Flex Shoes;shoes;red;L;male;1191
-65PUMSKUSF;Puma;Puma Essential Skirt;skirt;blue;S;female;655
-66PEPPTUSM;Peak Performance;Peak Performance Trail Pants;pants;blue;S;male;751
-67ADISKGSF;Adidas;Adidas Performance Skirt;skirt;green;S;female;742
-68PUMSRWLM;Puma;Puma Velocity Shirt;shirt;white;L;male;527
-69TNFSSBXSF;The North Face;The North Face Explorer Shoes;shoes;black;XS;female;1385
-70NIKSSRSM;Nike;Nike Air Shoes;shoes;red;S;male;1758
-71PUMSKRXLF;Puma;Puma Velocity Skirt;skirt;red;XL;female;850
-72PEPSOWSM;Peak Performance;Peak Performance Trail Socks;socks;white;S;male;181
-73TNFSRUMM;The North Face;The North Face Trail Shirt;shirt;blue;M;male;383
-74PEPSSBXLF;Peak Performance;Peak Performance Trail Shoes;shoes;black;XL;female;1615
-75ADIUWWLF;Adidas;Adidas Classic Underwear;underwear;white;L;female;338
-76PUMSOWXLF;Puma;Puma Sport Socks;socks;white;XL;female;214
-77PEPSKGXSF;Peak Performance;Peak Performance Outdoor Skirt;skirt;green;XS;female;767
-78TNFTSGXSF;The North Face;The North Face Mountain T-Shirt;t-shirt;green;XS;female;216
-79NIKSSGLM;Nike;Nike Air Shoes;shoes;green;L;male;1752
-80TNFPTGMF;The North Face;The North Face Mountain Pants;pants;green;M;female;626
-81PUMUWUXSM;Puma;Puma Motion Underwear;underwear;blue;XS;male;144
-82PEPSKULM;Peak Performance;Peak Performance Alpine Skirt;skirt;blue;L;male;356
-83PUMSHUSF;Puma;Puma Core Shorts;shorts;blue;S;female;544
-84PEPSKBLF;Peak Performance;Peak Performance Outdoor Skirt;skirt;black;L;female;847
-85TNFSRRXLF;The North Face;The North Face Outdoor Shirt;shirt;red;XL;female;445
-86TNFSSUSM;The North Face;The North Face Outdoor Shoes;shoes;blue;S;male;790
-87PUMSOBMM;Puma;Puma Motion Socks;socks;black;M;male;126
-88TNFUWBLM;The North Face;The North Face Trail Underwear;underwear;black;L;male;146
-89PEPUWWLM;Peak Performance;Peak Performance Summit Underwear;underwear;white;L;male;345
-90PUMTSBLM;Puma;Puma Motion T-Shirt;t-shirt;black;L;male;153
-91PUMSHWXLF;Puma;Puma Sport Shorts;shorts;white;XL;female;525
-92NIKTSGLF;Nike;Nike Pro T-Shirt;t-shirt;green;L;female;321
-93TNFTSBXSM;The North Face;The North Face Mountain T-Shirt;t-shirt;black;XS;male;293
-94NIKUWBLF;Nike;Nike Pro Underwear;underwear;black;L;female;144
-95PUMTSBSF;Puma;Puma Essential T-Shirt;t-shirt;black;S;female;247
-96PUMSOGXSF;Puma;Puma Velocity Socks;socks;green;XS;female;243
-97PEPTSGMM;Peak Performance;Peak Performance Outdoor T-Shirt;t-shirt;green;M;male;227
-98TNFSHGMF;The North Face;The North Face Summit Shorts;shorts;green;M;female;412
-99NIKPTBLM;Nike;Nike Air Pants;pants;black;L;male;476
-100PEPSOWXLM;Peak Performance;Peak Performance Outdoor Socks;socks;white;XL;male;151
-101PEPJKWMF;Peak Performance;Peak Performance Active Jacket;jacket;white;M;female;1483
-102ADIJKRXLM;Adidas;Adidas Classic Jacket;jacket;red;XL;male;2103
-103ADIJKRXSF;Adidas;Adidas Classic Jacket;jacket;red;XS;female;923
-104TNFJKGXLM;The North Face;The North Face Trail Jacket;jacket;green;XL;male;1772
-105ADIJKUMM;Adidas;Adidas Performance Jacket;jacket;blue;M;male;1522
-106ADIJKUXLM;Adidas;Adidas Essentials Jacket;jacket;blue;XL;male;2352
-107TNFJKGMF;The North Face;The North Face Outdoor Jacket;jacket;green;M;female;1897
-108TNFJKBXLM;The North Face;The North Face Trail Jacket;jacket;black;XL;male;1827
-109PUMJKBXSF;Puma;Puma Motion Jacket;jacket;black;XS;female;1920
-110NIKJKRMM;Nike;Nike Dri-FIT Jacket;jacket;red;M;male;1661
+product_id;product_code;product_name;brand_id;category_id;colour_id;size_id;price;gender_id;active
+1;24112;Storm Jacket;2;4;1;1;129.99;2;true
+2;13131;Urban Shirt;1;3;3;2;49.99;1;true
+3;35241;Alpine Shield;3;4;4;4;199.99;1;true
+4;46122;Flex Base;4;1;2;1;19.99;2;true
+5;57231;Active Shorts;5;5;3;2;59.99;1;true
+6;21342;Pulse Tee;2;2;4;3;39.99;2;true
+7;18151;Summit Shell;1;8;7;5;149.99;1;true
+8;32912;Mountain Socks;3;9;9;1;14.99;2;true
+9;45131;Sprint Shorts;4;5;1;2;44.99;1;true
+10;56321;Trail Pants;5;6;2;2;89.99;2;true
+11;12741;Velocity Tee;1;2;4;4;34.99;1;true
+12;23932;Urban Pulse Shirt;2;3;9;3;54.99;2;true
+13;34151;Summit Jacket;3;4;1;5;219.99;1;true
+14;45842;Storm Rider Jacket;4;8;4;3;139.99;2;true
+15;56921;Trail Grip Socks;5;9;2;2;16.99;2;true
+16;17431;Blaze Skirt;1;7;5;2;119.99;1;true
+17;28652;Active Motion Pants;2;6;6;5;99.99;2;true
+18;39811;Glacier Jacket;3;8;8;1;189.99;1;true
+19;41541;Skyline Jacket;4;4;4;4;109.99;1;true
+20;52122;Core Base Layer;5;1;2;1;24.99;2;true
