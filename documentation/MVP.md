@@ -93,7 +93,7 @@ Instead of relying on static reports or manual updates:
 
 - Inventory events are **streamed through a data pipeline**
 - Events include:
-  - Product sales
+  - Product sales 
   - Restocking
   - Inventory updates
 
@@ -103,11 +103,7 @@ These events are:
 2. Stored in a structured database
 3. Made available for monitoring and analytics.
 
-The architecture can later scale to **any inventory-based business**, such as:
 
-- Retail
-- Logistics
-- Warehouse management
 
 ---
 
