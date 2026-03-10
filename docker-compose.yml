@@ -2,19 +2,20 @@ services:
 
   postgres:
     image: postgres:16-alpine
-    container_name: sandbox_db
+    container_name: SportWear_Postgres
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: product_finder
+      POSTGRES_DB: SportWearDB
     ports:
       - "5439:5432"
     volumes:
       - pg_data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
 
   kafka:
     image: apache/kafka:latest
-    container_name: sandbox_kafka
+    container_name: SportWear_Kafka
     ports:
       - "9092:9092"
     environment:
