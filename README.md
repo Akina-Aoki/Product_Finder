@@ -6,14 +6,18 @@ This project is fully reproducible. All contributors use the same Python version
 
 ---
 
-# 🧱 Tech Stack
+# 🧱 Tech Stack & Dependencies
 
-- Python 3.12 (pinned)
-- uv (dependency & environment management)
-- Kafka (Docker)
-- confluent-kafka
-- Pydantic
-- python-dotenv
+| Package        | Purpose                                     |
+| -------------- | ------------------------------------------- |
+| kafka-python   | Kafka producer/consumer client              |
+| psycopg        | PostgreSQL driver                           |
+| psycopg-binary | Binary build of psycopg for easier installs |
+| pydantic       | Schema validation for event data            |
+| orjson         | Fast JSON parsing (Kafka events)            |
+| tenacity       | retrying for kafka connection & DB inserts  |
+| structlog      | Structured logging: pipeline observability  |
+
 
 ---
 

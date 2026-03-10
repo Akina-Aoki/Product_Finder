@@ -2,17 +2,17 @@
 
 ## Team Information
 
-**Team Name:** Stock & Roll  
+**Team Name:** Sportwear AB
 
 **Members:**  
 - Rikard  
 - Aira  
 - Samuel  
-- (Robin?)  
+- Robin
 
 **Product Owners:** Aira & Samuel  
 **Scrum Master:** Rikard  
-**Developers:** Aira, Samuel, Rikard, (Robin?)
+**Developers:** Aira, Samuel, Rikard, Robin
 
 ---
 
@@ -22,7 +22,7 @@
 
 **Company Inventory Events Platform**
 
-A system that tracks the movement of products (example product: **containers**) across company inventory and records **purchase and restocking events**.
+A system that tracks the movement of products across company inventory and records **purchase, inventory updates and restocking events**.
 
 The platform enables the company to:
 
@@ -109,8 +109,6 @@ The architecture can later scale to **any inventory-based business**, such as:
 - Logistics
 - Warehouse management
 
-Containers are used only as the **example product domain**.
-
 ---
 
 # MVP Features
@@ -119,7 +117,7 @@ The MVP focuses on the **smallest usable system that managers can actually use**
 
 ## 1. Track Product Movement
 
-The system tracks product inventory data across events such as:
+The system tracks product inventory data **events/topics** across events such as:
 
 - Sales
 - Updates
@@ -221,7 +219,7 @@ These features may be considered for **future iterations** of the platform.
 
 ---
 
-# Tech Stack (MVP)
+# Tech Stack
 
 The platform uses the following technologies:
 
