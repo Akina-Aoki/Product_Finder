@@ -2,4 +2,3 @@ gender_id;gender_name
 01;Male
 02;Female
 03;Unisex
-index = False
