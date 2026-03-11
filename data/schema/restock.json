@@ -1,0 +1,20 @@
+{
+    "success": "boolean",
+    "total_events": "integer",
+    "message": "string",
+    "events": [
+        {
+            "event_id": "integer",
+            "timestamp": "datetime",
+            "event_type": "string (restock)",
+            "product_id": "integer",
+            "product_name": "string",
+            "category": "string",
+            "purchase_cost": "number",
+            "quantity_change": "integer",
+            "stock_after_event": "integer", # Rikard refactor
+            "warehouse_id": "integer"
+        }
+    ]
+}
+
