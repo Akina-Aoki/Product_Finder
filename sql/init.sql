@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS staging.brands (
 
 CREATE TABLE IF NOT EXISTS staging.products (
   "product_id" serial PRIMARY KEY,
-  "product_code" integer(10) NOT NULL,
+  "product_code" integer NOT NULL,
   "product_name" varchar(50) NOT NULL,
   "brand_id" integer NOT NULL,
   "category_id" integer NOT NULL,

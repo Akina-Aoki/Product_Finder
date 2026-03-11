@@ -1,20 +1,25 @@
 services:
-
   postgres:
     image: postgres:16-alpine
     container_name: SportWear_Postgres
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: SportWearDB
+      POSTGRES_USER: ${DB_USER:-postgres}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-postgres}
+      POSTGRES_DB: ${DB_NAME:-SportWearDB}
     ports:
-      - "5439:5432"
+      - "${DB_HOST_PORT:-5439}:5432"
     volumes:
-      - pg_data:/var/lib/postgresql/data
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - postgres_data:/var/lib/postgresql/data
+      - ./sql/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+      - ./sql:/src_sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-postgres} -d ${DB_NAME:-SportWearDB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
 
   kafka:
-    image: apache/kafka:latest
+    image: apache/kafka:4.1.1
     container_name: SportWear_Kafka
     ports:
       - "9092:9092"
@@ -28,4 +33,5 @@ services:
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
 
 volumes:
-  pg_data:
+  postgres_data:
+  kafka_data:
