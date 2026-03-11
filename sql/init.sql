@@ -65,7 +65,8 @@ CREATE TABLE IF NOT EXISTS staging.inventories (
   "product_id" integer NOT NULL,
   "amount" integer DEFAULT 0,
   "store_id" integer NOT NULL,
-  "update_date" timestamptz NOT NULL
+  "update_date" timestamptz NOT NULL DEFAULT now(),
+  "created_at" timestamptz NOT NULL DEFAULT now()
 );
 
 ALTER TABLE staging.products ADD FOREIGN KEY ("brand_id") REFERENCES staging.brands ("brand_id") DEFERRABLE INITIALLY IMMEDIATE;
