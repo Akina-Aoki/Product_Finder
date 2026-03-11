@@ -88,3 +88,35 @@ ALTER TABLE staging.items ADD FOREIGN KEY ("order_id") REFERENCES staging.orders
 ALTER TABLE staging.inventories ADD FOREIGN KEY ("product_id") REFERENCES staging.products ("product_id") DEFERRABLE INITIALLY IMMEDIATE;
 
 ALTER TABLE staging.inventories ADD FOREIGN KEY ("store_id") REFERENCES staging.stores ("store_id") DEFERRABLE INITIALLY IMMEDIATE;
+
+COPY staging.brands (brand_id, brand_name)
+FROM '/data/raw/brands.csv'
+WITH (FORMAT csv, HEADER true, DELIMITER ';', ENCODING 'UTF8');
+
+COPY staging.categories (category_id, category_name)
+FROM '/data/raw/categories.csv'
+WITH (FORMAT csv, HEADER true, DELIMITER ';', ENCODING 'UTF8');
+
+COPY staging.colours (colour_id, colour_name)
+FROM '/data/raw/colours.csv'
+WITH (FORMAT csv, HEADER true, DELIMITER ';', ENCODING 'UTF8');
+
+COPY staging.genders (gender_id, gender_name)
+FROM '/data/raw/genders.csv'
+WITH (FORMAT csv, HEADER true, DELIMITER ';', ENCODING 'UTF8');
+
+COPY staging.sizes (size_id, size_name)
+FROM '/data/raw/sizes.csv'
+WITH (FORMAT csv, HEADER true, DELIMITER ';', ENCODING 'UTF8');
+
+COPY staging.stores (store_id, store_code, store_name, city)
+FROM '/data/raw/stores.csv'
+WITH (FORMAT csv, HEADER true, DELIMITER ';', ENCODING 'UTF8');
+
+COPY staging.products (product_id, product_code, product_name, brand_id, category_id, colour_id, size_id, price, gender_id, active)
+FROM '/data/raw/products.csv'
+WITH (FORMAT csv, HEADER true, DELIMITER ';', ENCODING 'UTF8');
+
+COPY staging.inventories (inventory_id,product_id, amount, store_id, update_date, created_at)
+FROM '/data/raw/inventories.csv'
+WITH (FORMAT csv, HEADER true, DELIMITER ';', ENCODING 'UTF8');

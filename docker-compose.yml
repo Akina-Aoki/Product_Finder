@@ -16,7 +16,7 @@ services:
       - postgres_data:/var/lib/postgresql/data
       - ./sql/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
       - ./sql:/src_sql:ro
-      - ./data/raw:/docker-entrypoint-initdb.d/raw:ro
+      - ./data/raw:/data/raw:ro
 
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-postgres} -d ${DB_NAME:-SportWearDB}"]
