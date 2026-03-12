@@ -6,8 +6,7 @@ from kafka import KafkaConsumer
 KAFKA_BOOTSTRAP_SERVERS = os.getenv("KAFKA_BOOTSTRAP_SERVERS", "localhost:29092")
 TOPIC = os.getenv("PRODUCTS_TOPIC", "inventory_events")
 GROUP_ID = "SportWear_DB_Consumer"
-
-DB_URL = "postgresql://postgres:postgres@localhost:5439/SportWearDB"
+DB_URL = os.getenv("DB_URL", "postgresql://postgres:postgres@localhost:5439/SportWearDB")
 
 def main():
     consumer = KafkaConsumer(

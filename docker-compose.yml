@@ -71,6 +71,38 @@ services:
     environment:
       KAFKA_CLUSTERS_0_NAME: SportWear
       KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092
+  
+  consumer:
+    build: .
+    container_name: SportWear_Consumer
+    environment:
+      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+      - PRODUCTS_TOPIC=inventory_events
+      - DB_URL=postgresql://${DB_USER:-postgres}:${DB_PASSWORD:-postgres}@postgres:5432/${DB_NAME:-SportWearDB}
+    depends_on:
+      kafka:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+    command: ["uv", "run", "python", "-u", "app/consumer/db_consumer.py"]
+  
+  app:
+    build: .
+    container_name: SportWear_API
+    environment:
+      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+      - PRODUCTS_TOPIC=inventory_events
+    depends_on:
+      postgres:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
+    ports:
+      - "8000:8000"
+    command: ["uv", "run", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+
+
+
 
 
 volumes:
