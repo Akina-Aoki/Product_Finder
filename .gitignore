@@ -60,3 +60,5 @@ Thumbs.db
 # Local data files (generated/imported datasets)
 *.jsonl
 *.jsonl.gz
+
+!data/inventory_events.jsonl
