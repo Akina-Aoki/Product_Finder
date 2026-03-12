@@ -1,16 +1,5 @@
 -- =====================================================
 -- Product_Finder
--- Sprint #2: Queries to Answer MVP User Stories
--- Schema: staging
---
--- Notes:
--- 1. Inventory queries work with the currently loaded tables.
--- 2. Sales / revenue queries require data in staging.orders
---    and staging.items.
--- 3. Restocking queries below use inventory update timestamps
---    as a proxy until a dedicated inventory events table exists.
--- =====================================================
-
 
 -- =====================================================
 -- A. TRACK PRODUCT MOVEMENT ACROSS INVENTORY
@@ -465,4 +454,4 @@ JOIN staging.products p
 JOIN staging.stores s
     ON i.store_id = s.store_id
 WHERE i.amount < 10
-ORDER BY i.update_date DESC, i.amount ASC;
+ORDER BY i.update_date DESC, i.amount ASC
