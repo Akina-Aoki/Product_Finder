@@ -29,7 +29,7 @@ Each event represents a physical or administrative change to the stock levels.
 | `price` | Number | Always $\ge 0$ | Unit price at the time of the event. |
 | **`quantity_change`** | Integer | **See logic table below** | Number of units added or removed. |
 | `stock_after` | Integer | Must never be $< 0$ | Stock level after the change is applied. |
-| `warehouse_id` | Integer | Positive integer. | ID of the physical warehouse location. |
+| `store_id` | Integer | Positive integer. | ID of the physical warehouse location. |
 
 ---
 
