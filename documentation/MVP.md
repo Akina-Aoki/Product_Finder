@@ -10,7 +10,7 @@
 - Samuel  
 - Robin
 
-**Product Owners:** Aira & Samuel  
+**Product Owners:** Aira
 **Scrum Master:** Rikard  
 **Developers:** Aira, Samuel, Rikard, Robin
 
