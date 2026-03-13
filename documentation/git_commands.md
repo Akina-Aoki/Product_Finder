@@ -68,3 +68,10 @@ git commit -m "feat: implement X"
 git push
 ```
 .
+
+
+### keeps feature branch synchronized without touching their branch (not main).
+```
+git fetch origin
+git merge origin/feat/consumer
+```

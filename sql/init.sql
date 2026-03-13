@@ -48,14 +48,14 @@ CREATE TABLE IF NOT EXISTS staging.stores (
 CREATE TABLE IF NOT EXISTS staging.orders (
   "order_id" serial PRIMARY KEY,
   "store_id" integer NOT NULL,
-  "order_price" decimal NOT NULL,
+  "order_price" float NOT NULL,
   "order_date" timestamptz NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS staging.items (
   "item_id" serial PRIMARY KEY,
   "product_id" integer NOT NULL,
-  "item_price" decimal NOT NULL,
+  "item_price" float NOT NULL,
   "order_id" integer NOT NULL,
   "quantity" integer DEFAULT 1
 );

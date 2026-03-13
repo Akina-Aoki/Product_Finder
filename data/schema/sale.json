@@ -12,8 +12,8 @@
             "category": "string",
             "price": "number",
             "quantity_change": "integer",
-            "stock_after_event": "integer",  # Rikard refactor
-            "warehouse_id": "integer"
+            "stock_after_event": "integer",
+            "store_id": "integer"
         }
     ]
 }
