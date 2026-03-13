@@ -5,17 +5,16 @@ from confluent_kafka import Consumer
 
 KAFKA_BOOTSTRAP_SERVERS = os.getenv("KAFKA_BOOTSTRAP_SERVERS", "kafka:9092")
 TOPIC = os.getenv("PRODUCTS_TOPIC", "inventory_events")
-
 DB_URL = os.getenv("DB_URL", "postgresql://postgres:postgres@postgres:5432/SportWearDB")
-
-print(f"Starting DB Consumer against {KAFKA_BOOTSTRAP_SERVERS}...")
 
 def on_assign(consumer, partitions):
     print(f"Kafka approved access to: {partitions}")
 
+print(f"Starting DB Consumer against {KAFKA_BOOTSTRAP_SERVERS}...")
+
 conf = {
     'bootstrap.servers': KAFKA_BOOTSTRAP_SERVERS,
-    'group.id': "sportwear_db_consumer_loud_test",
+    'group.id': "sportwear_inventory_consumer",
     'auto.offset.reset': 'earliest',
     'error_cb': lambda err: print(f"Kafka network error: {err}") 
 }
@@ -44,7 +43,6 @@ while True:
         if event.get("event_type") == "sale":
             print(f"Caught sale event from Kafka! (Event ID: {event.get('event_id')})")
             
-            # Databas-magin börjar här!
             with psycopg.connect(DB_URL) as conn:
                 with conn.cursor() as cur:
                     
@@ -70,7 +68,6 @@ while True:
                             (item["product_id"], item["price"], new_order_id, item["quantity"])
                         )
                         
-            # Denna skrivs bara ut om ingen Exception skedde ovanför!
             print("The sale has been saved to the database!")
 
     except json.JSONDecodeError as json_err:
