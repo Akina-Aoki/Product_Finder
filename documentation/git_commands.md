@@ -69,9 +69,9 @@ git push
 ```
 .
 
-
-### keeps feature branch synchronized without touching their branch (not main).
+## Before working on your feature branch
+Since multiple teammates are modifying infrastructure (Kafka, Postgres, Docker), it’s wise to periodically rebase feature branch:
 ```
 git fetch origin
-git merge origin/feat/consumer
+git rebase origin/main
 ```

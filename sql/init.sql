@@ -1,5 +1,7 @@
 CREATE SCHEMA IF NOT EXISTS staging;
 
+--- Static Reference Tables (Metadata)
+
 CREATE TABLE IF NOT EXISTS staging.categories (
   "category_id" serial PRIMARY KEY,
   "category_name" varchar(30) NOT NULL
@@ -27,45 +29,54 @@ CREATE TABLE IF NOT EXISTS staging.brands (
 
 CREATE TABLE IF NOT EXISTS staging.products (
   "product_id" serial PRIMARY KEY,
-  "product_code" integer(10) NOT NULL,
+  "product_code" integer NOT NULL,
   "product_name" varchar(50) NOT NULL,
   "brand_id" integer NOT NULL,
   "category_id" integer NOT NULL,
   "colour_id" integer NOT NULL,
   "size_id" integer NOT NULL,
   "gender_id" integer NOT NULL,
-  "price" decimal NOT NULL,
-  "active" boolean DEFAULT true
+  "price" numeric(10,2) NOT NULL CHECK ("price" >= 0),
+  "active" boolean NOT NULL DEFAULT true
 );
 
 CREATE TABLE IF NOT EXISTS staging.stores (
   "store_id" serial PRIMARY KEY,
-  "store_code" varchar(10) NOT NULL,
+  "store_code" varchar(10) NOT NULL UNIQUE,
   "store_name" varchar(50) NOT NULL,
   "city" varchar(50) NOT NULL
-);
-
-CREATE TABLE IF NOT EXISTS staging.orders (
-  "order_id" serial PRIMARY KEY,
-  "store_id" integer NOT NULL,
-  "order_price" float NOT NULL,
-  "order_date" timestamptz NOT NULL
-);
-
-CREATE TABLE IF NOT EXISTS staging.items (
-  "item_id" serial PRIMARY KEY,
-  "product_id" integer NOT NULL,
-  "item_price" float NOT NULL,
-  "order_id" integer NOT NULL,
-  "quantity" integer DEFAULT 1
 );
 
 CREATE TABLE IF NOT EXISTS staging.inventories (
   "inventory_id" serial PRIMARY KEY,
   "product_id" integer NOT NULL,
-  "amount" integer DEFAULT 0,
+  -- DEFAULT 0 allows creating an inventory row before stock is received.
+  "amount" integer NOT NULL DEFAULT 0 check ("amount" >= 0),
   "store_id" integer NOT NULL,
+  -- Timestamps default to insert time so loaders do not need to pass explicit values.
   "update_date" timestamptz NOT NULL DEFAULT now(),
+  "created_at" timestamptz NOT NULL DEFAULT now(),
+  -- One row per (store, product) keeps current stock state unique.
+  constraint "uq_inventory_store_product" unique ("store_id", "product_id")
+);
+
+-- Event tables (dynamic)
+-- Designed for future Kafka ingestion
+
+CREATE TABLE IF NOT EXISTS staging.orders (
+  "order_id" serial PRIMARY KEY,
+  "source_event_id" varchar (100) UNIQUE,
+  "store_id" integer NOT NULL,
+  "order_price" numeric(10,2) NOT NULL CHECK ("order_price" >= 0),
+  "order_date" timestamptz NOT NULL DEFAULT now()
+);
+
+CREATE TABLE IF NOT EXISTS staging.items (
+  "item_id" serial PRIMARY KEY,
+  "product_id" integer NOT NULL,
+  "item_price" numeric (10,2) NOT NULL CHECK ("item_price" >= 0),
+  "order_id" integer NOT NULL,
+  "quantity" integer NOT NULL DEFAULT 1 CHECK ("quantity" >= 0),
   "created_at" timestamptz NOT NULL DEFAULT now()
 );
 
@@ -83,8 +94,57 @@ ALTER TABLE staging.orders ADD FOREIGN KEY ("store_id") REFERENCES staging.store
 
 ALTER TABLE staging.items ADD FOREIGN KEY ("product_id") REFERENCES staging.products ("product_id") DEFERRABLE INITIALLY IMMEDIATE;
 
-ALTER TABLE staging.items ADD FOREIGN KEY ("order_id") REFERENCES staging.orders ("order_id") DEFERRABLE INITIALLY IMMEDIATE;
+ALTER TABLE staging.items ADD FOREIGN KEY ("order_id") REFERENCES staging.orders ("order_id") ON DELETE CASCADE DEFERRABLE INITIALLY IMMEDIATE;
 
 ALTER TABLE staging.inventories ADD FOREIGN KEY ("product_id") REFERENCES staging.products ("product_id") DEFERRABLE INITIALLY IMMEDIATE;
 
 ALTER TABLE staging.inventories ADD FOREIGN KEY ("store_id") REFERENCES staging.stores ("store_id") DEFERRABLE INITIALLY IMMEDIATE;
+
+
+
+-- Initial reference-data load
+
+COPY staging.brands (brand_id, brand_name)
+FROM '/data/raw/brands.csv'
+WITH (FORMAT csv, HEADER true, DELIMITER ';', ENCODING 'UTF8');
+
+COPY staging.categories (category_id, category_name)
+FROM '/data/raw/categories.csv'
+WITH (FORMAT csv, HEADER true, DELIMITER ';', ENCODING 'UTF8');
+
+COPY staging.colours (colour_id, colour_name)
+FROM '/data/raw/colours.csv'
+WITH (FORMAT csv, HEADER true, DELIMITER ';', ENCODING 'UTF8');
+
+COPY staging.genders (gender_id, gender_name)
+FROM '/data/raw/genders.csv'
+WITH (FORMAT csv, HEADER true, DELIMITER ';', ENCODING 'UTF8');
+
+COPY staging.sizes (size_id, size_name)
+FROM '/data/raw/sizes.csv'
+WITH (FORMAT csv, HEADER true, DELIMITER ';', ENCODING 'UTF8');
+
+COPY staging.stores (store_id, store_code, store_name, city)
+FROM '/data/raw/stores.csv'
+WITH (FORMAT csv, HEADER true, DELIMITER ';', ENCODING 'UTF8');
+
+-- Product and inventory facts are loaded after reference tables so foreign keys resolve.
+COPY staging.products (product_id, product_code, product_name, brand_id, category_id, colour_id, size_id, price, gender_id, active)
+FROM '/data/raw/products.csv'
+WITH (FORMAT csv, HEADER true, DELIMITER ';', ENCODING 'UTF8');
+
+COPY staging.inventories (inventory_id,product_id, amount, store_id, update_date, created_at)
+FROM '/data/raw/inventories.csv'
+WITH (FORMAT csv, HEADER true, DELIMITER ';', ENCODING 'UTF8');
+
+
+-- After explicit IDs are copied, set each serial sequence to max(id)
+-- so future inserts continue with the next available value.
+select setval(pg_get_serial_sequence('staging.brands', 'brand_id'), coalesce(max("brand_id"), 1), max("brand_id") is not null) from "staging"."brands";
+select setval(pg_get_serial_sequence('staging.categories', 'category_id'), coalesce(max("category_id"), 1), max("category_id") is not null) from "staging"."categories";
+select setval(pg_get_serial_sequence('staging.colours', 'colour_id'), coalesce(max("colour_id"), 1), max("colour_id") is not null) from "staging"."colours";
+select setval(pg_get_serial_sequence('staging.genders', 'gender_id'), coalesce(max("gender_id"), 1), max("gender_id") is not null) from "staging"."genders";
+select setval(pg_get_serial_sequence('staging.sizes', 'size_id'), coalesce(max("size_id"), 1), max("size_id") is not null) from "staging"."sizes";
+select setval(pg_get_serial_sequence('staging.stores', 'store_id'), coalesce(max("store_id"), 1), max("store_id") is not null) from "staging"."stores";
+select setval(pg_get_serial_sequence('staging.products', 'product_id'), coalesce(max("product_id"), 1), max("product_id") is not null) from "staging"."products";
+select setval(pg_get_serial_sequence('staging.inventories', 'inventory_id'), coalesce(max("inventory_id"), 1), max("inventory_id") is not null) from "staging"."inventories";
