@@ -31,6 +31,7 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(lifespan=lifespan)
 
+# Rikards
 @app.post("/api/sales")
 async def receive_single_sale(event: SaleEvent):
     # Använder model_dump_json() istället för dict() - Helt rätt för Pydantic v2!
@@ -39,6 +40,7 @@ async def receive_single_sale(event: SaleEvent):
     
     return {"status": "success", "message": "One sale sent to Kafka!"}
 
+# Rikards
 @app.post("/api/sales/batch")
 async def receive_sales_batch(events: List[SaleEvent]):
     for event in events:
@@ -48,6 +50,7 @@ async def receive_sales_batch(events: List[SaleEvent]):
         
     return {"status": "success", "message": f"{len(events)} sales sent to Kafka!"}
 
+# Aira
 @app.post("/api/inventory-events")
 async def receive_inventory_event(event: InventoryEvent):
     app.state.kafka_producer.send(PRODUCTS_TOPIC, value=event.model_dump_json())
@@ -55,7 +58,7 @@ async def receive_inventory_event(event: InventoryEvent):
 
     return {"status": "success", "message": f"{event.event_type} event sent to Kafka!"}
 
-
+# Aira
 @app.post("/api/inventory-events/batch")
 async def receive_inventory_events_batch(events: List[InventoryEvent]):
     for event in events:
