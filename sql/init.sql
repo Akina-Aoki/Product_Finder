@@ -133,9 +133,15 @@ COPY staging.products (product_id, product_code, product_name, brand_id, categor
 FROM '/data/raw/products.csv'
 WITH (FORMAT csv, HEADER true, DELIMITER ';', ENCODING 'UTF8');
 
-COPY staging.inventories (inventory_id,product_id, amount, store_id, update_date, created_at)
-FROM '/data/raw/inventories.csv'
-WITH (FORMAT csv, HEADER true, DELIMITER ';', ENCODING 'UTF8');
+-- Adds every product to every store
+INSERT INTO staging.inventories(product_id, store_id, amount) 
+SELECT
+  p.product_id,
+  s.store_id,
+  10 as amount
+FROM staging.products p
+CROSS JOIN staging.stores s
+ON CONFLICT (store_id, product_id) DO NOTHING;
 
 
 -- After explicit IDs are copied, set each serial sequence to max(id)
