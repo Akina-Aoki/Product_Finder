@@ -4,6 +4,10 @@
 
 This system captures real-time inventory events — such as **sales** and **restocks** — and stores them durably in a PostgreSQL database. Events are produced by a FastAPI application, transmitted through an Apache Kafka topic (`inventory_events`), and consumed by a dedicated database consumer that persists each event. A base dataset of products, stores, categories, and other reference data is pre-loaded from CSV files into the database at startup.
 
+## User Story
+ ![User Story](assets/User_Story_Version2.jpeg)
+
+
 [Repository Setup](documentation/kafka/setup.md)
 ---
 
