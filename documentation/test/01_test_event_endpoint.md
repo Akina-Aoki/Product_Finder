@@ -18,7 +18,9 @@ elif event_type == "stock_update":
 ```
 
 ## Test /api/sales (Single Event)
-Client → FastAPI → Kafka → Consumer → Postgres
+- Client → FastAPI → Kafka → Consumer → Postgres
+- UI for Apache Kafka
+`http://localhost:8080/`
 
 SEND: POST
 ```

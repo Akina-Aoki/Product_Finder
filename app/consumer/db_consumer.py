@@ -132,6 +132,63 @@ def process_stock_update_event(cur, event):
 
     print(f"Stock update event saved (Event ID: {event.get('event_id')})")
 
+def process_new_product_event(cur, event):
+    product = event["product"]
+
+    cur.execute(
+        """
+        INSERT INTO staging.products (
+            product_code,
+            product_name,
+            brand_id,
+            category_id,
+            colour_id,
+            size_id,
+            gender_id,
+            price,
+            active
+        )
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, TRUE)
+        ON CONFLICT (product_code) DO UPDATE
+            SET product_name = EXCLUDED.product_name,
+                brand_id = EXCLUDED.brand_id,
+                category_id = EXCLUDED.category_id,
+                colour_id = EXCLUDED.colour_id,
+                size_id = EXCLUDED.size_id,
+                gender_id = EXCLUDED.gender_id,
+                price = EXCLUDED.price,
+                active = TRUE
+        RETURNING product_id;
+        """,
+        (
+            product["product_code"],
+            product["product_name"],
+            product["brand_id"],
+            product["category_id"],
+            product["colour_id"],
+            product["size_id"],
+            product["gender_id"],
+            product["price"],
+        )
+    )
+
+    new_product_id = cur.fetchone()[0]
+
+    for store_id in (1, 2):
+        cur.execute(
+            """
+            INSERT INTO staging.inventories (product_id, store_id, amount, update_date)
+            VALUES (%s, %s, %s, %s)
+            ON CONFLICT (store_id, product_id)
+            DO UPDATE SET
+                amount = EXCLUDED.amount,
+                update_date = EXCLUDED.update_date;
+            """,
+            (new_product_id, store_id, 10, event["timestamp"])
+        )
+
+    print(f"New product event saved (Event ID: {event.get('event_id')}, Product ID: {new_product_id})")
+
 
 while True:
     msg = consumer.poll(1.0)
@@ -157,6 +214,9 @@ while True:
                 elif event_type == "stock_update":
                     print(f"Caught stock_update event from Kafka! (Event ID: {event.get('event_id')})")
                     process_stock_update_event(cur, event)
+                elif event_type == "new_product":
+                    print(f"Caught new product event from Kafka! (Event ID: {event.get('event_id')}) ")
+                    process_new_product_event(cur, event)
                 else:
                     print(f"Unsupported event_type received: {event_type}")
 
