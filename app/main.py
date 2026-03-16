@@ -1,7 +1,7 @@
 import os
 from typing import List
 from fastapi import FastAPI
-from app.schema.product import InventoryEvent, SaleEvent
+from app.schema.product import InventoryEvent, NewProductEvent, SaleEvent
 import json
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
@@ -49,6 +49,15 @@ async def receive_sales_batch(events: List[SaleEvent]):
     app.state.kafka_producer.flush()
         
     return {"status": "success", "message": f"{len(events)} sales sent to Kafka!"}
+
+
+# Aira
+@app.post("/api/products/new")
+async def receive_new_product_event(event: NewProductEvent):
+    app.state.kafka_producer.send(PRODUCTS_TOPIC, value=event.model_dump_json())
+    app.state.kafka_producer.flush()
+
+    return {"status": "success", "message": "new_product event sent to Kafka!"}
 
 # Aira
 @app.post("/api/inventory-events")

@@ -35,3 +35,25 @@ class InventoryEvent(BaseModel):
         if self.event_type == "stock_update" and self.quantity_change == 0 and self.stock_after_event is None:
             raise ValueError("stock_update must include a non-zero quantity_change or stock_after_event")
         return self
+    
+
+class NewProductPayload(BaseModel):
+    """Payload used when creating a new product via inventory events."""
+
+    product_code: str
+    product_name: str
+    brand_id: int
+    category_id: int
+    colour_id: int
+    size_id: int
+    gender_id: int
+    price: float = Field(gt=0)
+
+
+class NewProductEvent(BaseModel):
+    """Model for creating a new product and seeding initial inventory."""
+
+    event_id: int
+    event_type: Literal["new_product"]
+    timestamp: datetime
+    product: NewProductPayload
