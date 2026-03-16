@@ -1,4 +1,4 @@
-# Tests
+# Tests Core Event Pipeline
 1. Sales pipeline
 2. Sales batch
 3. Inventory restock
@@ -160,3 +160,47 @@ Verify in DB:
 SELECT product_id, store_id, amount FROM staging.inventories WHERE product_id=1 AND store_id=1;
 ```
 amount must be = 50
+
+------
+
+# More integrity testing
+## Orders vs Items relationship
+- Each order has matching items
+- order_price equals sum(price * quantity)
+
+```
+SELECT o.order_id,
+       COUNT(i.item_id) AS item_count,
+       o.order_price
+FROM staging.orders o
+LEFT JOIN staging.items i
+ON o.order_id = i.order_id
+GROUP BY o.order_id, o.order_price
+ORDER BY o.order_id DESC;
+```
+
+## Inventory NEVER negative
+```
+SELECT *
+FROM staging.inventories
+WHERE amount < 0;
+```
+
+## Check stock after event
+- sales decreased stock
+- restock increased stock
+- stock_update set absolute value
+
+```
+SELECT product_id, store_id, amount
+FROM staging.inventories
+ORDER BY product_id, store_id;
+```
+
+## Event Idempotency
+````
+SELECT COUNT(*)
+FROM staging.orders
+WHERE source_event_id = '10001';
+```
+Should give 1
