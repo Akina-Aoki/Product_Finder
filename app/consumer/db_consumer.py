@@ -24,6 +24,115 @@ consumer.subscribe([TOPIC], on_assign=on_assign)
 
 print(f"The Consumer is listening to {TOPIC} and is ready to save to the database!")
 
+def parse_event(message):
+    raw_data = message.value().decode('utf-8')
+    event = json.loads(raw_data)
+
+    if isinstance(event, str):
+        event = json.loads(event)
+
+    return event
+
+
+def upsert_inventory_delta(cur, store_id, product_id, quantity_delta, timestamp):
+    cur.execute(
+        """
+        INSERT INTO staging.inventories (product_id, store_id, amount, update_date)
+        VALUES (%s, %s, GREATEST(%s, 0), %s)
+        ON CONFLICT (store_id, product_id)
+        DO UPDATE
+            SET amount = GREATEST(staging.inventories.amount + %s, 0),
+                update_date = EXCLUDED.update_date;
+        """,
+        (product_id, store_id, quantity_delta, timestamp, quantity_delta)
+    )
+
+
+def set_inventory_absolute(cur, store_id, product_id, stock_after_event, timestamp):
+    cur.execute(
+        """
+        INSERT INTO staging.inventories (product_id, store_id, amount, update_date)
+        VALUES (%s, %s, GREATEST(%s, 0), %s)
+        ON CONFLICT (store_id, product_id)
+        DO UPDATE
+            SET amount = GREATEST(EXCLUDED.amount, 0),
+                update_date = EXCLUDED.update_date;
+        """,
+        (product_id, store_id, stock_after_event, timestamp)
+    )
+
+
+def process_sale_event(cur, event):
+    total_order_price = sum(item["price"] * item["quantity"] for item in event["items"])
+
+    cur.execute(
+        """
+        INSERT INTO staging.orders (source_event_id, store_id, order_price, order_date)
+        VALUES (%s, %s, %s, %s)
+        ON CONFLICT (source_event_id) DO NOTHING
+        RETURNING order_id;
+        """,
+        (str(event["event_id"]), event["store_id"], total_order_price, event["timestamp"])
+    )
+
+    inserted_order = cur.fetchone()
+    if inserted_order is None:
+        print(f"Duplicate sale event skipped (Event ID: {event.get('event_id')})")
+        return
+
+    new_order_id = inserted_order[0]
+
+    for item in event["items"]:
+        cur.execute(
+            """
+            INSERT INTO staging.items (product_id, item_price, order_id, quantity)
+            VALUES (%s, %s, %s, %s);
+            """,
+            (item["product_id"], item["price"], new_order_id, item["quantity"])
+        )
+        upsert_inventory_delta(
+            cur,
+            event["store_id"],
+            item["product_id"],
+            -int(item["quantity"]),
+            event["timestamp"]
+        )
+
+    print("The sale has been saved to the database and inventory has been updated!")
+
+
+def process_restock_event(cur, event):
+    upsert_inventory_delta(
+        cur,
+        event["store_id"],
+        event["product_id"],
+        int(event["quantity_change"]),
+        event["timestamp"]
+    )
+    print(f"Restock event saved (Event ID: {event.get('event_id')})")
+
+
+def process_stock_update_event(cur, event):
+    if event.get("stock_after_event") is not None:
+        set_inventory_absolute(
+            cur,
+            event["store_id"],
+            event["product_id"],
+            int(event["stock_after_event"]),
+            event["timestamp"]
+        )
+    else:
+        upsert_inventory_delta(
+            cur,
+            event["store_id"],
+            event["product_id"],
+            int(event["quantity_change"]),
+            event["timestamp"]
+        )
+
+    print(f"Stock update event saved (Event ID: {event.get('event_id')})")
+
+
 while True:
     msg = consumer.poll(1.0)
     
@@ -34,41 +143,22 @@ while True:
         continue
 
     try:
-        raw_data = msg.value().decode('utf-8')
-        event = json.loads(raw_data)
+        event = parse_event(msg)
+        event_type = event.get("event_type")
 
-        if isinstance(event, str):
-            event = json.loads(event)
-
-        if event.get("event_type") == "sale":
-            print(f"Caught sale event from Kafka! (Event ID: {event.get('event_id')})")
-            
-            with psycopg.connect(DB_URL) as conn:
-                with conn.cursor() as cur:
-                    
-                    total_order_price = sum(item["price"] * item["quantity"] for item in event["items"])
-                    
-                    cur.execute(
-                        """
-                        INSERT INTO staging.orders (store_id, order_price, order_date)
-                        VALUES (%s, %s, %s)
-                        RETURNING order_id;
-                        """,
-                        (event["store_id"], total_order_price, event["timestamp"])
-                    )
-                    
-                    new_order_id = cur.fetchone()[0]
-                    
-                    for item in event["items"]:
-                        cur.execute(
-                            """
-                            INSERT INTO staging.items (product_id, item_price, order_id, quantity)
-                            VALUES (%s, %s, %s, %s);
-                            """,
-                            (item["product_id"], item["price"], new_order_id, item["quantity"])
-                        )
-                        
-            print("The sale has been saved to the database!")
+        with psycopg.connect(DB_URL) as conn:
+            with conn.cursor() as cur:
+                if event_type == "sale":
+                    print(f"Caught sale event from Kafka! (Event ID: {event.get('event_id')})")
+                    process_sale_event(cur, event)
+                elif event_type == "restock":
+                    print(f"Caught restock event from Kafka! (Event ID: {event.get('event_id')})")
+                    process_restock_event(cur, event)
+                elif event_type == "stock_update":
+                    print(f"Caught stock_update event from Kafka! (Event ID: {event.get('event_id')})")
+                    process_stock_update_event(cur, event)
+                else:
+                    print(f"Unsupported event_type received: {event_type}")
 
     except json.JSONDecodeError as json_err:
         print(f"An error occurred while decoding JSON: {json_err}")
