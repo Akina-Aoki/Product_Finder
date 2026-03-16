@@ -4,7 +4,6 @@ from fastapi import FastAPI
 from app.schema.product import InventoryEvent, NewProductEvent, SaleEvent
 import json
 from contextlib import asynccontextmanager
-from fastapi import FastAPI
 from kafka import KafkaProducer
 
 # Samma adress-tänk som vi pratade om tidigare!
@@ -60,12 +59,31 @@ async def receive_new_product_event(event: NewProductEvent):
     return {"status": "success", "message": "new_product event sent to Kafka!"}
 
 # Aira
-@app.post("/api/inventory-events")
-async def receive_inventory_event(event: InventoryEvent):
-    app.state.kafka_producer.send(PRODUCTS_TOPIC, value=event.model_dump_json())
+@app.post("/api/products/new/batch")
+async def receive_new_product_events_batch(events: List[NewProductEvent]):
+    for event in events:
+        app.state.kafka_producer.send(
+            PRODUCTS_TOPIC,
+            value=event.model_dump(mode="json")
+        )
+
     app.state.kafka_producer.flush()
 
-    return {"status": "success", "message": f"{event.event_type} event sent to Kafka!"}
+    return {
+        "status": "success",
+        "message": f"{len(events)} new_product events sent to Kafka!"
+    }
+
+# Aira
+@app.post("/api/products/new")
+async def receive_new_product_event(event: NewProductEvent):
+    app.state.kafka_producer.send(
+        PRODUCTS_TOPIC,
+        value=event.model_dump(mode="json")
+    )
+    app.state.kafka_producer.flush()
+
+    return {"status": "success", "message": "new_product event sent to Kafka!"}
 
 # Aira
 @app.post("/api/inventory-events/batch")

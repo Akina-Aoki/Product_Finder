@@ -40,7 +40,7 @@ class InventoryEvent(BaseModel):
 class NewProductPayload(BaseModel):
     """Payload used when creating a new product via inventory events."""
 
-    product_code: str
+    product_code: int
     product_name: str
     brand_id: int
     category_id: int
@@ -57,3 +57,4 @@ class NewProductEvent(BaseModel):
     event_type: Literal["new_product"]
     timestamp: datetime
     product: NewProductPayload
+ 
