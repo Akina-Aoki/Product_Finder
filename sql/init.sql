@@ -1,7 +1,145 @@
 CREATE SCHEMA IF NOT EXISTS staging;
 
---- Static Reference Tables (Metadata)
+-- refined.schema here WORK ONGOING
+CREATE SCHEMA IF NOT EXISTS refined;
 
+-- Curated/refined tables used by analytics and dashboards.
+-- These tables denormalise staging data into business-friendly entities.
+CREATE TABLE IF NOT EXISTS refined.products (
+  "product_id" integer PRIMARY KEY,
+  "product_name" varchar(50) NOT NULL,
+  "brand_name" varchar(50) NOT NULL,
+  "category_name" varchar(30) NOT NULL,
+  "colour_name" varchar(20) NOT NULL,
+  "size_name" varchar(20) NOT NULL,
+  "gender_name" varchar(20) NOT NULL,
+  "price" numeric(10,2) NOT NULL CHECK ("price" >= 0)
+);
+
+CREATE TABLE IF NOT EXISTS refined.stores (
+  "store_id" integer PRIMARY KEY,
+  "store_code" varchar(10) NOT NULL UNIQUE,
+  "store_name" varchar(50) NOT NULL,
+  "city" varchar(50) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS refined.inventories (
+  "inventory_id" integer PRIMARY KEY,
+  "product_id" integer NOT NULL,
+  "product_name" varchar(50) NOT NULL,
+  "amount" integer NOT NULL CHECK ("amount" >= 0),
+  "store_name" varchar(50) NOT NULL,
+  "city" varchar(50) NOT NULL,
+  "update_date" timestamptz NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS refined.items (
+  "item_id" integer PRIMARY KEY,
+  "order_id" integer NOT NULL,
+  "order_date" timestamptz NOT NULL,
+  "product_id" integer NOT NULL,
+  "product_name" varchar(50) NOT NULL,
+  "item_price" numeric(10,2) NOT NULL CHECK ("item_price" >= 0),
+  "quantity" integer NOT NULL CHECK ("quantity" >= 0),
+  "store_name" varchar(50) NOT NULL,
+  "city" varchar(50) NOT NULL
+);
+
+CREATE OR REPLACE FUNCTION refined.refresh_refined() RETURNS void
+LANGUAGE plpgsql
+AS $$
+BEGIN
+  TRUNCATE TABLE refined.items, refined.inventories, refined.stores, refined.products;
+
+  INSERT INTO refined.products (
+    product_id,
+    product_name,
+    brand_name,
+    category_name,
+    colour_name,
+    size_name,
+    gender_name,
+    price
+  )
+  SELECT
+    p.product_id,
+    p.product_name,
+    b.brand_name,
+    c.category_name,
+    co.colour_name,
+    si.size_name,
+    g.gender_name,
+    p.price
+  FROM staging.products p
+  JOIN staging.brands b ON b.brand_id = p.brand_id
+  JOIN staging.categories c ON c.category_id = p.category_id
+  JOIN staging.colours co ON co.colour_id = p.colour_id
+  JOIN staging.sizes si ON si.size_id = p.size_id
+  JOIN staging.genders g ON g.gender_id = p.gender_id;
+
+  INSERT INTO refined.stores (
+    store_id,
+    store_code,
+    store_name,
+    city
+  )
+  SELECT
+    s.store_id,
+    s.store_code,
+    s.store_name,
+    s.city
+  FROM staging.stores s;
+
+  INSERT INTO refined.inventories (
+    inventory_id,
+    product_id,
+    product_name,
+    amount,
+    store_name,
+    city,
+    update_date
+  )
+  SELECT
+    i.inventory_id,
+    p.product_id,
+    p.product_name,
+    i.amount,
+    s.store_name,
+    s.city,
+    i.update_date
+  FROM staging.inventories i
+  JOIN staging.products p ON p.product_id = i.product_id
+  JOIN staging.stores s ON s.store_id = i.store_id;
+
+  INSERT INTO refined.items (
+    item_id,
+    order_id,
+    order_date,
+    product_id,
+    product_name,
+    item_price,
+    quantity,
+    store_name,
+    city
+  )
+  SELECT
+    it.item_id,
+    o.order_id,
+    o.order_date,
+    p.product_id,
+    p.product_name,
+    it.item_price,
+    it.quantity,
+    s.store_name,
+    s.city
+  FROM staging.items it
+  JOIN staging.orders o ON o.order_id = it.order_id
+  JOIN staging.products p ON p.product_id = it.product_id
+  JOIN staging.stores s ON s.store_id = o.store_id;
+END;
+$$;
+
+-- staging.schema metadata. Static Reference Tables (Metadata)
 CREATE TABLE IF NOT EXISTS staging.categories (
   "category_id" serial PRIMARY KEY,
   "category_name" varchar(30) NOT NULL
