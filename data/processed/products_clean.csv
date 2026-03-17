@@ -1,0 +1,2 @@
+product_id;product_code;product_name;brand_id;category_id;colour_id;size_id;price;gender_id;active
+1;10010001;Storm Tee V2;1;2;1;1;59.9;3;True
