@@ -282,6 +282,10 @@ CROSS JOIN staging.stores s
 ON CONFLICT (store_id, product_id) DO NOTHING;
 
 
+-- Initial load into curated/refined schema from staging.
+SELECT refined.refresh_refined();
+
+
 -- After explicit IDs are copied, set each serial sequence to max(id)
 -- so future inserts continue with the next available value.
 select setval(pg_get_serial_sequence('staging.brands', 'brand_id'), coalesce(max("brand_id"), 1), max("brand_id") is not null) from "staging"."brands";
