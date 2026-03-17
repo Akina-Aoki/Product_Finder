@@ -8,33 +8,56 @@
 -- Query 1:
 -- Current stock per product across all stores
 SELECT
-    p.product_id,
-    p.product_name,
+    product_id,
+    product_name,
     SUM(i.amount) AS current_total_stock
-FROM staging.products p
+FROM refined.products p
 JOIN staging.inventories i
-    ON p.product_id = i.product_id
-GROUP BY p.product_id, p.product_name
+GROUP BY product_id, product_name
 ORDER BY current_total_stock DESC, p.product_name;
 
 
 -- Query 2:
 -- Current stock by product and store
 SELECT
-    s.store_id,
-    s.store_name,
-    s.city,
-    p.product_id,
-    p.product_name,
-    i.amount AS current_stock,
-    i.update_date
-FROM staging.inventories i
-JOIN staging.products p
-    ON i.product_id = p.product_id
-JOIN staging.stores s
-    ON i.store_id = s.store_id
-ORDER BY s.store_name, p.product_name;
+    inventory_id,
+    store_name,
+    city,
+    product_id,
+    product_name,
+    amount AS current_stock,
+    update_date
+FROM refined.inventories 
+ORDER BY store_name, product_name;
 
+
+-- Extra for refined schema
+-- Revenue per product
+SELECT
+  product_id,
+  product_name,
+  SUM(quantity * item_price) AS total_revenue
+FROM refined.items
+GROUP BY product_id, product_name
+ORDER BY total_revenue DESC, product_name;
+
+-- Revenue by store
+SELECT
+  store_name,
+  city,
+  SUM(quantity * item_price) AS total_store_revenue
+FROM refined.items
+GROUP BY store_name, city
+ORDER BY total_store_revenue DESC, store_name;
+
+-- Sales by day
+SELECT
+  DATE(order_date) AS sales_day,
+  COUNT(DISTINCT order_id) AS total_orders,
+  SUM(quantity * item_price) AS total_revenue
+FROM refined.items
+GROUP BY DATE(order_date)
+ORDER BY sales_day;
 
 -- Query 3:
 -- Low-stock products across all stores

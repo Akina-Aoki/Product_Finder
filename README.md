@@ -44,7 +44,7 @@ This system captures real-time inventory events — such as **sales** and **rest
 | **Docker Compose** | `docker-compose.yml` | Launches PostgreSQL and Kafka as local services |
 | **PostgreSQL** | `postgres:16-alpine` | Stores all reference data and inventory events |
 | **Apache Kafka** | `apache/kafka:latest` | Message broker for the `inventory_events` topic |
-| **init.sql** | SQL DDL script | Creates the `staging` schema and all tables on first startup |
+| **init.sql** | SQL DDL script | Creates both `staging` and `refined` schemas with batch-load logic on first startup |
 | **CSV files** | `data/raw/*.csv` | Seed data loaded into the database (products, stores, brands, etc.) |
 | **FastAPI app** | `app/main.py` | REST API that receives sale events and publishes them to Kafka |
 | **DB Consumer** | `app/consumer/db_consumer.py` | Reads events from Kafka and inserts them into PostgreSQL |
@@ -57,6 +57,13 @@ This system captures real-time inventory events — such as **sales** and **rest
 CSV files ──────────────────────────────► PostgreSQL (staging schema)
 (data/raw/*.csv)                          (reference tables: products,
                                            stores, brands, categories…)
+
+ │
+                                                     ▼
+                                        refined.refresh_refined() batch load
+                                                     │
+                                                     ▼
+                                    PostgreSQL (refined schema for analytics)                                           
 
 HTTP Client          FastAPI              Kafka               PostgreSQL
 (Thunder Client) ──► app/main.py ──────► inventory_events ──► db_consumer.py ──► staging.orders
