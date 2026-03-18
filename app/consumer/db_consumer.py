@@ -2,16 +2,23 @@ import os
 import json
 import psycopg
 from confluent_kafka import Consumer
+from pydantic import ValidationError
 
+# Importing the schemas to clean and validate incoming "dirty" data
+from app.schema.product import SaleEvent, InventoryEvent, NewProductEvent
+
+# Configuration from environment variables
 KAFKA_BOOTSTRAP_SERVERS = os.getenv("KAFKA_BOOTSTRAP_SERVERS", "kafka:9092")
 TOPIC = os.getenv("PRODUCTS_TOPIC", "inventory_events")
 DB_URL = os.getenv("DB_URL", "postgresql://postgres:postgres@postgres:5432/SportWearDB")
 
 def on_assign(consumer, partitions):
+    """Callback triggered when Kafka assigns partitions to this consumer."""
     print(f"Kafka approved access to: {partitions}")
 
 print(f"Starting DB Consumer against {KAFKA_BOOTSTRAP_SERVERS}...")
 
+# Consumer configuration
 conf = {
     'bootstrap.servers': KAFKA_BOOTSTRAP_SERVERS,
     'group.id': "sportwear_inventory_consumer",
@@ -24,17 +31,36 @@ consumer.subscribe([TOPIC], on_assign=on_assign)
 
 print(f"The Consumer is listening to {TOPIC} and is ready to save to the database!")
 
-def parse_event(message):
+def parse_and_validate_event(message):
+    """
+    Parses the raw Kafka message and validates it against Pydantic models.
+    This acts as a 'data cleaning' step before the database is touched.
+    Returns the validated data as a standard Python dictionary.
+    """
     raw_data = message.value().decode('utf-8')
-    event = json.loads(raw_data)
+    data = json.loads(raw_data)
 
-    if isinstance(event, str):
-        event = json.loads(event)
+    # Handle double-serialized JSON strings if they occur
+    if isinstance(data, str):
+        data = json.loads(data)
 
-    return event
+    event_type = data.get("event_type")
 
+    # Match event type to the correct validation schema and return as a dictionary
+    if event_type == "sale":
+        return SaleEvent(**data).model_dump()
+    elif event_type in ["restock", "stock_update"]:
+        return InventoryEvent(**data).model_dump()
+    elif event_type == "new_product":
+        return NewProductEvent(**data).model_dump()
+    else:
+        raise ValueError(f"Unknown event_type received: {event_type}")
 
 def upsert_inventory_delta(cur, store_id, product_id, quantity_delta, timestamp):
+    """
+    Updates inventory by adding/subtracting a delta. 
+    Uses GREATEST(..., 0) to ensure stock never drops below zero in the DB.
+    """
     cur.execute(
         """
         INSERT INTO staging.inventories (product_id, store_id, amount, update_date)
@@ -47,8 +73,11 @@ def upsert_inventory_delta(cur, store_id, product_id, quantity_delta, timestamp)
         (product_id, store_id, quantity_delta, timestamp, quantity_delta)
     )
 
-
 def set_inventory_absolute(cur, store_id, product_id, stock_after_event, timestamp):
+    """
+    Sets inventory to an absolute value.
+    Uses GREATEST(..., 0) as an extra safeguard against negative values.
+    """
     cur.execute(
         """
         INSERT INTO staging.inventories (product_id, store_id, amount, update_date)
@@ -61,10 +90,13 @@ def set_inventory_absolute(cur, store_id, product_id, stock_after_event, timesta
         (product_id, store_id, stock_after_event, timestamp)
     )
 
-
 def process_sale_event(cur, event):
+    """
+    Handles a sale by creating an order, adding items, and reducing inventory.
+    """
     total_order_price = sum(item["price"] * item["quantity"] for item in event["items"])
 
+    # Insert into orders table; ignore if the event_id already exists (idempotency)
     cur.execute(
         """
         INSERT INTO staging.orders (source_event_id, store_id, order_price, order_date)
@@ -83,6 +115,7 @@ def process_sale_event(cur, event):
     new_order_id = inserted_order[0]
 
     for item in event["items"]:
+        # Link items to the newly created order
         cur.execute(
             """
             INSERT INTO staging.items (product_id, item_price, order_id, quantity)
@@ -90,6 +123,7 @@ def process_sale_event(cur, event):
             """,
             (item["product_id"], item["price"], new_order_id, item["quantity"])
         )
+        # Decrease stock based on quantity sold
         upsert_inventory_delta(
             cur,
             event["store_id"],
@@ -100,8 +134,10 @@ def process_sale_event(cur, event):
 
     print("The sale has been saved to the database and inventory has been updated!")
 
-
 def process_restock_event(cur, event):
+    """
+    Handles a restock event by increasing the inventory level.
+    """
     upsert_inventory_delta(
         cur,
         event["store_id"],
@@ -111,8 +147,10 @@ def process_restock_event(cur, event):
     )
     print(f"Restock event saved (Event ID: {event.get('event_id')})")
 
-
 def process_stock_update_event(cur, event):
+    """
+    Handles manual stock updates, either by setting an absolute value or applying a delta.
+    """
     if event.get("stock_after_event") is not None:
         set_inventory_absolute(
             cur,
@@ -133,6 +171,10 @@ def process_stock_update_event(cur, event):
     print(f"Stock update event saved (Event ID: {event.get('event_id')})")
 
 def process_new_product_event(cur, event):
+    """
+    Handles the introduction of a new product by inserting it into the products table
+    and initializing its inventory to 10 for both stores.
+    """
     product = event["product"]
 
     cur.execute(
@@ -189,7 +231,7 @@ def process_new_product_event(cur, event):
 
     print(f"New product event saved (Event ID: {event.get('event_id')}, Product ID: {new_product_id})")
 
-
+# Main processing loop
 while True:
     msg = consumer.poll(1.0)
     
@@ -200,9 +242,12 @@ while True:
         continue
 
     try:
-        event = parse_event(msg)
+        # 1. Parse, clean and validate data. 
+        # Returns a dictionary if valid, raises ValidationError if it's "dirty data".
+        event = parse_and_validate_event(msg)
         event_type = event.get("event_type")
 
+        # 2. Process based on event type
         with psycopg.connect(DB_URL) as conn:
             with conn.cursor() as cur:
                 if event_type == "sale":
@@ -217,14 +262,17 @@ while True:
                 elif event_type == "new_product":
                     print(f"Caught new product event from Kafka! (Event ID: {event.get('event_id')}) ")
                     process_new_product_event(cur, event)
-                else:
-                    print(f"Unsupported event_type received: {event_type}")
+                
+                # Commit the transaction if everything succeeded
+                conn.commit()
 
+    except ValidationError as v_err:
+        print(f"Dirty Data Detected! Validation failed for event: {v_err}")
+    except ValueError as val_err:
+        print(f"Value Error: {val_err}")
     except json.JSONDecodeError as json_err:
         print(f"An error occurred while decoding JSON: {json_err}")
-        
     except psycopg.Error as db_err:
         print(f"The database is having issues! Error in SQL or connection: {db_err}")
-        
     except Exception as e:
         print(f"Something went wrong when we tried to save: {e}")
