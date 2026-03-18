@@ -79,6 +79,15 @@ BEGIN
 END;
 $$;
 
+CREATE OR REPLACE FUNCTION staging.run_refresh_refined_trigger()
+RETURNS TRIGGER AS $$
+BEGIN
+  PERFORM refined.refresh_refined();
+  RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
+
+
 -- ==========================================
 -- 6. READING DATA FROM CSV
 -- ==========================================
@@ -136,3 +145,24 @@ select setval(pg_get_serial_sequence('staging.sizes', 'size_id'), coalesce(max("
 select setval(pg_get_serial_sequence('staging.stores', 'store_id'), coalesce(max("store_id"), 1), max("store_id") is not null) from "staging"."stores";
 select setval(pg_get_serial_sequence('staging.products', 'product_id'), coalesce(max("product_id"), 1), max("product_id") is not null) from "staging"."products";
 select setval(pg_get_serial_sequence('staging.inventories', 'inventory_id'), coalesce(max("inventory_id"), 1), max("inventory_id") is not null) from "staging"."inventories";
+
+-- ==========================================
+-- 8. TRIGGERS FOR UPDATES
+-- ==========================================
+-- Order Trigger
+CREATE TRIGGER trigger_update_on_orders
+AFTER INSERT OR UPDATE OR DELETE ON staging.orders
+FOR EACH STATEMENT
+EXECUTE FUNCTION staging.run_refresh_refined_trigger();
+
+-- Item Trigger
+CREATE TRIGGER trigger_update_on_items
+AFTER INSERT OR UPDATE OR DELETE ON staging.items
+FOR EACH STATEMENT
+EXECUTE FUNCTION staging.run_refresh_refined_trigger();
+
+-- Inventory Trigger
+CREATE TRIGGER trigger_update_on_inventories
+AFTER INSERT OR UPDATE OR DELETE ON staging.inventories
+FOR EACH STATEMENT
+EXECUTE FUNCTION staging.run_refresh_refined_trigger();
