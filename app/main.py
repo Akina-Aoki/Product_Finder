@@ -74,18 +74,6 @@ async def receive_new_product_events_batch(events: List[NewProductEvent]):
         "message": f"{len(events)} new_product events sent to Kafka!"
     }
 
-# Aira
-@app.post("/api/products/new")
-async def receive_new_product_event(event: NewProductEvent):
-    app.state.kafka_producer.send(
-        PRODUCTS_TOPIC,
-        value=event.model_dump(mode="json")
-    )
-    app.state.kafka_producer.flush()
-
-    return {"status": "success", "message": "new_product event sent to Kafka!"}
-
-# Aira
 @app.post("/api/inventory-events/batch")
 async def receive_inventory_events_batch(events: List[InventoryEvent]):
     for event in events:
