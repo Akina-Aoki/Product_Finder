@@ -1,13 +1,19 @@
 services:
 
   postgres:
-    image: postgres:16-alpine
+    build:
+      context: .
+      dockerfile: Dockerfile.postgres
     container_name: SportWear_Postgres
 
     environment:
       POSTGRES_USER: ${DB_USER:-postgres}
       POSTGRES_PASSWORD: ${DB_PASSWORD:-postgres}
       POSTGRES_DB: ${DB_NAME:-SportWearDB}
+
+    command: >
+      postgres -c shared_preload_libraries=pg_cron
+               -c cron.database_name=${DB_NAME:-SportWearDB}
 
     ports:
       - "${DB_HOST_PORT:-5439}:5432"
@@ -16,7 +22,7 @@ services:
       - postgres_data:/var/lib/postgresql/data
       - ./sql/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
       - ./sql:/src_sql:ro
-      - ./data/raw:/data/raw:ro
+      - ./data:/data:ro
 
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-postgres} -d ${DB_NAME:-SportWearDB}"]

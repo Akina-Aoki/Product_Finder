@@ -19,17 +19,7 @@ CREATE TABLE IF NOT EXISTS staging.orders ( "order_id" serial PRIMARY KEY, "sour
 CREATE TABLE IF NOT EXISTS staging.items ( "item_id" serial PRIMARY KEY, "product_id" integer NOT NULL, "item_price" numeric (10,2) NOT NULL CHECK ("item_price" >= 0), "order_id" integer NOT NULL, "quantity" integer NOT NULL DEFAULT 1 CHECK ("quantity" >= 0), "created_at" timestamptz NOT NULL DEFAULT now() );
 
 -- ==========================================
--- 3. CREATE REFINED TABLES
--- ==========================================
--- Curated/refined tables used by analytics and dashboards.
--- These tables denormalise staging data into business-friendly entities.
-CREATE TABLE IF NOT EXISTS refined.products ( "product_id" integer PRIMARY KEY, "product_name" varchar(50) NOT NULL, "brand_name" varchar(50) NOT NULL, "category_name" varchar(30) NOT NULL, "colour_name" varchar(20) NOT NULL, "size_name" varchar(20) NOT NULL, "gender_name" varchar(20) NOT NULL, "price" numeric(10,2) NOT NULL CHECK ("price" >= 0) );
-CREATE TABLE IF NOT EXISTS refined.stores ( "store_id" integer PRIMARY KEY, "store_code" varchar(10) NOT NULL UNIQUE, "store_name" varchar(50) NOT NULL, "city" varchar(50) NOT NULL );
-CREATE TABLE IF NOT EXISTS refined.inventories ( "inventory_id" integer PRIMARY KEY, "product_id" integer NOT NULL, "product_name" varchar(50) NOT NULL, "amount" integer NOT NULL CHECK ("amount" >= 0), "store_name" varchar(50) NOT NULL, "city" varchar(50) NOT NULL, "update_date" timestamptz NOT NULL );
-CREATE TABLE IF NOT EXISTS refined.items ( "item_id" integer PRIMARY KEY, "order_id" integer NOT NULL, "order_date" timestamptz NOT NULL, "product_id" integer NOT NULL, "product_name" varchar(50) NOT NULL, "item_price" numeric(10,2) NOT NULL CHECK ("item_price" >= 0), "quantity" integer NOT NULL CHECK ("quantity" >= 0), "store_name" varchar(50) NOT NULL, "city" varchar(50) NOT NULL );
-
--- ==========================================
--- 4. ADD RELATIONSHIPS (Foreign Keys)
+-- 3. ADD RELATIONSHIPS (Foreign Keys)
 -- ==========================================
 ALTER TABLE staging.products ADD FOREIGN KEY ("brand_id") REFERENCES staging.brands ("brand_id") DEFERRABLE INITIALLY IMMEDIATE;
 ALTER TABLE staging.products ADD FOREIGN KEY ("category_id") REFERENCES staging.categories ("category_id") DEFERRABLE INITIALLY IMMEDIATE;
@@ -43,53 +33,7 @@ ALTER TABLE staging.inventories ADD FOREIGN KEY ("product_id") REFERENCES stagin
 ALTER TABLE staging.inventories ADD FOREIGN KEY ("store_id") REFERENCES staging.stores ("store_id") DEFERRABLE INITIALLY IMMEDIATE;
 
 -- ==========================================
--- 5. UPDATEFUNCTION
--- ==========================================
-CREATE OR REPLACE FUNCTION refined.refresh_refined() RETURNS void
-LANGUAGE plpgsql
-AS $$
-BEGIN
-  TRUNCATE TABLE refined.items, refined.inventories, refined.stores, refined.products;
-
-  INSERT INTO refined.products ( product_id, product_name, brand_name, category_name, colour_name, size_name, gender_name, price )
-  SELECT p.product_id, p.product_name, b.brand_name, c.category_name, co.colour_name, si.size_name, g.gender_name, p.price
-  FROM staging.products p
-  JOIN staging.brands b ON b.brand_id = p.brand_id
-  JOIN staging.categories c ON c.category_id = p.category_id
-  JOIN staging.colours co ON co.colour_id = p.colour_id
-  JOIN staging.sizes si ON si.size_id = p.size_id
-  JOIN staging.genders g ON g.gender_id = p.gender_id;
-
-  INSERT INTO refined.stores ( store_id, store_code, store_name, city )
-  SELECT s.store_id, s.store_code, s.store_name, s.city
-  FROM staging.stores s;
-  
-  INSERT INTO refined.inventories ( inventory_id, product_id, product_name, amount, store_name, city, update_date )
-  SELECT i.inventory_id, p.product_id, p.product_name, i.amount, s.store_name, s.city, i.update_date
-  FROM staging.inventories i
-  JOIN staging.products p ON p.product_id = i.product_id
-  JOIN staging.stores s ON s.store_id = i.store_id;
-
-  INSERT INTO refined.items ( item_id, order_id, order_date, product_id, product_name, item_price, quantity, store_name, city )
-  SELECT it.item_id, o.order_id, o.order_date, p.product_id, p.product_name, it.item_price, it.quantity, s.store_name, s.city
-  FROM staging.items it
-  JOIN staging.orders o ON o.order_id = it.order_id
-  JOIN staging.products p ON p.product_id = it.product_id
-  JOIN staging.stores s ON s.store_id = o.store_id;
-END;
-$$;
-
-CREATE OR REPLACE FUNCTION staging.run_refresh_refined_trigger()
-RETURNS TRIGGER AS $$
-BEGIN
-  PERFORM refined.refresh_refined();
-  RETURN NULL;
-END;
-$$ LANGUAGE plpgsql;
-
-
--- ==========================================
--- 6. READING DATA FROM CSV
+-- 4. READING DATA FROM CSV
 -- ==========================================
 COPY staging.brands (brand_id, brand_name)
 FROM '/data/raw/brands.csv'
@@ -121,7 +65,7 @@ FROM '/data/raw/products.csv'
 WITH (FORMAT csv, HEADER true, DELIMITER ';', ENCODING 'UTF8');
 
 -- ==========================================
--- 7. UPDATE INVENTORY
+-- 5. UPDATE INVENTORY
 -- ==========================================
 INSERT INTO staging.inventories(product_id, store_id, amount) 
 SELECT
@@ -132,11 +76,95 @@ FROM staging.products p
 CROSS JOIN staging.stores s
 ON CONFLICT (store_id, product_id) DO NOTHING;
 
--- Initial load into curated/refined schema from staging.
-SELECT refined.refresh_refined();
+-- ==========================================
+-- 6. CREATE REFINED MATERIALIZED VIEWS
+-- ==========================================
+DROP MATERIALIZED VIEW IF EXISTS refined.items CASCADE;
+DROP MATERIALIZED VIEW IF EXISTS refined.inventories CASCADE;
+DROP MATERIALIZED VIEW IF EXISTS refined.stores CASCADE;
+DROP MATERIALIZED VIEW IF EXISTS refined.products CASCADE;
 
--- After explicit IDs are copied, set each serial sequence to max(id)
--- so future inserts continue with the next available value.
+CREATE MATERIALIZED VIEW refined.products AS
+SELECT 
+    p.product_id, 
+    p.product_name, 
+    b.brand_name, 
+    c.category_name, 
+    co.colour_name, 
+    si.size_name, 
+    g.gender_name, 
+    p.price
+FROM staging.products p
+JOIN staging.brands b ON b.brand_id = p.brand_id
+JOIN staging.categories c ON c.category_id = p.category_id
+JOIN staging.colours co ON co.colour_id = p.colour_id
+JOIN staging.sizes si ON si.size_id = p.size_id
+JOIN staging.genders g ON g.gender_id = p.gender_id;
+
+-- Unika index KRÄVS för att kunna använda REFRESH MATERIALIZED VIEW CONCURRENTLY
+CREATE UNIQUE INDEX idx_refined_products_id ON refined.products(product_id);
+
+CREATE MATERIALIZED VIEW refined.stores AS
+SELECT 
+    s.store_id, 
+    s.store_code, 
+    s.store_name, 
+    s.city
+FROM staging.stores s;
+
+CREATE UNIQUE INDEX idx_refined_stores_id ON refined.stores(store_id);
+
+CREATE MATERIALIZED VIEW refined.inventories AS
+SELECT 
+    i.inventory_id, 
+    p.product_id, 
+    p.product_name, 
+    i.amount, 
+    s.store_name, 
+    s.city, 
+    i.update_date
+FROM staging.inventories i
+JOIN staging.products p ON p.product_id = i.product_id
+JOIN staging.stores s ON s.store_id = i.store_id;
+
+CREATE UNIQUE INDEX idx_refined_inventories_id ON refined.inventories(inventory_id);
+
+CREATE MATERIALIZED VIEW refined.items AS
+SELECT 
+    it.item_id, 
+    o.order_id, 
+    o.order_date, 
+    p.product_id, 
+    p.product_name, 
+    it.item_price, 
+    it.quantity, 
+    s.store_name, 
+    s.city
+FROM staging.items it
+JOIN staging.orders o ON o.order_id = it.order_id
+JOIN staging.products p ON p.product_id = it.product_id
+JOIN staging.stores s ON s.store_id = o.store_id;
+
+CREATE UNIQUE INDEX idx_refined_items_id ON refined.items(item_id);
+
+
+-- ==========================================
+-- 7. UPDATE FUNCTION
+-- ==========================================
+CREATE OR REPLACE FUNCTION refined.refresh_refined() RETURNS void
+LANGUAGE plpgsql
+AS $$
+BEGIN
+  REFRESH MATERIALIZED VIEW CONCURRENTLY refined.products;
+  REFRESH MATERIALIZED VIEW CONCURRENTLY refined.stores;
+  REFRESH MATERIALIZED VIEW CONCURRENTLY refined.inventories;
+  REFRESH MATERIALIZED VIEW CONCURRENTLY refined.items;
+END;
+$$;
+
+-- ==========================================
+-- 8. SET SEQUENCES
+-- ==========================================
 select setval(pg_get_serial_sequence('staging.brands', 'brand_id'), coalesce(max("brand_id"), 1), max("brand_id") is not null) from "staging"."brands";
 select setval(pg_get_serial_sequence('staging.categories', 'category_id'), coalesce(max("category_id"), 1), max("category_id") is not null) from "staging"."categories";
 select setval(pg_get_serial_sequence('staging.colours', 'colour_id'), coalesce(max("colour_id"), 1), max("colour_id") is not null) from "staging"."colours";
@@ -147,22 +175,7 @@ select setval(pg_get_serial_sequence('staging.products', 'product_id'), coalesce
 select setval(pg_get_serial_sequence('staging.inventories', 'inventory_id'), coalesce(max("inventory_id"), 1), max("inventory_id") is not null) from "staging"."inventories";
 
 -- ==========================================
--- 8. TRIGGERS FOR UPDATES
+-- 8. SET UPDATE SCHEDULE FOR REFINED VIEWS
 -- ==========================================
--- Order Trigger
-CREATE TRIGGER trigger_update_on_orders
-AFTER INSERT OR UPDATE OR DELETE ON staging.orders
-FOR EACH STATEMENT
-EXECUTE FUNCTION staging.run_refresh_refined_trigger();
-
--- Item Trigger
-CREATE TRIGGER trigger_update_on_items
-AFTER INSERT OR UPDATE OR DELETE ON staging.items
-FOR EACH STATEMENT
-EXECUTE FUNCTION staging.run_refresh_refined_trigger();
-
--- Inventory Trigger
-CREATE TRIGGER trigger_update_on_inventories
-AFTER INSERT OR UPDATE OR DELETE ON staging.inventories
-FOR EACH STATEMENT
-EXECUTE FUNCTION staging.run_refresh_refined_trigger();
+CREATE EXTENSION IF NOT EXISTS pg_cron;
+SELECT cron.schedule('refresh_refined_views', '*/15 * * * *', 'SELECT refined.refresh_refined();');
