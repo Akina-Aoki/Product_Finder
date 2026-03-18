@@ -41,7 +41,7 @@ category_ids = list(category_mapping.keys())
 adjectives = ["Storm", "Urban", "Alpine", "Flex", "Active", "Pulse", "Summit", "Mountain", "Sprint", "Trail", "Velocity", "Glacier", "Skyline", "Core", "Blaze"]
 
 # How many total variants do we want to generate?
-TARGET_TOTAL_VARIANTS = 300
+TARGET_TOTAL_VARIANTS = 10
 
 products_data = []
 product_id_counter = 1
