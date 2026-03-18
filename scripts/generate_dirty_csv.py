@@ -1,23 +1,23 @@
 import pandas as pd
 import random
 import csv
+import itertools
 
 # -----------------------------------
 # CONFIG
 # -----------------------------------
 OUTPUT_PATH = "data/raw/products_dirty.csv"
 
-TARGET_TOTAL_ROWS = 30        # total rows we want
-TARGET_BASE_PRODUCTS = 6      # number of different products
+TARGET_BASE_PRODUCTS = 100      # number of different products
 
 # Corruption probabilities (tuned for ETL testing)
-PROB_NEGATIVE_PRICE = 0.25
-PROB_MISSING_PRICE = 0.15
-PROB_DIRTY_NAME = 0.30
-PROB_MISSING_NAME = 0.10
-PROB_INVALID_CODE = 0.10
-PROB_INVALID_FK = 0.15
-PROB_INVALID_ACTIVE = 0.30
+PROB_NEGATIVE_PRICE = 0.003
+PROB_MISSING_PRICE = 0.002
+PROB_DIRTY_NAME = 0.05
+PROB_MISSING_NAME = 0.002
+PROB_INVALID_CODE = 0.002
+PROB_INVALID_FK = 0.003
+PROB_INVALID_ACTIVE = 0.05
 
 print("Reading reference data...")
 
@@ -121,6 +121,9 @@ def corrupt_active():
 # -----------------------------------
 # MAIN GENERATION
 # -----------------------------------
+# -----------------------------------
+# MAIN GENERATION
+# -----------------------------------
 print("Generating DIRTY dataset for ETL testing...")
 
 products_data = []
@@ -128,57 +131,42 @@ used_product_codes = set()
 product_id_counter = 1
 
 for _ in range(TARGET_BASE_PRODUCTS):
-
     brand_id = random.choice(brand_ids)
     category_id = random.choice(category_ids)
 
     base_name = generate_product_name(category_id)
     base_price = round(random.uniform(19.99, 299.99), 2)
 
-    # Gender logic
+    # Om det är en kjol (kategori 7), bara dam. Annars alla kön.
     if category_id == 7:
         genders = [GENDER_FEMALE]
     else:
-        genders = random.choice([
-            [GENDER_UNISEX],
-            [GENDER_MALE, GENDER_FEMALE]
-        ])
+        genders = [GENDER_MALE, GENDER_FEMALE, GENDER_UNISEX]
 
-    # Select subset of colors + sizes
-    colors = random.sample(colour_ids, k=random.randint(1, 3))
-    sizes = random.sample(size_ids, k=random.randint(1, 3))
+    # Skapa ALLA möjliga kombinationer av färger, storlekar och kön för denna produkt
+    variants = list(itertools.product(colour_ids, size_ids, genders))
 
-    for gender_id in genders:
-        for colour_id in colors:
-            for size_id in sizes:
+    for variant in variants:
+        colour_id, size_id, gender_id = variant
 
-                if len(products_data) >= TARGET_TOTAL_ROWS:
-                    break
+        product_name = corrupt_name(base_name)
+        price = corrupt_price(base_price)
 
-                product_name = corrupt_name(base_name)
-                price = corrupt_price(base_price)
+        row = [
+            product_id_counter,
+            generate_product_code(used_product_codes),
+            product_name,
+            corrupt_fk(brand_id),
+            corrupt_fk(category_id),
+            corrupt_fk(colour_id),
+            corrupt_fk(size_id),
+            price,
+            corrupt_fk(gender_id),
+            corrupt_active()
+        ]
 
-                row = [
-                    product_id_counter,
-                    generate_product_code(used_product_codes),
-                    product_name,
-                    corrupt_fk(brand_id),
-                    corrupt_fk(category_id),
-                    corrupt_fk(colour_id),
-                    corrupt_fk(size_id),
-                    price,
-                    corrupt_fk(gender_id),
-                    corrupt_active()
-                ]
-
-                products_data.append(row)
-                product_id_counter += 1
-
-            if len(products_data) >= TARGET_TOTAL_ROWS:
-                break
-        if len(products_data) >= TARGET_TOTAL_ROWS:
-            break
-
+        products_data.append(row)
+        product_id_counter += 1
 
 # -----------------------------------
 # FORCE EDGE CASES (guarantee ETL hits)
