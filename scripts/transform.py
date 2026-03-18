@@ -172,7 +172,6 @@ def run_etl():
 
         # Recreate product_id
         valid_df = valid_df.reset_index(drop=True)
-        valid_df['product_id'] = valid_df.index + 1
 
         # Sort rejected
         rejected_df = rejected_df.sort_values(
