@@ -1,6 +1,7 @@
 import pandas as pd
 import subprocess
 import sys
+import argparse
 
 # -------------------------
 # FILE PATH CONFIGURATION
@@ -107,7 +108,7 @@ def validate_foreign_keys(numeric_values, valid_ids, df):
 # -------------------------
 # MAIN ETL
 # -------------------------
-def run_etl():
+def run_etl(load_to_db=False):
     try:
         print("Starting ETL process...")
 
@@ -170,9 +171,6 @@ def run_etl():
             subset=['product_code'], keep='last'
         )
 
-        # Recreate product_id
-        valid_df = valid_df.reset_index(drop=True)
-
         # Sort rejected
         rejected_df = rejected_df.sort_values(
             ['rejection_reason', 'product_code'],
@@ -192,14 +190,20 @@ def run_etl():
         # -------------------------
         # LOAD
         # -------------------------
-        print("Starting LOAD step...")
-        subprocess.run([sys.executable, "scripts/load_products.py"], check=True)
-
-        print("ETL pipeline finished successfully.")
+        if load_to_db:
+            print("Starting LOAD step...")
+            subprocess.run([sys.executable, "scripts/load_products.py"], check=True)
+        else:
+            print("ETL complete. Data saved to CSV. (Skipping database load)")
 
     except Exception as e:
         print(f"ETL pipeline failed: {e}")
 
 
 if __name__ == '__main__':
-    run_etl()
+    parser = argparse.ArgumentParser(description='Run the ETL process to clean product data.')
+    parser.add_argument('--load', action='store_true', help='Automatically load data into the database after cleaning')
+    
+    args = parser.parse_args()
+    
+    run_etl(load_to_db=args.load)
