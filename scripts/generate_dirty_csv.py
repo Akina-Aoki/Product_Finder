@@ -2,28 +2,47 @@ import pandas as pd
 import random
 import csv
 
-print("Reading in reference data from CSV files...")
+# -----------------------------------
+# CONFIG
+# -----------------------------------
+OUTPUT_PATH = "data/raw/products_dirty.csv"
 
-brands_df = pd.read_csv('data/raw/brands.csv', sep=';')
-colours_df = pd.read_csv('data/raw/colours.csv', sep=';')
-sizes_df = pd.read_csv('data/raw/sizes.csv', sep=';')
-categories_df = pd.read_csv('data/raw/categories.csv', sep=';')
+TARGET_TOTAL_ROWS = 30        # total rows we want
+TARGET_BASE_PRODUCTS = 6      # number of different products
 
-brand_ids = brands_df['brand_id'].tolist()
-colour_ids = colours_df['colour_id'].tolist()
-size_ids = sizes_df['size_id'].tolist()
+# Corruption probabilities (tuned for ETL testing)
+PROB_NEGATIVE_PRICE = 0.25
+PROB_MISSING_PRICE = 0.15
+PROB_DIRTY_NAME = 0.30
+PROB_MISSING_NAME = 0.10
+PROB_INVALID_CODE = 0.10
+PROB_INVALID_FK = 0.15
+PROB_INVALID_ACTIVE = 0.30
 
-# Gender definition
+print("Reading reference data...")
+
+brands_df = pd.read_csv("data/raw/brands.csv", sep=";")
+colours_df = pd.read_csv("data/raw/colours.csv", sep=";")
+sizes_df = pd.read_csv("data/raw/sizes.csv", sep=";")
+categories_df = pd.read_csv("data/raw/categories.csv", sep=";")
+
+brand_ids = brands_df["brand_id"].tolist()
+colour_ids = colours_df["colour_id"].tolist()
+size_ids = sizes_df["size_id"].tolist()
+
+# Gender constants
 GENDER_MALE = 1
 GENDER_FEMALE = 2
 GENDER_UNISEX = 3
 
-# Subcategories
+# -----------------------------------
+# CATEGORY → NAME MAPPING
+# -----------------------------------
 synonyms = {
     "underwear": ["Boxers", "Briefs", "Underwear"],
     "t-shirt": ["T-Shirt", "Tee", "Top"],
     "shirt": ["Shirt", "Polo", "Longsleeve"],
-    "jacket": ["Jacket", "Windbreaker", "Coat", "Parka", "Shell"],
+    "jacket": ["Jacket", "Windbreaker", "Coat", "Shell"],
     "shorts": ["Shorts", "Boardshorts"],
     "pants": ["Pants", "Tights", "Sweatpants"],
     "skirt": ["Skirt", "Skort"],
@@ -33,8 +52,8 @@ synonyms = {
 
 category_mapping = {}
 for _, row in categories_df.iterrows():
-    cat_id = row['category_id']
-    cat_name = row['category_names'].lower()
+    cat_id = row["category_id"]
+    cat_name = row["category_names"].lower()
     category_mapping[cat_id] = synonyms.get(cat_name, [cat_name.title()])
 
 category_ids = list(category_mapping.keys())
@@ -46,144 +65,152 @@ adjectives = [
     "Core", "Blaze"
 ]
 
-TARGET_TOTAL_VARIANTS = 10
+# -----------------------------------
+# HELPERS
+# -----------------------------------
+def generate_product_name(category_id):
+    noun = random.choice(category_mapping[category_id])
+    return f"{random.choice(adjectives)} {noun}"
+
+
+def corrupt_name(name):
+    if random.random() < PROB_MISSING_NAME:
+        return None
+
+    if random.random() < PROB_DIRTY_NAME:
+        # messy spacing + random casing
+        name = "   " + name.upper() + "   "
+
+    return name
+
+
+def corrupt_price(price):
+    if random.random() < PROB_MISSING_PRICE:
+        return None
+
+    if random.random() < PROB_NEGATIVE_PRICE:
+        return -price
+
+    return price
+
+
+def corrupt_fk(value):
+    if random.random() < PROB_INVALID_FK:
+        return random.choice([-1, 0, 9999])
+    return value
+
+
+def generate_product_code(used_codes):
+    if random.random() < PROB_INVALID_CODE:
+        return "INVALID_CODE"
+
+    while True:
+        code = str(random.randint(10000000, 99999999))
+        if code not in used_codes:
+            used_codes.add(code)
+            return code
+
+
+def corrupt_active():
+    options = ["true", "false", "1", "0", "yes", "no", "T", "F", "kanske", ""]
+    if random.random() < PROB_INVALID_ACTIVE:
+        return random.choice(options)
+    return "true"
+
+
+# -----------------------------------
+# MAIN GENERATION
+# -----------------------------------
+print("Generating DIRTY dataset for ETL testing...")
 
 products_data = []
+used_product_codes = set()
 product_id_counter = 1
 
-print("Generating DIRTY product dataset for ETL testing...")
+for _ in range(TARGET_BASE_PRODUCTS):
 
-used_product_codes = set()
-
-while product_id_counter <= TARGET_TOTAL_VARIANTS:
-
-    # -------------------------------
-    # BASE PRODUCT (CLEAN START)
-    # -------------------------------
     brand_id = random.choice(brand_ids)
     category_id = random.choice(category_ids)
 
-    noun = random.choice(category_mapping[category_id])
-    product_name = f"{random.choice(adjectives)} {noun}"
-
+    base_name = generate_product_name(category_id)
     base_price = round(random.uniform(19.99, 299.99), 2)
 
-    # -------------------------------
-    # 🔴 DATA CORRUPTION (ETL PURPOSE)
-    # -------------------------------
-
-    # Invalid price
-    if random.random() < 0.1:
-        base_price = -base_price
-
-    # Missing price
-    if random.random() < 0.05:
-        base_price = None
-
-    # Dirty spacing
-    if random.random() < 0.1:
-        product_name = "   " + product_name + "   "
-
-    # Missing product name
-    if random.random() < 0.03:
-        product_name = None
-
-    # Invalid product_code flag
-    force_invalid_code = False
-    if random.random() < 0.05:
-        force_invalid_code = True
-
-    # Invalid foreign key
-    if random.random() < 0.05:
-        brand_id = -1
-
-    # -------------------------------
-    # GENDER LOGIC
-    # -------------------------------
+    # Gender logic
     if category_id == 7:
-        genders_for_this_product = [GENDER_FEMALE]
+        genders = [GENDER_FEMALE]
     else:
-        genders_for_this_product = random.choice([
+        genders = random.choice([
             [GENDER_UNISEX],
             [GENDER_MALE, GENDER_FEMALE]
         ])
 
-    # -------------------------------
-    # COLOR LOGIC
-    # -------------------------------
-    num_colors = random.randint(1, min(5, len(colour_ids)))
-    colors_for_this_product = random.sample(colour_ids, k=num_colors)
+    # Select subset of colors + sizes
+    colors = random.sample(colour_ids, k=random.randint(1, 3))
+    sizes = random.sample(size_ids, k=random.randint(1, 3))
 
-    # -------------------------------
-    # SIZE LOGIC
-    # -------------------------------
-    sizes_for_this_product = size_ids
+    for gender_id in genders:
+        for colour_id in colors:
+            for size_id in sizes:
 
-    # -------------------------------
-    # EXPLODE TO VARIANTS
-    # -------------------------------
-    for gender_id in genders_for_this_product:
-        for colour_id in colors_for_this_product:
-            for size_id in sizes_for_this_product:
-
-                # Product code generation
-                while True:
-                    if force_invalid_code:
-                        new_code = "INVALID_CODE"
-                    else:
-                        new_code = str(random.randint(10000000, 99999999))
-
-                    if new_code not in used_product_codes:
-                        used_product_codes.add(new_code)
-                        product_code = new_code
-                        break
-
-                active = "true"
-
-                products_data.append([
-                    product_id_counter,
-                    product_code,
-                    product_name,
-                    brand_id,
-                    category_id,
-                    colour_id,
-                    size_id,
-                    base_price,
-                    gender_id,
-                    active
-                ])
-
-                product_id_counter += 1
-
-                if product_id_counter > TARGET_TOTAL_VARIANTS:
+                if len(products_data) >= TARGET_TOTAL_ROWS:
                     break
 
-            if product_id_counter > TARGET_TOTAL_VARIANTS:
-                break
+                product_name = corrupt_name(base_name)
+                price = corrupt_price(base_price)
 
-        if product_id_counter > TARGET_TOTAL_VARIANTS:
+                row = [
+                    product_id_counter,
+                    generate_product_code(used_product_codes),
+                    product_name,
+                    corrupt_fk(brand_id),
+                    corrupt_fk(category_id),
+                    corrupt_fk(colour_id),
+                    corrupt_fk(size_id),
+                    price,
+                    corrupt_fk(gender_id),
+                    corrupt_active()
+                ]
+
+                products_data.append(row)
+                product_id_counter += 1
+
+            if len(products_data) >= TARGET_TOTAL_ROWS:
+                break
+        if len(products_data) >= TARGET_TOTAL_ROWS:
             break
 
 
-# -------------------------------
-# SAVE DIRTY DATA
-# -------------------------------
-products_path = 'data/raw/products_dirty.csv'
+# -----------------------------------
+# FORCE EDGE CASES (guarantee ETL hits)
+# -----------------------------------
+print("Injecting guaranteed edge cases...")
 
-with open(products_path, 'w', newline='', encoding='utf-8') as f:
-    writer = csv.writer(f, delimiter=';')
+if len(products_data) >= 5:
+    products_data[0][7] = -99.99        # negative price
+    products_data[1][7] = None          # missing price
+    products_data[2][2] = None          # missing name
+    products_data[3][1] = "BAD_CODE"    # invalid product code
+    products_data[4][3] = -1            # invalid brand_id
+
+
+# -----------------------------------
+# SAVE FILE
+# -----------------------------------
+with open(OUTPUT_PATH, "w", newline="", encoding="utf-8") as f:
+    writer = csv.writer(f, delimiter=";")
     writer.writerow([
-        'product_id',
-        'product_code',
-        'product_name',
-        'brand_id',
-        'category_id',
-        'colour_id',
-        'size_id',
-        'price',
-        'gender_id',
-        'active'
+        "product_id",
+        "product_code",
+        "product_name",
+        "brand_id",
+        "category_id",
+        "colour_id",
+        "size_id",
+        "price",
+        "gender_id",
+        "active"
     ])
     writer.writerows(products_data)
 
-print(f"Done! Created DIRTY dataset with {len(products_data)} rows → ready for ETL.")
+print(f"Done! Created DIRTY dataset with {len(products_data)} rows.")
+print(f"Saved to: {OUTPUT_PATH}")
