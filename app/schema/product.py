@@ -1,4 +1,4 @@
-from pydantic import AliasChoices, BaseModel, Field, model_validator
+from pydantic import AliasChoices, BaseModel, Field, model_validator, field_validator
 from typing import List, Literal, Optional
 from datetime import datetime
 
@@ -41,14 +41,20 @@ class NewProductPayload(BaseModel):
     """Payload used when creating a new product via inventory events."""
 
     product_code: int
-    product_name: str
-    brand_id: int
-    category_id: int
-    colour_id: int
-    size_id: int
-    gender_id: int
+    brand_id: int = Field(gt=0)
+    category_id: int = Field(gt=0)
+    colour_id: int = Field(gt=0)
+    size_id: int = Field(gt=0)
+    gender_id: int = Field(gt=0)
     price: float = Field(gt=0)
+    
+    product_name: str
 
+    @field_validator('product_name')
+    @classmethod
+    def clean_product_name(cls, v: str) -> str:
+        return " ".join(v.split()).title()
+    
 
 class NewProductEvent(BaseModel):
     """Model for creating a new product and seeding initial inventory."""
