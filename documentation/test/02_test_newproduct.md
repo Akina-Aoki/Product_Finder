@@ -40,7 +40,7 @@ docker compose logs -f consumer
 ---
 
 ## 📦 2. Schema Reference (API Contracts)
-
+http://localhost:8000/api/sales
 ### 🧾 SaleEvent
 ```json
 {
@@ -58,9 +58,47 @@ docker compose logs -f consumer
 }
 ```
 
+http://localhost:8000/api/sales/batch
+```json
+[
+  {
+    "event_id": 10001,
+    "event_type": "sale",
+    "timestamp": "2026-01-10T12:30:00Z",
+    "store_id": 1,
+    "items": [
+      {
+        "product_id": 1,
+        "price": 49.99,
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "event_id": 10002,
+    "event_type": "sale",
+    "timestamp": "2026-01-10T12:35:00Z",
+    "store_id": 2,
+    "items": [
+      {
+        "product_id": 2,
+        "price": 79.99,
+        "quantity": 1
+      },
+      {
+        "product_id": 3,
+        "price": 19.99,
+        "quantity": 3
+      }
+    ]
+  }
+]
+```
+
 ---
 
 ### 🆕 NewProductEvent
+http://localhost:8000/api/products/new
 ```json
 {
   "event_id": 1,
@@ -79,9 +117,60 @@ docker compose logs -f consumer
 }
 ```
 
+http://localhost:8000/api/products/new/batch
+```json
+[
+  {
+    "event_id": 1,
+    "event_type": "new_product",
+    "timestamp": "2026-01-15T10:00:00Z",
+    "product": {
+      "product_code": 999001,
+      "product_name": "Test Jacket",
+      "brand_id": 1,
+      "category_id": 2,
+      "colour_id": 1,
+      "size_id": 3,
+      "gender_id": 1,
+      "price": 99.99
+    }
+  },
+  {
+    "event_id": 2,
+    "event_type": "new_product",
+    "timestamp": "2026-01-15T10:05:00Z",
+    "product": {
+      "product_code": 999002,
+      "product_name": "Test Hoodie",
+      "brand_id": 1,
+      "category_id": 3,
+      "colour_id": 2,
+      "size_id": 4,
+      "gender_id": 1,
+      "price": 79.99
+    }
+  }
+]
+```
+
+Test new products
+```
+SELECT *
+FROM staging.products
+ORDER BY product_id DESC
+LIMIT 10;
+```
+
+Validate Specific Batch
+```
+SELECT *
+FROM staging.products
+WHERE product_code IN (999001, 999002);
+```
 ---
 
 ### 📦 InventoryEvent (IMPORTANT)
+http://localhost:8000/api/inventory-events
 ```json
 {
   "event_id": 20001,
@@ -94,9 +183,46 @@ docker compose logs -f consumer
 }
 ```
 
-⚠️ NOTE:
-- Use `quantity_change` (NOT `quantity`)
-- `stock_after_event` is REQUIRED
+http://localhost:8000/api/inventory-events/batch
+```
+[
+  {
+    "event_id": 20001,
+    "event_type": "restock",
+    "timestamp": "2026-03-18T08:44:02.011Z",
+    "store_id": 1,
+    "product_id": 1,
+    "quantity_change": 10,
+    "stock_after_event": 50
+  },
+  {
+    "event_id": 20002,
+    "event_type": "restock",
+    "timestamp": "2026-03-18T08:50:00.000Z",
+    "store_id": 1,
+    "product_id": 2,
+    "quantity_change": 5,
+    "stock_after_event": 30
+  },
+  {
+    "event_id": 20003,
+    "event_type": "restock",
+    "timestamp": "2026-03-18T09:00:00.000Z",
+    "store_id": 2,
+    "product_id": 1,
+    "quantity_change": 20,
+    "stock_after_event": 70
+  }
+]
+```
+
+Validate the inventory events
+```
+SELECT *
+FROM staging.inventories
+WHERE product_id IN (1, 2)
+ORDER BY update_date DESC;
+```
 
 ---
 
@@ -193,7 +319,7 @@ WHERE product_id = 1 AND store_id = 1;
 ---
 
 ## 🧪 6. Test: Inventory (Stock Update)
-
+http://localhost:8000/api/inventory-events/batch
 ```json
 [
   {
