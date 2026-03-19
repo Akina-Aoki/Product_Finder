@@ -59,25 +59,25 @@ COPY staging.stores (store_id, store_code, store_name, city)
 FROM '/data/raw/stores.csv'
 WITH (FORMAT csv, HEADER true, DELIMITER ';', ENCODING 'UTF8');
 
--- Product and inventory facts are loaded after reference tables so foreign keys resolve.
 COPY staging.products (product_id, product_code, product_name, brand_id, category_id, colour_id, size_id, price, gender_id, active)
-FROM '/data/raw/products.csv'
+FROM '/data/processed/products_clean.csv'
 WITH (FORMAT csv, HEADER true, DELIMITER ';', ENCODING 'UTF8');
 
--- ==========================================
--- 5. UPDATE INVENTORY
--- ==========================================
-INSERT INTO staging.inventories(product_id, store_id, amount) 
-SELECT
-  p.product_id,
-  s.store_id,
-  10 as amount
-FROM staging.products p
-CROSS JOIN staging.stores s
-ON CONFLICT (store_id, product_id) DO NOTHING;
+COPY staging.inventories (inventory_id, product_id, amount, store_id, update_date, created_at)
+FROM '/data/raw/inventories.csv'
+WITH (FORMAT csv, HEADER true, DELIMITER ';', ENCODING 'UTF8');
+
+COPY staging.orders (order_id, source_event_id, store_id, order_price, order_date)
+FROM '/data/raw/orders.csv'
+WITH (FORMAT csv, HEADER true, DELIMITER ';', ENCODING 'UTF8');
+
+COPY staging.items (item_id, product_id, item_price, order_id, quantity, created_at)
+FROM '/data/raw/items.csv'
+WITH (FORMAT csv, HEADER true, DELIMITER ';', ENCODING 'UTF8');
+
 
 -- ==========================================
--- 6. CREATE REFINED MATERIALIZED VIEWS
+-- 5. CREATE REFINED MATERIALIZED VIEWS
 -- ==========================================
 DROP MATERIALIZED VIEW IF EXISTS refined.items CASCADE;
 DROP MATERIALIZED VIEW IF EXISTS refined.inventories CASCADE;
@@ -149,7 +149,7 @@ CREATE UNIQUE INDEX idx_refined_items_id ON refined.items(item_id);
 
 
 -- ==========================================
--- 7. UPDATE FUNCTION
+-- 6. UPDATE FUNCTION
 -- ==========================================
 CREATE OR REPLACE FUNCTION refined.refresh_refined() RETURNS void
 LANGUAGE plpgsql
@@ -163,7 +163,7 @@ END;
 $$;
 
 -- ==========================================
--- 8. SET SEQUENCES
+-- 7. SET SEQUENCES
 -- ==========================================
 select setval(pg_get_serial_sequence('staging.brands', 'brand_id'), coalesce(max("brand_id"), 1), max("brand_id") is not null) from "staging"."brands";
 select setval(pg_get_serial_sequence('staging.categories', 'category_id'), coalesce(max("category_id"), 1), max("category_id") is not null) from "staging"."categories";
@@ -173,6 +173,8 @@ select setval(pg_get_serial_sequence('staging.sizes', 'size_id'), coalesce(max("
 select setval(pg_get_serial_sequence('staging.stores', 'store_id'), coalesce(max("store_id"), 1), max("store_id") is not null) from "staging"."stores";
 select setval(pg_get_serial_sequence('staging.products', 'product_id'), coalesce(max("product_id"), 1), max("product_id") is not null) from "staging"."products";
 select setval(pg_get_serial_sequence('staging.inventories', 'inventory_id'), coalesce(max("inventory_id"), 1), max("inventory_id") is not null) from "staging"."inventories";
+select setval(pg_get_serial_sequence('staging.orders', 'order_id'), coalesce(max("order_id"), 1), max("order_id") is not null) from "staging"."orders";
+select setval(pg_get_serial_sequence('staging.items', 'item_id'), coalesce(max("item_id"), 1), max("item_id") is not null) from "staging"."items";
 
 -- ==========================================
 -- 8. SET UPDATE SCHEDULE FOR REFINED VIEWS
