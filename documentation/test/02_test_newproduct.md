@@ -39,6 +39,15 @@ docker compose logs -f consumer
 
 ---
 
+## Verify database seeded correctly
+In pgadmin
+```sql
+SELECT * FROM staging.products;
+SELECT * FROM staging.stores;
+SELECT * FROM staging.inventories;
+```
+
+
 ## 📦 2. Schema Reference (API Contracts)
 http://localhost:8000/api/sales
 ### 🧾 SaleEvent
@@ -95,6 +104,12 @@ http://localhost:8000/api/sales/batch
 ]
 ```
 
+Check the sale event in the database
+```sql
+SELECT * FROM staging.orders;
+SELECT * FROM staging.items;
+
+```
 ---
 
 ### 🆕 NewProductEvent
