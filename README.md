@@ -14,7 +14,7 @@ This system captures real-time inventory events, such as **sales**, **inventory 
 ---
 
 ## User Stories for Business
-[Minimum Viable Product and User Stories](documentation/kafka_and_etl/MVP.md)
+[Minimum Viable Product and User Stories](documentation/MVP.md)
 ![User Story for Business](assets/User_Story_2.png)
 
 ## User Stories for Developers
@@ -97,7 +97,7 @@ This system captures real-time inventory events, such as **sales**, **inventory 
 
 ## 📊 Data Model
 ![SportWear Data Model](documentation/data_model/SportWear_Inc_Logical_final.png)
-[Data Model Relationship Description](documentation/kafka_and_etl/relationship_desc.md)
+[Data Model Relationship Description](documentation/data_model/relationship_desc.md)
 
 ---
 
@@ -130,4 +130,4 @@ POST /api/sales       (producer)          (topic)             (consumer)        
 - [Test 1: Event Endpoints](documentation/test/01_test_event_endpoint.md)
 - [Test 2: New Product Feature](documentation/test/02_test_newproduct.md)
 - [Test 3: Full Pipeline](documentation/test/03_test_full_pipeline.md)
-- [Test 4: Dirty Mock Data Transformation](documentation/test/dirty_data_manual_test.md)
+- [Test 4: Dirty Mock Data Transformation](documentation/test/04_dirty_data_manual_test.md)
