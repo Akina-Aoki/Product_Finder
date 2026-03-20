@@ -1,0 +1,9 @@
+# Ignorera Evidence
+evidence_app/
+node_modules/
+.svelte-kit/
+
+# Ignorera Pythons tillfälliga filer och virtuella miljöer
+.venv/
+__pycache__/
+*.pyc
