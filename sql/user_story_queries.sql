@@ -18,6 +18,47 @@
 -- =====================================================
 
 -- Query 1:
+-- FINAL --- DO WE HAVE FULL SIZE COVERAGE?
+WITH jackets AS (
+    SELECT *
+    FROM refined.products
+    WHERE category_name ILIKE '%jacket%'
+)
+
+SELECT
+    i.store_name,
+    j.product_name,
+
+    COALESCE(SUM(i.amount), 0) AS total_stock,
+
+    -- Sizes (NULL → 0)
+    COALESCE(SUM(i.amount) FILTER (WHERE j.size_name = 'XS'), 0) AS xs,
+    COALESCE(SUM(i.amount) FILTER (WHERE j.size_name = 'S'), 0)  AS s,
+    COALESCE(SUM(i.amount) FILTER (WHERE j.size_name = 'M'), 0)  AS m,
+    COALESCE(SUM(i.amount) FILTER (WHERE j.size_name = 'L'), 0)  AS l,
+    COALESCE(SUM(i.amount) FILTER (WHERE j.size_name = 'XL'), 0) AS xl,
+
+    -- Gender
+    COALESCE(SUM(i.amount) FILTER (WHERE j.gender_name = 'Male'), 0)   AS male,
+    COALESCE(SUM(i.amount) FILTER (WHERE j.gender_name = 'Female'), 0) AS female,
+    COALESCE(SUM(i.amount) FILTER (WHERE j.gender_name = 'Unisex'), 0) AS unisex,
+
+    -- Business classification (safe)
+    CASE
+        WHEN COALESCE(SUM(i.amount), 0) = 0 THEN 'OUT OF STOCK'
+        WHEN COALESCE(SUM(i.amount), 0) < 10 THEN 'LOW STOCK'
+        ELSE 'OK'
+    END AS stock_status
+
+FROM jackets j
+JOIN refined.inventories i
+    ON i.product_id = j.product_id
+
+GROUP BY i.store_name, j.product_name
+ORDER BY total_stock DESC;
+
+
+
 -- Current stock per product across all stores
 WITH jackets AS (
     SELECT *
@@ -54,10 +95,10 @@ ORDER BY total_stock DESC;
 
 
 -- Now divide it into smaller views per store
-WITH jackets AS (
+WITH  AS (                      ----- adjust category name here
     SELECT *
     FROM refined.products
-    WHERE category_name ILIKE '%jacket%'
+    WHERE category_name ILIKE '%jacket%'   ----- adjust category name here
 )
 
 SELECT
@@ -78,11 +119,92 @@ SELECT
     SUM(i.amount) FILTER (WHERE j.gender_name = 'Female') AS stock_female,
     SUM(i.amount) FILTER (WHERE j.gender_name = 'Unisex') AS stock_unisex
 
-FROM jackets j
+FROM jackets j                           ----- adjust category name here
 JOIN refined.inventories i
     ON i.product_id = j.product_id
 
 WHERE i.store_name = 'Gallerian_Centrum'   -- adjust to actual name
+
+GROUP BY i.store_name, j.product_name
+ORDER BY total_stock DESC;
+
+
+
+-- Or BY COLOR
+WITH jackets AS (
+    SELECT *
+    FROM refined.products
+    WHERE category_name ILIKE '%jacket%'
+)
+
+SELECT
+    i.store_name,
+    j.product_name,
+    j.colour_name,
+
+    SUM(i.amount) AS total_stock,
+
+    -- Sizes
+    SUM(i.amount) FILTER (WHERE j.size_name = 'XS') AS xs,
+    SUM(i.amount) FILTER (WHERE j.size_name = 'S')  AS s,
+    SUM(i.amount) FILTER (WHERE j.size_name = 'M')  AS m,
+    SUM(i.amount) FILTER (WHERE j.size_name = 'L')  AS l,
+    SUM(i.amount) FILTER (WHERE j.size_name = 'XL') AS xl,
+
+    -- Gender
+    SUM(i.amount) FILTER (WHERE j.gender_name = 'Male')   AS male,
+    SUM(i.amount) FILTER (WHERE j.gender_name = 'Female') AS female,
+    SUM(i.amount) FILTER (WHERE j.gender_name = 'Unisex') AS unisex
+
+FROM jackets j
+JOIN refined.inventories i
+    ON i.product_id = j.product_id
+
+GROUP BY
+    i.store_name,
+    j.product_name,
+    j.colour_name
+
+ORDER BY
+    i.store_name,
+    total_stock DESC;
+
+
+--- WITH STOCK STATUS
+WITH jackets AS (
+    SELECT *
+    FROM refined.products
+    WHERE category_name ILIKE '%jacket%'
+)
+
+SELECT
+    i.store_name,
+    j.product_name,
+
+    SUM(i.amount) AS total_stock,
+
+    -- Sizes
+    SUM(i.amount) FILTER (WHERE j.size_name = 'XS') AS xs,
+    SUM(i.amount) FILTER (WHERE j.size_name = 'S')  AS s,
+    SUM(i.amount) FILTER (WHERE j.size_name = 'M')  AS m,
+    SUM(i.amount) FILTER (WHERE j.size_name = 'L')  AS l,
+    SUM(i.amount) FILTER (WHERE j.size_name = 'XL') AS xl,
+
+    -- Colors (Top-level visibility)
+    COUNT(DISTINCT j.colour_name) AS color_variants,
+
+    -- Gender coverage
+    COUNT(DISTINCT j.gender_name) AS gender_variants,
+
+    CASE
+        WHEN SUM(i.amount) = 0 THEN 'OUT_OF_STOCK'
+        WHEN SUM(i.amount) < 10 THEN 'LOW_STOCK'
+        ELSE 'OK'
+    END AS stock_health
+
+FROM jackets j
+JOIN refined.inventories i
+    ON i.product_id = j.product_id
 
 GROUP BY i.store_name, j.product_name
 ORDER BY total_stock DESC;
