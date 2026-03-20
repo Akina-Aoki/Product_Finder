@@ -39,7 +39,7 @@ docker compose logs -f consumer
 
 ---
 
-## Verify database seeded correctly
+## Verify database seeded correctly in staging
 In pgadmin
 ```sql
 SELECT * FROM staging.products;

@@ -83,6 +83,7 @@ DROP MATERIALIZED VIEW IF EXISTS refined.items CASCADE;
 DROP MATERIALIZED VIEW IF EXISTS refined.inventories CASCADE;
 DROP MATERIALIZED VIEW IF EXISTS refined.stores CASCADE;
 DROP MATERIALIZED VIEW IF EXISTS refined.products CASCADE;
+DROP MATERIALIZED VIEW IF EXISTS refined.orders CASCADE;
 
 CREATE MATERIALIZED VIEW refined.products AS
 SELECT 
@@ -148,6 +149,19 @@ JOIN staging.stores s ON s.store_id = o.store_id;
 CREATE UNIQUE INDEX idx_refined_items_id ON refined.items(item_id);
 
 
+CREATE MATERIALIZED VIEW refined.orders AS
+SELECT 
+    o.order_id,
+    o.order_date,
+    s.store_name,
+    s.city,
+    o.order_price
+FROM staging.orders o
+JOIN staging.stores s ON s.store_id = o.store_id;
+
+CREATE UNIQUE INDEX idx_refined_orders_id ON refined.orders(order_id);
+
+
 -- ==========================================
 -- 6. UPDATE FUNCTION
 -- ==========================================
@@ -159,6 +173,7 @@ BEGIN
   REFRESH MATERIALIZED VIEW CONCURRENTLY refined.stores;
   REFRESH MATERIALIZED VIEW CONCURRENTLY refined.inventories;
   REFRESH MATERIALIZED VIEW CONCURRENTLY refined.items;
+  REFRESH MATERIALIZED VIEW CONCURRENTLY refined.orders;
 END;
 $$;
 
