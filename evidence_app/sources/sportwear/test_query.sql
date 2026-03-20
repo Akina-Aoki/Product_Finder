@@ -1,1 +1,0 @@
-SELECT * FROM staging.products LIMIT 10;
