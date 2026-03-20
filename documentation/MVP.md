@@ -22,7 +22,7 @@
 
 **Company Inventory Events Platform**
 
-A system that tracks the movement of products across company inventory and records **purchase, inventory updates and restocking events**.
+**Product_Finder is an inventory intelligence platform prototype for a retail company. Our platform brings together sales and inventory data so businesses can clearly see what’s happening in their operations. This enables them to avoid costly mistakes, optimize stock levels, and make confident decisions based on real data.**
 
 The platform enables the company to:
 
@@ -32,15 +32,35 @@ The platform enables the company to:
 - Analyze revenue performance of products
 - Identify top and low performing container products
 
-The system:
 
-1. Collects source product data from **structured JSONL datasets**
-2. Processes the data through an **ETL pipeline**
-3. Stores the processed data in a **PostgreSQL database**
-4. Uses **Kafka event streaming** to track inventory events such as:
+## The system:
+
+- a **batch ETL layer** that cleans synthetic product master data
+
+- a **streaming/event layer** built with **FastAPI + Kafka**
+
+- Uses **Kafka event streaming** to track inventory events such as:
    - Purchases
    - Restocking
    - Inventory updates
+
+- a **PostgreSQL warehouse-style database** with `staging` and `refined` schemas
+
+- and a set of **SQL queries** intended to power analytics, reporting, and future dashboards.
+
+- evolve the platform into a data product that companies can subscribe to or use internally.
+
+- That means this repository is not only a CRUD/API project. It is a **data platform prototype** with:
+```
+data generation
+data quality validation
+ETL processing
+event streaming
+database modeling
+analytical SQL
+and documentation for future dashboard/productization work
+```
+
 
 ---
 

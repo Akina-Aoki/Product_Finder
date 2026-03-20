@@ -1,53 +1,103 @@
-# Product_Finder
+# About our Product: Product_Finder
+**Product_Finder is an inventory management platform prototype for a retail company (SportsWear AB). Our platform brings together sales and inventory data so businesses can clearly see what’s happening in their operations. This enables them to avoid costly mistakes, optimize stock levels, and make confident decisions based on real data.**
 
 ## Project Overview
+This system captures real-time inventory events, such as **sales**, **inventory events updates** and **restocks**. It stores them durably in a PostgreSQL database. Events are produced by a FastAPI application, transmitted through an Apache Kafka topic (`inventory_events`), and consumed by a dedicated database consumer that persists each event. A base dataset of products, stores, categories, and other reference data is pre-loaded from CSV files into the database at startup.
 
-This system captures real-time inventory events — such as **sales** and **restocks** — and stores them durably in a PostgreSQL database. Events are produced by a FastAPI application, transmitted through an Apache Kafka topic (`inventory_events`), and consumed by a dedicated database consumer that persists each event. A base dataset of products, stores, categories, and other reference data is pre-loaded from CSV files into the database at startup.
+---
 
-## User Story
- ![User Story](assets/User_Story_Version2.jpeg)
+## Repository Setup
+- [Repository Setup](documentation/kafka_and_etl/setup.md)
+- [Spin up Docker Container with Host Services](documentation/kafka_and_etl/connect_docker_psql_kafka.md)
+- [Connecting events pipeline](documentation/kafka_and_etl/events_pipeline_guide.md)
+
+---
+
+## User Stories for Business
+[Minimum Viable Product and User Stories](documentation/MVP.md)
+![User Story for Business](assets/User_Story_2.png)
+
+## User Stories for Developers
+![User Story for Developers](assets/User_Story_1.jpeg)
 
 
-[Repository Setup](documentation/kafka/setup.md)
+## Business Value
+![Business_Value](assets/Business_Value.png)
+
 ---
 
 ## Architecture
 
 ```
-┌─────────────────────────────────────────────────────┐
-│                  Docker Compose                      │
-│                                                      │
-│   ┌──────────────────┐    ┌──────────────────────┐   │
-│   │   PostgreSQL 16  │    │   Apache Kafka        │   │
-│   │  (SportWearDB)   │    │  (inventory_events)   │   │
-│   └──────────────────┘    └──────────────────────┘   │
-└─────────────────────────────────────────────────────┘
-         ▲  ▲                          ▲
-         │  │                          │
-         │  └─── init.sql (schema)     │
-         │        CSV seed data        │
-         │                             │
-   db_consumer.py            app/main.py (FastAPI)
-   (reads Kafka,              (receives HTTP requests,
-    writes to DB)              publishes to Kafka)
+                    ┌──────────────────────────────────────────────┐
+                    │ Dockerized Environment (End-to-End Platform) │
+                    │ All services run inside containers           │
+                    └──────────────────────────────────────────────┘
+
+
+                    ┌──────────────────────────────┐
+                    │ Synthetic / Seed Data        │
+                    │ data/raw/*.csv               │
+                    └──────────────┬───────────────┘
+                                   │
+                                   ▼
+                    ┌──────────────────────────────┐
+                    │ Batch ETL                    │
+                    │ scripts/transform.py         │
+                    │ -> products_clean.csv        │
+                    │ -> products_rejected.csv     │
+                    └──────────────┬───────────────┘
+                                   │
+                                   ▼
+┌──────────────┐      ┌──────────────────────────────┐      ┌────────────────────┐
+│ HTTP Clients │ ───► │ FastAPI producer             │ ───► │ Kafka topic         │
+│ Postman etc. │      │ app/main.py                  │      │ inventory_events    │
+└──────────────┘      └──────────────────────────────┘      └─────────┬──────────┘
+                                                                       │
+                                                                       ▼
+                                                        ┌────────────────────────┐
+                                                        │ Kafka consumer         │
+                                                        │ app/consumer/          │
+                                                        │ db_consumer.py         │
+                                                        └────────────┬───────────┘
+                                                                     │
+                                                                     ▼
+            ┌────────────────────────────────────────────────────────────┐
+            │ PostgreSQL (Containerized)                                │
+            │ staging schema + refined materialized views               │
+            │ analytics queries                                         │
+            └──────────────┬────────────────────────────────────────────┘
+                           │
+                           ▼
+            ┌────────────────────────────────────────────────────────────┐
+            │ Analytics / Dashboard Layer (Inside Docker)               │
+            │ Evidence dashboards                                       │
+            │ Business KPIs & query results                             │
+            │ → Final interface used by customers for decision-making   │
+            └────────────────────────────────────────────────────────────┘
 ```
 
-### Other Documentations
-[Minimum Viable Product and User Stories](documentation/kafka/MVP.md)
-[Connect Host Services](documentation/kafka/connect_docker_psql_kafka.md)
 
 
-### Components
+| Component                          | Technology                                                                | Purpose                                                                                              |
+| ---------------------------------- | ------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
+| **Docker Compose**                 | `docker-compose.yml`                                                      | Orchestrates the full platform (PostgreSQL, Kafka, Evidence dashboard) in a reproducible environment |
+| **PostgreSQL**                     | `postgres:16-alpine`                                                      | Central data store for inventory, events, and analytical queries                                     |
+| **Apache Kafka**                   | `apache/kafka:latest`                                                     | Real-time event streaming via the `inventory_events` topic                                           |
+| **init.sql**                       | SQL DDL script                                                            | Initializes `staging` and `refined` schemas and prepares database structure                          |
+| **CSV Seed Data**                  | `data/raw|processed/*.csv`                                                          | Base reference datasets (products, stores, brands, etc.) used for initial loading                    |
+| **Data Generators**                | `generate_clean_csv.py`, `generate_dirty_csv.py`, `generate_sales_csv.py` | Simulate realistic and edge-case data scenarios for testing pipeline robustness                      |
+| **Transformation Layer (ETL)**     | `scripts/transform.py`                                                    | Cleans, validates, and splits raw data into `clean` and `rejected` datasets                          |
+| **Batch Load Script**              | `load_products.py`                                                        | Loads cleaned data into PostgreSQL (primarily for testing and ETL validation)                        |
+| **Data Schema / Validation Model** | `app/schema/product.py`                                                   | Defines product structure and enforces data validation rules across the pipeline                     |
+| **FastAPI Producer**               | `app/main.py`                                                             | API layer that receives business events and publishes them to Kafka                                  |
+| **Kafka Consumer**                 | `app/consumer/db_consumer.py`                                             | Processes streaming events and persists them into PostgreSQL                                         |
+| **Analytics Dashboard**            | Evidence (Docker)                                                         | Presents KPIs and query results as dashboards for business users                                     |
 
-| Component | Technology | Purpose |
-|-----------|-----------|---------|
-| **Docker Compose** | `docker-compose.yml` | Launches PostgreSQL and Kafka as local services |
-| **PostgreSQL** | `postgres:16-alpine` | Stores all reference data and inventory events |
-| **Apache Kafka** | `apache/kafka:latest` | Message broker for the `inventory_events` topic |
-| **init.sql** | SQL DDL script | Creates both `staging` and `refined` schemas with batch-load logic on first startup |
-| **CSV files** | `data/raw/*.csv` | Seed data loaded into the database (products, stores, brands, etc.) |
-| **FastAPI app** | `app/main.py` | REST API that receives sale events and publishes them to Kafka |
-| **DB Consumer** | `app/consumer/db_consumer.py` | Reads events from Kafka and inserts them into PostgreSQL |
+
+## 📊 Data Model
+![SportWear Data Model](documentation/data_model/SportWear_Inc_Logical_final.png)
+[Data Model Relationship Description](documentation/data_model/relationship_desc.md)
 
 ---
 
@@ -55,7 +105,7 @@ This system captures real-time inventory events — such as **sales** and **rest
 
 ```
 CSV files ──────────────────────────────► PostgreSQL (staging schema)
-(data/raw/*.csv)                          (reference tables: products,
+(data/raw|processed/*.csv)                (reference tables: products,
                                            stores, brands, categories…)
 
  │
@@ -66,47 +116,18 @@ CSV files ───────────────────────�
                                     PostgreSQL (refined schema for analytics)                                           
 
 HTTP Client          FastAPI              Kafka               PostgreSQL
-(Thunder Client) ──► app/main.py ──────► inventory_events ──► db_consumer.py ──► staging.orders
-POST /api/sales       (producer)          (topic)             (consumer)          staging.items
+(Thunder Client) ──► app/main.py ──────► inventory_events ──► db_consumer.py ──► staging.orders  ──► refined.orders
+POST /api/sales       (producer)          (topic)             (consumer)          staging.items      refined.items
 ```
-
-**Step-by-step:**
-
-1. **CSV → Database**: Reference data (products, stores, brands, colours, sizes, genders, categories) is loaded from `data/raw/*.csv` into the `staging` schema.
-2. **API → Kafka**: A client sends a `POST /api/sales` (or `POST /api/sales/batch`) request to the FastAPI app. The app serialises the event as JSON and publishes it to the `inventory_events` Kafka topic.
-3. **Kafka → Consumer → Database**: `db_consumer.py` reads messages from `inventory_events`. For each `sale` event, it inserts a new row into `staging.orders` and one row per item into `staging.items`, then commits the transaction.
 
 ---
 
-## Event Schema
-[Events Schema](documentation/kafka/schema.md)
-
-
-A sale event published to Kafka follows this structure:
-
-```json
-{
-  "event_id": 1,
-  "event_type": "sale",
-  "timestamp": "2026-03-12T10:30:00Z",
-  "store_id": 1,
-  "items": [
-    {
-      "product_id": 101,
-      "price": 89.99,
-      "quantity": 2
-    }
-  ]
-}
-```
-
-- `event_type`: Currently `"sale"`. Future support planned for `"restock"`.
-- `items`: One or more products included in the sale.
-- `price`: Price per unit (must be > 0).
-- `quantity`: Units sold (must be > 0).
-
----
-
-### 📊 Data Model
- ![SportWear Data Model](documentation/data_model/SportWear_Inc_Logical_final.png)
- [Data Model Relationship Description](documentation/kafka/relationship_desc.md)
+## Other Documentations
+- [Sprint_2](documentation/kafka_and_etl/sprint2.md)
+- [Sprint_3](documentation/kafka_and_etl/sprint3.md)
+- [Validation Summary](documentation/kafka_and_etl/validations.md)
+- [Database Schema](documentation/kafka_and_etl/schema.md)
+- [Test 1: Event Endpoints](documentation/test/01_test_event_endpoint.md)
+- [Test 2: New Product Feature](documentation/test/02_test_newproduct.md)
+- [Test 3: Full Pipeline](documentation/test/03_test_full_pipeline.md)
+- [Test 4: Dirty Mock Data Transformation](documentation/test/04_dirty_data_manual_test.md)

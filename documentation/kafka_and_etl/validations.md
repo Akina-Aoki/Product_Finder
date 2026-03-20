@@ -1,4 +1,40 @@
-# Validations in our Repository at Sprint # 3
+# Data Quality and Validation Summary
+
+The repository already applies data quality checks in multiple layers.
+
+### API validation
+Pydantic validation enforces rules such as:
+- sale item price must be greater than zero,
+- sale item quantity must be greater than zero,
+- restock quantity must be positive,
+- stock updates must include either a non-zero delta or an absolute stock value,
+- `stock_after_event` cannot be negative.
+
+### Consumer validation
+The Kafka consumer:
+- parses raw JSON,
+- handles double-serialized payloads,
+- validates by `event_type`,
+- rejects unknown event types.
+
+### ETL validation
+`scripts/transform.py` checks:
+- required columns,
+- invalid product codes,
+- invalid prices,
+- missing required fields,
+- invalid foreign keys,
+- duplicate product codes.
+
+### Database protection
+PostgreSQL adds constraints such as:
+- non-negative prices,
+- non-negative order totals,
+- non-negative item quantities,
+- non-negative inventory amounts.
+
+-----
+
 
 ## 1) API-level validation (Pydantic models)
 These validations are enforced when requests hit the FastAPI endpoints that accept `SaleEvent` / `InventoryEvent` models. `app/main.py` uses those models directly in endpoint signatures, so invalid payloads should be rejected before being sent to Kafka.
@@ -29,11 +65,7 @@ OR stock_after_event
 if event_type == "stock_update" and quantity_change == 0 and stock_after_event is None: raise ValueError(...)
 ```
 
-
-
 ----  
-
-
 
 ## 2) Database-level validation (PostgreSQL CHECK constraints)
 These are hard constraints in `sql/init.sql`, so DB writes violating them fail even if app logic misses something.
@@ -67,7 +99,6 @@ staging.items.quantity CHECK (quantity >= 0)
 -----
 
 
-
 ## 3) Consumer logic that actively clamps inventory to non-negative
 When processing events, inventory updates use GREATEST(..., 0) so values are forcibly prevented from going below zero.
 
@@ -86,3 +117,5 @@ SQL CHECK (amount >= 0),
 
 Consumer clamping with GREATEST(..., 0).
 ```
+
+

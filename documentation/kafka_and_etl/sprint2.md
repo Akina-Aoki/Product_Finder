@@ -14,17 +14,12 @@ helping users identify which stores have container products available and at wha
 
 ---
 
-# Why This Sprint Order
-
-To deliver value quickly, the sprint builds a **thin vertical slice of the data platform**:
-
 1. Infrastructure setup  
 2. Data schema definition  
 3. Synthetic dataset creation  
 4. Data ingestion pipeline  
 5. SQL queries that produce business insights  
 
-This ensures we can demonstrate the **end-to-end data flow** required for the MVP.
 
 ---
 
@@ -354,9 +349,7 @@ ORDER BY SUM(stock_quantity) DESC;
 
 ---
 
-# 4-Day Execution Plan
-
-## Day 1 — Infrastructure and Schema
+## Infrastructure and Schema
 
 Tasks:
 
@@ -370,7 +363,7 @@ Deliverable:
 
 ---
 
-## Day 2 — Dataset Creation
+## Dataset Creation
 
 Tasks:
 
@@ -383,7 +376,7 @@ Deliverable:
 
 ---
 
-## Day 3 — Database Modeling
+## Database Modeling
 
 Tasks:
 
@@ -396,7 +389,7 @@ Deliverable:
 
 ---
 
-## Day 4 — Data Loading and Queries
+## Data Loading and Queries
 
 Tasks:
 
@@ -406,36 +399,6 @@ Tasks:
 
 Deliverable:
 
-- End-to-end pipeline working
+- End-to-end pipeline working for KAFKA
 
----
 
-# Suggested Sprint Board Labels
-
-```
-infra
-data-schema
-dataset
-database
-etl
-sql
-documentation
-```
-
----
-
-# Product Owner Guidance
-
-Focus on delivering **one complete working pipeline** instead of many unfinished components.
-
-The priority order should remain:
-
-```
-Data schema
-→ Dataset generation
-→ Database model
-→ Data loading
-→ SQL outputs
-```
-
-This ensures the sprint produces a **demonstrable data platform MVP**.
