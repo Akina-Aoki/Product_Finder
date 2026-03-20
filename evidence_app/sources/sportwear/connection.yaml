@@ -1,0 +1,8 @@
+name: sportwear
+type: postgres
+options:
+  host: postgres
+  port: 5432
+  database: SportWearDB
+  user: postgres
+  password: postgres
