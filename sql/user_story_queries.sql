@@ -1,5 +1,17 @@
 -- =====================================================
 -- Product_Finder
+-- SAFEST WORKING VERSION BASED ON CONFIRMED SCHEMA
+-- =====================================================
+
+-- NOTE:
+-- refined.inventories confirmed columns:
+-- inventory_id, product_id, product_name, amount, store_name, city, update_date
+--
+-- refined.categories does not exist.
+-- Therefore:
+-- - inventory-only queries use refined.inventories
+-- - category / pricing / revenue / sales queries use staging tables
+
 
 -- =====================================================
 -- A. TRACK PRODUCT MOVEMENT ACROSS INVENTORY
@@ -8,98 +20,62 @@
 -- Query 1:
 -- Current stock per product across all stores
 SELECT
-    product_id,
-    product_name,
+    i.product_id,
+    i.product_name,
     SUM(i.amount) AS current_total_stock
-FROM refined.products p
-JOIN staging.inventories i
-GROUP BY product_id, product_name
-ORDER BY current_total_stock DESC, p.product_name;
+FROM refined.inventories i
+GROUP BY i.product_id, i.product_name
+ORDER BY current_total_stock DESC, i.product_name;
 
 
 -- Query 2:
 -- Current stock by product and store
 SELECT
-    inventory_id,
-    store_name,
-    city,
-    product_id,
-    product_name,
-    amount AS current_stock,
-    update_date
-FROM refined.inventories 
-ORDER BY store_name, product_name;
+    i.inventory_id,
+    i.store_name,
+    i.city,
+    i.product_id,
+    i.product_name,
+    i.amount AS current_stock,
+    i.update_date
+FROM refined.inventories i
+ORDER BY i.store_name, i.product_name;
 
-
--- Extra for refined schema
--- Revenue per product
-SELECT
-  product_id,
-  product_name,
-  SUM(quantity * item_price) AS total_revenue
-FROM refined.items
-GROUP BY product_id, product_name
-ORDER BY total_revenue DESC, product_name;
-
--- Revenue by store
-SELECT
-  store_name,
-  city,
-  SUM(quantity * item_price) AS total_store_revenue
-FROM refined.items
-GROUP BY store_name, city
-ORDER BY total_store_revenue DESC, store_name;
-
--- Sales by day
-SELECT
-  DATE(order_date) AS sales_day,
-  COUNT(DISTINCT order_id) AS total_orders,
-  SUM(quantity * item_price) AS total_revenue
-FROM refined.items
-GROUP BY DATE(order_date)
-ORDER BY sales_day;
 
 -- Query 3:
 -- Low-stock products across all stores
 -- Adjust threshold as needed
 SELECT
-    p.product_id,
-    p.product_name,
+    i.product_id,
+    i.product_name,
     SUM(i.amount) AS current_total_stock
-FROM staging.products p
-JOIN staging.inventories i
-    ON p.product_id = i.product_id
-GROUP BY p.product_id, p.product_name
+FROM refined.inventories i
+GROUP BY i.product_id, i.product_name
 HAVING SUM(i.amount) < 10
-ORDER BY current_total_stock ASC, p.product_name;
+ORDER BY current_total_stock ASC, i.product_name;
 
 
 -- Query 4:
 -- Out-of-stock products across all stores
 SELECT
-    p.product_id,
-    p.product_name,
+    i.product_id,
+    i.product_name,
     SUM(i.amount) AS total_stock
-FROM staging.products p
-JOIN staging.inventories i
-    ON p.product_id = i.product_id
-GROUP BY p.product_id, p.product_name
+FROM refined.inventories i
+GROUP BY i.product_id, i.product_name
 HAVING SUM(i.amount) = 0
-ORDER BY p.product_name;
+ORDER BY i.product_name;
 
 
 -- Query 5:
 -- Total inventory quantity by store
 SELECT
-    s.store_id,
-    s.store_name,
-    s.city,
+    i.store_name,
+    i.city,
     SUM(i.amount) AS total_items_in_stock
-FROM staging.stores s
-JOIN staging.inventories i
-    ON s.store_id = i.store_id
-GROUP BY s.store_id, s.store_name, s.city
-ORDER BY total_items_in_stock DESC, s.store_name;
+FROM refined.inventories i
+GROUP BY i.store_name, i.city
+ORDER BY total_items_in_stock DESC, i.store_name;
 
 
 -- Query 6:
@@ -110,7 +86,7 @@ SELECT
 FROM staging.products p
 JOIN staging.categories c
     ON p.category_id = c.category_id
-WHERE p.active = true
+WHERE p.active = TRUE
 GROUP BY c.category_name
 ORDER BY active_product_count DESC, c.category_name;
 
@@ -336,48 +312,38 @@ ORDER BY total_revenue ASC, p.product_name;
 -- Query 23:
 -- Recently updated inventory records by product and store
 SELECT
-    s.store_id,
-    s.store_name,
-    p.product_id,
-    p.product_name,
+    i.store_name,
+    i.city,
+    i.product_id,
+    i.product_name,
     i.amount,
     i.update_date
-FROM staging.inventories i
-JOIN staging.products p
-    ON i.product_id = p.product_id
-JOIN staging.stores s
-    ON i.store_id = s.store_id
+FROM refined.inventories i
 ORDER BY i.update_date DESC;
 
 
 -- Query 24:
 -- Most recently updated products across all stores
 SELECT
-    p.product_id,
-    p.product_name,
+    i.product_id,
+    i.product_name,
     MAX(i.update_date) AS latest_inventory_update
-FROM staging.inventories i
-JOIN staging.products p
-    ON i.product_id = p.product_id
-GROUP BY p.product_id, p.product_name
-ORDER BY latest_inventory_update DESC, p.product_name;
+FROM refined.inventories i
+GROUP BY i.product_id, i.product_name
+ORDER BY latest_inventory_update DESC, i.product_name;
 
 
 -- Query 25:
 -- Most recently updated products by store
 SELECT
-    s.store_id,
-    s.store_name,
-    p.product_id,
-    p.product_name,
+    i.store_name,
+    i.city,
+    i.product_id,
+    i.product_name,
     MAX(i.update_date) AS latest_inventory_update
-FROM staging.inventories i
-JOIN staging.products p
-    ON i.product_id = p.product_id
-JOIN staging.stores s
-    ON i.store_id = s.store_id
-GROUP BY s.store_id, s.store_name, p.product_id, p.product_name
-ORDER BY latest_inventory_update DESC, s.store_name, p.product_name;
+FROM refined.inventories i
+GROUP BY i.store_name, i.city, i.product_id, i.product_name
+ORDER BY latest_inventory_update DESC, i.store_name, i.product_name;
 
 
 -- Query 26:
@@ -385,7 +351,7 @@ ORDER BY latest_inventory_update DESC, s.store_name, p.product_name;
 SELECT
     DATE_TRUNC('week', i.update_date) AS update_week,
     COUNT(*) AS inventory_updates
-FROM staging.inventories i
+FROM refined.inventories i
 GROUP BY DATE_TRUNC('week', i.update_date)
 ORDER BY update_week;
 
@@ -395,7 +361,7 @@ ORDER BY update_week;
 SELECT
     DATE_TRUNC('month', i.update_date) AS update_month,
     COUNT(*) AS inventory_updates
-FROM staging.inventories i
+FROM refined.inventories i
 GROUP BY DATE_TRUNC('month', i.update_date)
 ORDER BY update_month;
 
@@ -403,43 +369,37 @@ ORDER BY update_month;
 -- Query 28:
 -- Inventory updates by store and week
 SELECT
-    s.store_id,
-    s.store_name,
+    i.store_name,
+    i.city,
     DATE_TRUNC('week', i.update_date) AS update_week,
     COUNT(*) AS inventory_updates
-FROM staging.inventories i
-JOIN staging.stores s
-    ON i.store_id = s.store_id
-GROUP BY s.store_id, s.store_name, DATE_TRUNC('week', i.update_date)
-ORDER BY update_week, s.store_name;
+FROM refined.inventories i
+GROUP BY i.store_name, i.city, DATE_TRUNC('week', i.update_date)
+ORDER BY update_week, i.store_name;
 
 
 -- Query 29:
 -- Inventory updates by store and month
 SELECT
-    s.store_id,
-    s.store_name,
+    i.store_name,
+    i.city,
     DATE_TRUNC('month', i.update_date) AS update_month,
     COUNT(*) AS inventory_updates
-FROM staging.inventories i
-JOIN staging.stores s
-    ON i.store_id = s.store_id
-GROUP BY s.store_id, s.store_name, DATE_TRUNC('month', i.update_date)
-ORDER BY update_month, s.store_name;
+FROM refined.inventories i
+GROUP BY i.store_name, i.city, DATE_TRUNC('month', i.update_date)
+ORDER BY update_month, i.store_name;
 
 
 -- Query 30:
 -- Products most frequently updated in inventory
 -- Proxy for products that may be constantly restocked
 SELECT
-    p.product_id,
-    p.product_name,
+    i.product_id,
+    i.product_name,
     COUNT(*) AS inventory_record_count,
     MAX(i.update_date) AS latest_update
-FROM staging.inventories i
-JOIN staging.products p
-    ON i.product_id = p.product_id
-GROUP BY p.product_id, p.product_name
+FROM refined.inventories i
+GROUP BY i.product_id, i.product_name
 ORDER BY inventory_record_count DESC, latest_update DESC;
 
 
@@ -447,34 +407,27 @@ ORDER BY inventory_record_count DESC, latest_update DESC;
 -- Products most frequently updated in inventory by store
 -- Proxy for products that may be constantly restocked in a specific store
 SELECT
-    s.store_id,
-    s.store_name,
-    p.product_id,
-    p.product_name,
+    i.store_name,
+    i.city,
+    i.product_id,
+    i.product_name,
     COUNT(*) AS inventory_record_count,
     MAX(i.update_date) AS latest_update
-FROM staging.inventories i
-JOIN staging.products p
-    ON i.product_id = p.product_id
-JOIN staging.stores s
-    ON i.store_id = s.store_id
-GROUP BY s.store_id, s.store_name, p.product_id, p.product_name
-ORDER BY inventory_record_count DESC, latest_update DESC, s.store_name;
+FROM refined.inventories i
+GROUP BY i.store_name, i.city, i.product_id, i.product_name
+ORDER BY inventory_record_count DESC, latest_update DESC, i.store_name;
 
 
 -- Query 32:
 -- Recently updated low-stock products
 -- Useful for spotting products that may need frequent restocking attention
 SELECT
-    s.store_name,
-    p.product_id,
-    p.product_name,
+    i.store_name,
+    i.city,
+    i.product_id,
+    i.product_name,
     i.amount,
     i.update_date
-FROM staging.inventories i
-JOIN staging.products p
-    ON i.product_id = p.product_id
-JOIN staging.stores s
-    ON i.store_id = s.store_id
+FROM refined.inventories i
 WHERE i.amount < 10
-ORDER BY i.update_date DESC, i.amount ASC
+ORDER BY i.update_date DESC, i.amount ASC;
