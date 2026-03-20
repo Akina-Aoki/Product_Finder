@@ -1,413 +1,411 @@
 product_id;product_code;product_name;brand_id;category_id;colour_id;size_id;price;gender_id;active;rejection_reason
-4106;10260221;Flex Top;3;9999;4;4;203.25;2;true;invalid_foreign_key
-173;10276424;Pulse Boots;0;10;2;3;239.26;2;true;invalid_foreign_key
-13522;10730070;Velocity Tee;2;2;9999;3;157.49;1;true;invalid_foreign_key
-11088;10788422;Mountain Shorts;0;5;6;5;243.82;1;true;invalid_foreign_key
-10133;10954256;Summit Sweatpants;4;-1;3;1;257.9;3;true;invalid_foreign_key
-2777;11636254;Blaze Shirt;4;3;9;3;21.88;9999;true;invalid_foreign_key
-5168;11857403;Flex T-Shirt;1;2;-1;1;53.37;3;true;invalid_foreign_key
-7760;12756672;Alpine Tights;5;6;4;0;239.03;3;true;invalid_foreign_key
-4071;13105835;Flex Top;3;0;2;2;203.25;3;true;invalid_foreign_key
-9166;14095438;Summit Skort;2;7;9999;1;216.96;2;true;invalid_foreign_key
-4487;16229012;Sprint Shell;-1;4;10;1;114.45;2;true;invalid_foreign_key
-13771;16472997;Core Tee;4;2;-1;1;118.4;1;true;invalid_foreign_key
-5478;19888961;Urban Underwear;2;1;2;5;262.29;-1;true;invalid_foreign_key
-8818;19979356;Storm Polo;2;3;2;0;44.57;3;true;invalid_foreign_key
-6531;20181095;Alpine Wool Socks;4;9;3;9999;51.0;1;true;invalid_foreign_key
-13367;20326158;Urban Coat;3;8;9999;1;135.3;2;0;invalid_foreign_key
-4996;20673192;Velocity Coat;0;4;10;4;123.63;2;true;invalid_foreign_key
-450;21132345;Blaze Boardshorts;5;5;-1;5;69.01;3;true;invalid_foreign_key
-5813;21338333;Summit Tights;1;9999;5;1;209.8;3;true;invalid_foreign_key
-2975;21822042;Pulse Shoes;5;10;2;4;92.51;0;true;invalid_foreign_key
-5444;22227409;Blaze Top;3;0;10;3;76.64;3;true;invalid_foreign_key
-5011;22336856;Mountain Tights;2;0;1;4;96.63;2;true;invalid_foreign_key
-8388;22386780;Mountain Windbreaker;3;0;3;3;207.16;2;true;invalid_foreign_key
-8826;22790623;Storm Polo;2;3;2;9999;44.57;2;true;invalid_foreign_key
-10047;23171571;Trail Sneakers;1;10;0;3;273.76;1;true;invalid_foreign_key
-11076;23865381;Mountain Shorts;5;5;6;-1;243.82;1;true;invalid_foreign_key
-13037;23867214;Sprint Windbreaker;4;8;0;1;47.32;2;true;invalid_foreign_key
-12819;24394152;Pulse Sneakers;9999;10;8;5;51.22;2;true;invalid_foreign_key
-12533;25346589;Flex Sneakers;2;10;-1;5;170.34;1;true;invalid_foreign_key
-5991;25567764;Alpine Shorts;3;5;7;1;84.77;9999;true;invalid_foreign_key
-11507;25589140;Summit Wool Socks;4;9;1;-1;105.54;1;true;invalid_foreign_key
-13641;25596184;Velocity Tee;2;2;10;2;157.49;0;true;invalid_foreign_key
-1765;26648867;Urban Windbreaker;3;0;5;2;261.33;2;true;invalid_foreign_key
-2411;27059234;Summit Shorts;2;5;9999;1;104.2;1;true;invalid_foreign_key
-6024;27341075;Alpine Shorts;0;5;9;2;84.77;1;true;invalid_foreign_key
-13162;27412459;Storm Sweatpants;4;6;9999;3;235.91;1;true;invalid_foreign_key
-3124;27493860;Blaze Sweatpants;2;-1;2;3;246.66;3;true;invalid_foreign_key
-1116;27570495;Skyline Wool Socks;9999;9;5;2;171.18;3;true;invalid_foreign_key
-3992;27616127;Active Coat;5;8;7;1;75.31;0;true;invalid_foreign_key
-2465;27653427;Summit Shorts;2;5;8;9999;104.2;1;true;invalid_foreign_key
-9316;28100429;Pulse Boxers;3;1;8;4;67.03;-1;true;invalid_foreign_key
-4402;28389185;Sprint Shell;1;4;-1;3;114.45;1;true;invalid_foreign_key
-7193;28538727;Urban Shell;-1;8;7;1;21.98;3;true;invalid_foreign_key
-9706;28690494;Flex T-Shirt;1;-1;4;4;169.51;2;true;invalid_foreign_key
-3938;28805902;Active Coat;5;9999;3;3;75.31;2;true;invalid_foreign_key
-11340;29051099;Alpine Boots;2;10;10;9999;197.33;2;true;invalid_foreign_key
-12733;29591576;Pulse Sneakers;2;10;3;-1;51.22;3;true;invalid_foreign_key
-4753;29873378;Pulse T-Shirt;9999;2;4;3;287.2;2;true;invalid_foreign_key
-7781;30230662;Alpine Tights;5;6;9999;2;239.03;3;true;invalid_foreign_key
-5951;30847217;Alpine Shorts;3;9999;4;2;84.77;3;true;invalid_foreign_key
-5604;31308565;Velocity Coat;3;-1;1;2;271.22;1;true;invalid_foreign_key
-7675;31537435;Summit Ankle Socks;2;9;9;-1;230.13;2;true;invalid_foreign_key
-10414;32102370;Core Sweatpants;2;6;9999;5;51.46;2;true;invalid_foreign_key
-10925;32521030;Urban Polo;5;3;5;5;135.52;0;true;invalid_foreign_key
-5327;33309776;Blaze Top;3;9999;2;4;76.64;3;true;invalid_foreign_key
-10972;33652463;Urban Polo;5;3;9999;1;135.52;2;true;invalid_foreign_key
-10424;33987758;Core Sweatpants;2;9999;2;3;51.46;3;true;invalid_foreign_key
-13099;34419378;Storm Sweatpants;4;6;4;2;235.91;9999;true;invalid_foreign_key
-3832;34850783;Blaze Boxers;5;1;9999;3;76.88;1;true;invalid_foreign_key
-3943;34917645;Active Coat;5;8;3;5;75.31;-1;true;invalid_foreign_key
-7207;35051753;Urban Shell;4;8;8;1;21.98;-1;true;invalid_foreign_key
-10037;35094866;Trail Sneakers;1;10;6;4;273.76;9999;true;invalid_foreign_key
-758;35548443;Glacier Shorts;5;5;1;3;81.19;9999;true;invalid_foreign_key
-7110;35687171;Urban Shell;-1;8;1;4;21.98;1;true;invalid_foreign_key
-480;36049161;Velocity Longsleeve;-1;3;2;5;106.39;3;true;invalid_foreign_key
-10689;36373799;Blaze Boots;5;10;-1;2;267.41;1;true;invalid_foreign_key
-6324;36415162;Urban Tee;2;2;0;2;144.44;1;true;invalid_foreign_key
-12322;37222438;Active Sweatpants;2;6;5;4;114.45;-1;true;invalid_foreign_key
-441;37596865;Blaze Boardshorts;9999;5;10;2;69.01;3;true;invalid_foreign_key
-5434;39333513;Blaze Top;3;2;9;9999;76.64;2;true;invalid_foreign_key
-12829;39537840;Pulse Sneakers;2;10;9;3;51.22;9999;true;invalid_foreign_key
-11457;40565258;Summit Boardshorts;5;5;8;1;112.51;9999;true;invalid_foreign_key
-7761;41429938;Alpine Tights;9999;6;5;1;239.03;1;true;invalid_foreign_key
-2004;41607757;Flex Underwear;2;1;7;5;191.85;0;0;invalid_foreign_key
-8135;42386065;Alpine Jacket;2;4;9999;4;227.72;1;true;invalid_foreign_key
-12117;42571923;Core Sneakers;0;10;2;1;123.87;2;true;invalid_foreign_key
-4931;42723992;Velocity Coat;5;9999;6;2;123.63;3;true;invalid_foreign_key
-11537;43066678;Summit Wool Socks;4;9;3;3;105.54;9999;true;invalid_foreign_key
-7266;43210024;Skyline T-Shirt;5;2;2;1;234.43;9999;true;invalid_foreign_key
-7081;43215752;Skyline Boxers;5;1;9;-1;79.24;2;true;invalid_foreign_key
-9017;43995089;Flex Tee;5;2;5;0;256.8;1;true;invalid_foreign_key
-1893;44135137;Pulse Skort;3;7;0;3;24.14;2;true;invalid_foreign_key
-4178;44566368;Flex Top;3;2;9;0;203.25;2;true;invalid_foreign_key
-11990;45653039;Core Boardshorts;4;5;-1;4;106.89;1;true;invalid_foreign_key
-834;46229998;Glacier Shorts;0;5;6;3;81.19;3;true;invalid_foreign_key
-11732;46654561;Flex Longsleeve;5;0;6;3;223.79;1;true;invalid_foreign_key
-10256;47393030;Velocity Coat;3;0;1;2;115.89;3;true;invalid_foreign_key
-1865;47523996;Pulse Skort;3;7;3;9999;24.14;2;true;invalid_foreign_key
-10145;47618818;Summit Sweatpants;4;6;-1;5;257.9;3;true;invalid_foreign_key
-8398;48495030;Mountain Windbreaker;3;4;0;1;207.16;3;true;invalid_foreign_key
-4357;49008336;Sprint Shell;1;4;1;-1;114.45;1;true;invalid_foreign_key
-6752;49698121;Summit Sneakers;2;10;7;4;188.51;0;true;invalid_foreign_key
-4685;50737200;Storm Shell;1;-1;9;5;118.04;3;true;invalid_foreign_key
-5253;53231555;Flex T-Shirt;1;2;7;5;53.37;0;true;invalid_foreign_key
-8397;53241390;Mountain Windbreaker;0;4;4;1;207.16;2;true;invalid_foreign_key
-645;53646258;Alpine Windbreaker;5;0;3;5;58.68;-1;true;invalid_foreign_key
-4837;54459632;Pulse T-Shirt;1;0;10;1;287.2;2;true;invalid_foreign_key
-12032;54650873;Core Boardshorts;4;5;6;9999;106.89;1;true;invalid_foreign_key
-8036;54977730;Core Skirt;5;7;0;1;283.61;2;true;invalid_foreign_key
-1606;55061934;Alpine Underwear;0;1;4;4;178.9;2;kanske;invalid_foreign_key
-7268;55461879;Skyline T-Shirt;5;2;2;1;234.43;-1;true;invalid_foreign_key
-11923;55560071;Core Briefs;3;1;9;1;130.73;9999;true;invalid_foreign_key
-665;55667278;Alpine Windbreaker;5;8;5;2;58.68;-1;true;invalid_foreign_key
-12142;55873460;Core Sneakers;1;10;3;0;123.87;3;true;invalid_foreign_key
-3671;56126086;Flex Shell;5;4;9;0;144.87;1;true;invalid_foreign_key
-1043;57251458;Velocity Windbreaker;4;4;10;-1;204.26;2;true;invalid_foreign_key
-5961;57724977;Alpine Shorts;0;5;5;1;84.77;1;true;invalid_foreign_key
-6111;57998294;Core Sweatpants;1;0;5;1;124.39;1;true;invalid_foreign_key
-11036;58204623;Mountain Shorts;5;5;0;2;243.82;3;true;invalid_foreign_key
-6954;58323108;Skyline Boxers;5;1;1;2;79.24;9999;true;invalid_foreign_key
-2529;58813743;Mountain Sneakers;5;10;2;-1;73.67;2;true;invalid_foreign_key
-5;59041465;Trail Skort;-1;7;1;5;229.26;2;true;invalid_foreign_key
-682;60084176;Alpine Windbreaker;5;8;-1;3;58.68;1;true;invalid_foreign_key
-116;60594326;Storm Skort;-1;7;4;1;166.88;2;true;invalid_foreign_key
-7691;60819555;Summit Ankle Socks;2;9;10;-1;230.13;3;true;invalid_foreign_key
-6306;62551059;Urban Tee;2;2;-1;1;144.44;1;true;invalid_foreign_key
-8438;62733110;Mountain Windbreaker;3;-1;6;5;207.16;1;true;invalid_foreign_key
-8372;62903443;Mountain Windbreaker;3;0;2;3;207.16;1;true;invalid_foreign_key
-9849;63365291;Flex Coat;4;4;4;-1;157.45;1;true;invalid_foreign_key
-7070;63571395;Skyline Boxers;5;1;-1;5;79.24;3;true;invalid_foreign_key
-5776;63734101;Summit Tights;1;6;-1;4;209.8;2;true;invalid_foreign_key
-12282;63863218;Active Sweatpants;2;6;-1;1;114.45;2;true;invalid_foreign_key
-5933;64488652;Alpine Shorts;3;5;3;1;84.77;9999;true;invalid_foreign_key
-8613;64876549;Velocity Ankle Socks;4;9;8;0;195.07;2;true;invalid_foreign_key
-9036;64968509;Flex Tee;5;2;6;-1;256.8;2;true;invalid_foreign_key
-12563;65434108;Blaze Briefs;1;0;1;5;28.75;1;true;invalid_foreign_key
-7703;66143245;Alpine Tights;5;6;1;0;239.03;3;0;invalid_foreign_key
-3412;66767739;Urban Windbreaker;4;0;1;4;91.24;3;true;invalid_foreign_key
-12144;67178875;Core Sneakers;1;10;9999;5;123.87;2;true;invalid_foreign_key
-2505;67774103;Mountain Sneakers;5;10;1;-1;73.67;2;true;invalid_foreign_key
-3768;67862747;Blaze Boxers;5;1;2;9999;76.88;3;true;invalid_foreign_key
-6191;69472710;Core Sweatpants;1;6;10;9999;124.39;3;true;invalid_foreign_key
-13623;69822268;Velocity Tee;9999;2;9;1;157.49;3;true;invalid_foreign_key
-13151;69827974;Storm Sweatpants;4;6;7;4;235.91;-1;true;invalid_foreign_key
-1824;70053387;Urban Windbreaker;0;4;9;2;261.33;1;true;invalid_foreign_key
-9571;71035865;Urban Wool Socks;1;9;5;9999;236.18;2;true;invalid_foreign_key
-1636;71343966;Alpine Underwear;2;-1;6;4;178.9;2;true;invalid_foreign_key
-9236;71414687;Pulse Boxers;3;1;3;2;67.03;0;true;invalid_foreign_key
-9823;71977472;Flex Coat;4;0;2;3;157.45;2;true;invalid_foreign_key
-4053;72285624;Flex Top;3;2;1;0;203.25;3;true;invalid_foreign_key
-6419;72326964;Summit Ankle Socks;-1;9;5;3;183.17;3;true;invalid_foreign_key
-10607;73174084;Blaze Boots;5;10;4;-1;267.41;3;F;invalid_foreign_key
-13542;73200057;Velocity Tee;2;2;3;0;157.49;3;true;invalid_foreign_key
-2834;73234201;Sprint Tee;1;2;3;2;282.81;-1;true;invalid_foreign_key
-91;73264864;Glacier Skort;5;7;9;-1;101.36;2;true;invalid_foreign_key
-3456;74864362;Urban Windbreaker;4;8;4;4;91.24;0;true;invalid_foreign_key
-11558;74920497;Summit Wool Socks;4;9;4;-1;105.54;1;true;invalid_foreign_key
-9920;75347688;Flex Coat;-1;4;8;5;157.45;3;true;invalid_foreign_key
-2105;75393001;Mountain Shoes;4;10;0;4;294.6;1;true;invalid_foreign_key
-1520;75565262;Core Shell;4;8;8;-1;62.09;3;true;invalid_foreign_key
-3356;76250969;Active Top;5;2;8;9999;123.73;1;true;invalid_foreign_key
-10519;76786241;Core Sweatpants;2;6;8;9999;51.46;2;true;invalid_foreign_key
-6156;76950198;Core Sweatpants;-1;6;8;1;124.39;1;true;invalid_foreign_key
-12189;77516029;Core Sneakers;1;10;6;5;123.87;9999;true;invalid_foreign_key
-12364;77820271;Active Sweatpants;-1;6;8;3;114.45;3;true;invalid_foreign_key
-11573;78337262;Summit Wool Socks;4;9;5;9999;105.54;1;true;invalid_foreign_key
-3194;78582348;Blaze Sweatpants;0;6;7;2;246.66;1;true;invalid_foreign_key
-4473;78833370;Sprint Shell;-1;4;9;1;114.45;3;true;invalid_foreign_key
-10396;78981173;Velocity Coat;9999;8;10;4;115.89;2;true;invalid_foreign_key
-396;79125655;Blaze Boardshorts;5;5;7;-1;69.01;3;true;invalid_foreign_key
-12853;79152936;Sprint Skort;5;0;1;3;251.78;2;true;invalid_foreign_key
-7198;79224487;Urban Shell;4;8;-1;3;21.98;2;true;invalid_foreign_key
-12890;79283573;Sprint Skort;5;7;8;9999;251.78;2;true;invalid_foreign_key
-10899;80329187;Urban Polo;5;3;4;2;135.52;0;true;invalid_foreign_key
-9669;80593082;Flex T-Shirt;1;9999;2;2;169.51;1;true;invalid_foreign_key
-2899;81058799;Sprint Tee;1;2;7;3;282.81;9999;true;invalid_foreign_key
-5399;81730798;Blaze Top;3;9999;7;3;76.64;3;true;invalid_foreign_key
-9394;81764280;Glacier Windbreaker;9999;4;3;5;243.53;2;true;invalid_foreign_key
-399;82007374;Blaze Boardshorts;5;5;9999;3;69.01;3;true;invalid_foreign_key
-5144;82535352;Mountain Tights;0;6;10;3;96.63;3;true;invalid_foreign_key
-9051;82740280;Flex Tee;-1;2;7;4;256.8;2;true;invalid_foreign_key
-2476;82941674;Summit Shorts;2;-1;9;2;104.2;3;true;invalid_foreign_key
-13676;83059841;Core Tee;-1;2;2;4;118.4;2;true;invalid_foreign_key
-10521;83205125;Core Sweatpants;2;6;0;1;51.46;1;true;invalid_foreign_key
-9105;83672673;Storm Skirt;9999;7;1;5;68.06;2;true;invalid_foreign_key
-12168;84012648;Core Sneakers;1;10;5;0;123.87;2;true;invalid_foreign_key
-8662;84270275;Sprint Coat;4;-1;1;4;217.56;3;true;invalid_foreign_key
-11605;84447927;Summit Wool Socks;4;9;7;5;105.54;-1;true;invalid_foreign_key
-5890;84481081;Summit Tights;1;6;0;2;209.8;2;true;invalid_foreign_key
-1471;84702182;Core Shell;4;8;5;9999;62.09;2;true;invalid_foreign_key
-8721;85128921;Sprint Coat;4;4;5;0;217.56;2;true;invalid_foreign_key
-3218;86377361;Blaze Sweatpants;2;6;0;5;246.66;1;true;invalid_foreign_key
-1012;86899855;Velocity Windbreaker;4;4;-1;3;204.26;1;true;invalid_foreign_key
-8547;87519295;Velocity Ankle Socks;4;9;4;0;195.07;2;true;invalid_foreign_key
-7815;87562404;Alpine Tights;5;6;8;4;239.03;0;true;invalid_foreign_key
-8717;87691322;Sprint Coat;4;4;5;9999;217.56;1;true;invalid_foreign_key
-6957;87934289;Skyline Boxers;5;1;1;3;79.24;9999;true;invalid_foreign_key
-12003;89087535;Core Boardshorts;0;5;4;3;106.89;2;true;invalid_foreign_key
-11739;89664011;Flex Longsleeve;5;3;6;9999;223.79;2;true;invalid_foreign_key
-4017;89735479;Active Coat;5;8;9999;4;75.31;3;true;invalid_foreign_key
-6241;89875358;Urban Tee;2;2;9999;4;144.44;2;no;invalid_foreign_key
-4656;91059927;Storm Shell;1;8;8;1;118.04;9999;true;invalid_foreign_key
-2069;91519496;Mountain Shoes;4;10;2;2;294.6;9999;true;invalid_foreign_key
-6159;92122217;Core Sweatpants;1;9999;8;2;124.39;1;true;invalid_foreign_key
-10935;92564956;Urban Polo;5;0;6;4;135.52;1;true;invalid_foreign_key
-9068;93545767;Flex Tee;5;2;-1;5;256.8;1;true;invalid_foreign_key
-4154;94159041;Flex Top;3;2;9999;5;203.25;2;true;invalid_foreign_key
-5060;95619102;Mountain Tights;2;9999;4;5;96.63;3;true;invalid_foreign_key
-7845;95701289;Alpine Tights;5;6;10;4;239.03;0;true;invalid_foreign_key
-10481;96184910;Core Sweatpants;2;6;6;2;51.46;9999;true;invalid_foreign_key
-6021;96806722;Alpine Shorts;3;5;9;1;84.77;-1;true;invalid_foreign_key
-10896;96908041;Urban Polo;5;3;4;1;135.52;9999;true;invalid_foreign_key
-13422;97141965;Urban Coat;3;8;0;4;135.3;3;true;invalid_foreign_key
-3388;97795561;Active Top;5;0;10;1;123.73;3;true;invalid_foreign_key
-6927;11226352;Velocity Boots;5;10;9;3;-232.61;1;true;invalid_price
-4123;12440860;Flex Top;3;2;5;5;-203.25;1;true;invalid_price
-8101;15645381;Alpine Jacket;2;4;4;2;-227.72;3;true;invalid_price
-6702;15649309;Summit Sneakers;2;10;4;3;-188.51;1;true;invalid_price
-11386;17148413;Summit Boardshorts;5;5;3;2;-112.51;3;true;invalid_price
-11258;18460708;Alpine Boots;2;10;4;5;-197.33;1;true;invalid_price
-4146;23133048;Flex Top;3;2;7;2;-203.25;3;true;invalid_price
-8941;24380620;Storm Polo;2;3;10;2;-44.57;3;true;invalid_price
-2613;32041737;Mountain Sneakers;5;10;8;3;-73.67;2;true;invalid_price
-3069;32215955;Pulse Shoes;5;10;8;5;-92.51;2;true;invalid_price
-8659;33855509;Sprint Coat;4;4;1;3;-217.56;3;true;invalid_price
-10242;34120689;Summit Sweatpants;4;6;10;3;-257.9;1;F;invalid_price
-1292;35509091;Summit Shorts;1;5;7;1;-281.6;2;true;invalid_price
-3090;37453425;Pulse Shoes;5;10;10;2;-92.51;2;true;invalid_price
-7887;38010203;Blaze Boxers;3;1;3;3;-216.33;1;true;invalid_price
-4970;39088626;Velocity Coat;5;4;8;5;-123.63;3;true;invalid_price
-1;42907748;Trail Skort;2;7;1;1;-99.99;2;true;invalid_price
-1573;45062456;Alpine Underwear;2;1;2;3;-178.9;2;true;invalid_price
-7011;45842263;Skyline Boxers;5;1;5;1;-79.24;1;true;invalid_price
-2526;46255099;Mountain Sneakers;5;10;2;4;-73.67;2;true;invalid_price
-2596;49200868;Mountain Sneakers;5;10;7;2;-73.67;3;true;invalid_price
-4734;51129598;Pulse T-Shirt;1;2;3;2;-287.2;1;true;invalid_price
-7290;53805995;Skyline T-Shirt;5;2;3;4;-234.43;1;true;invalid_price
-13258;60510388;Alpine Coat;5;4;4;5;-232.9;1;true;invalid_price
-8543;61970950;Velocity Ankle Socks;4;9;3;5;-195.07;1;true;invalid_price
-6341;62510315;Urban Tee;2;2;10;2;-144.44;3;true;invalid_price
-3004;69525235;Pulse Shoes;5;10;4;3;-92.51;3;true;invalid_price
-10280;70092745;Velocity Coat;3;8;2;5;-115.89;3;true;invalid_price
-2594;70343850;Mountain Sneakers;5;10;7;2;-73.67;1;true;invalid_price
-2064;71435977;Mountain Shoes;4;10;1;5;-294.6;2;true;invalid_price
-7103;72164728;Urban Shell;4;8;1;1;-21.98;3;true;invalid_price
-4827;73277911;Pulse T-Shirt;1;2;9;3;-287.2;1;true;invalid_price
-12066;74412127;Core Boardshorts;4;5;8;4;-106.89;2;true;invalid_price
-13155;75431288;Storm Sweatpants;4;6;7;5;-235.91;3;true;invalid_price
-1010;77093132;Velocity Windbreaker;4;4;8;2;-204.26;2;true;invalid_price
-1831;79247012;Urban Windbreaker;3;4;9;4;-261.33;2;true;invalid_price
-5480;79515504;Urban Underwear;2;1;2;5;-262.29;3;true;invalid_price
-8691;80789938;Sprint Coat;4;4;3;4;-217.56;2;true;invalid_price
-4410;81950053;Sprint Shell;1;4;4;5;-114.45;3;true;invalid_price
-3330;83872124;Active Top;5;2;6;2;-123.73;2;true;invalid_price
-2223;85812358;Velocity Boardshorts;3;5;2;3;-288.74;2;true;invalid_price
-7220;87570857;Urban Shell;4;8;8;5;-21.98;3;true;invalid_price
-8805;90699761;Storm Polo;2;3;1;2;-44.57;2;true;invalid_price
-2656;90926745;Blaze Shirt;4;3;1;2;-21.88;3;true;invalid_price
-8934;93730840;Storm Polo;2;3;9;5;-44.57;2;true;invalid_price
-2078;95530415;Mountain Shoes;4;10;2;5;-294.6;1;true;invalid_price
-9713;97012659;Flex T-Shirt;1;2;5;1;-169.51;3;true;invalid_price
-2819;97554055;Sprint Tee;1;2;2;2;-282.81;1;true;invalid_price
-1470;99313319;Core Shell;4;8;5;4;-62.09;1;true;invalid_price
-4465;99939616;Sprint Shell;1;4;8;4;-114.45;1;true;invalid_price
-13786;28408149;Core Tee;4;-1;10;1;-118.4;1;true;invalid_price|invalid_foreign_key
-7737;54529585;Alpine Tights;5;6;9999;3;-239.03;1;true;invalid_price|invalid_foreign_key
-2;10928082;Trail Skort;2;7;1;2;;2;true;invalid_price|missing_required_field
-6816;13873896;Velocity Boots;5;10;2;1;;1;true;invalid_price|missing_required_field
-214;17418821;Pulse Boots;5;10;5;2;;1;true;invalid_price|missing_required_field
-5048;18100766;Mountain Tights;2;6;4;1;;3;true;invalid_price|missing_required_field
-6536;24510618;Alpine Wool Socks;4;9;3;2;;3;true;invalid_price|missing_required_field
-5189;27705222;Flex T-Shirt;1;2;3;3;;3;true;invalid_price|missing_required_field
-4736;28719471;Pulse T-Shirt;1;2;3;2;;3;0;invalid_price|missing_required_field
-7192;31429067;Urban Shell;4;8;7;1;;2;true;invalid_price|missing_required_field
-4674;33490995;Storm Shell;1;8;9;2;;1;true;invalid_price|missing_required_field
-5744;37379154;Velocity Coat;3;8;10;3;;3;true;invalid_price|missing_required_field
-7236;39847028;Urban Shell;4;8;10;1;;1;true;invalid_price|missing_required_field
-1115;42039174;Skyline Wool Socks;3;9;5;2;;2;true;invalid_price|missing_required_field
-7616;43480633;Summit Ankle Socks;2;9;5;2;;3;true;invalid_price|missing_required_field
-2786;44361062;Blaze Shirt;4;3;10;1;;1;true;invalid_price|missing_required_field
-9985;45133658;Trail Sneakers;1;10;3;2;;2;true;invalid_price|missing_required_field
-13359;48358099;Urban Coat;3;8;1;3;;3;true;invalid_price|missing_required_field
-7607;48704979;Summit Ankle Socks;2;9;4;4;;3;true;invalid_price|missing_required_field
-6994;48846955;Skyline Boxers;5;1;3;5;;2;true;invalid_price|missing_required_field
-12538;50982604;Flex Sneakers;2;10;10;1;;3;true;invalid_price|missing_required_field
-8533;51645937;;4;9;3;1;-195.07;3;true;invalid_price|missing_required_field
-12832;52391232;Pulse Sneakers;2;10;9;4;;3;true;invalid_price|missing_required_field
-9702;53117395;Flex T-Shirt;1;2;4;3;;1;true;invalid_price|missing_required_field
-12499;53244241;Flex Sneakers;2;10;7;3;;3;true;invalid_price|missing_required_field
-8519;55425656;Velocity Ankle Socks;4;9;2;2;;1;true;invalid_price|missing_required_field
-8562;55598089;Velocity Ankle Socks;4;9;5;1;;2;true;invalid_price|missing_required_field
-5114;55636091;Mountain Tights;2;6;8;3;;3;true;invalid_price|missing_required_field
-6120;63826732;Core Sweatpants;1;6;5;4;;1;true;invalid_price|missing_required_field
-9924;64604396;Flex Coat;4;4;9;2;;1;true;invalid_price|missing_required_field
-1747;74127238;Urban Windbreaker;3;4;4;1;;2;true;invalid_price|missing_required_field
-10072;75504548;Trail Sneakers;1;10;9;1;;2;true;invalid_price|missing_required_field
-7952;92634247;Blaze Boxers;3;1;7;4;;3;true;invalid_price|missing_required_field
-7583;95990589;Summit Ankle Socks;2;9;3;1;;3;T;invalid_price|missing_required_field
-5874;99998771;Summit Tights;1;6;9;2;;1;true;invalid_price|missing_required_field
-4;BAD_CODE;Trail Skort;2;7;1;4;229.26;2;true;invalid_product_code
-21;INVALID_CODE;Trail Skort;2;7;5;1;229.26;2;true;invalid_product_code
-2290;INVALID_CODE;Velocity Boardshorts;3;5;6;5;288.74;3;true;invalid_product_code
-2487;INVALID_CODE;Summit Shorts;2;5;10;1;104.2;2;true;invalid_product_code
-2540;INVALID_CODE;Mountain Sneakers;5;10;3;4;73.67;1;true;invalid_product_code
-3331;INVALID_CODE;Active Top;5;2;6;2;123.73;3;true;invalid_product_code
-3649;INVALID_CODE;Flex Shell;5;4;7;3;144.87;3;true;invalid_product_code
-4392;INVALID_CODE;Sprint Shell;1;4;3;4;114.45;3;true;invalid_product_code
-4581;INVALID_CODE;Storm Shell;1;8;3;1;118.04;1;true;invalid_product_code
-5134;INVALID_CODE;Mountain Tights;2;6;9;5;96.63;2;true;invalid_product_code
-5599;INVALID_CODE;Urban Underwear;2;1;10;5;262.29;2;true;invalid_product_code
-5871;INVALID_CODE;Summit Tights;1;6;9;1;209.8;1;true;invalid_product_code
-5931;INVALID_CODE;Alpine Shorts;3;5;3;1;84.77;1;true;invalid_product_code
-6102;INVALID_CODE;Core Sweatpants;1;6;4;3;124.39;1;1;invalid_product_code
-6974;INVALID_CODE;Skyline Boxers;5;1;2;3;79.24;3;true;invalid_product_code
-7217;INVALID_CODE;Urban Shell;4;8;8;4;21.98;3;true;invalid_product_code
-7541;INVALID_CODE;Skyline Boardshorts;2;5;10;2;200.84;3;true;invalid_product_code
-7608;INVALID_CODE;Summit Ankle Socks;2;9;4;5;230.13;1;true;invalid_product_code
-8843;INVALID_CODE;Storm Polo;2;3;3;5;44.57;1;true;invalid_product_code
-9007;INVALID_CODE;Flex Tee;5;2;4;4;256.8;3;false;invalid_product_code
-9152;INVALID_CODE;Summit Skort;2;7;1;2;216.96;2;true;invalid_product_code
-10426;INVALID_CODE;Core Sweatpants;2;6;2;4;51.46;2;true;invalid_product_code
-10930;INVALID_CODE;Urban Polo;5;3;6;2;135.52;2;true;invalid_product_code
-11355;INVALID_CODE;Summit Boardshorts;5;5;1;2;112.51;2;true;invalid_product_code
-11581;INVALID_CODE;Summit Wool Socks;4;9;6;2;105.54;3;true;invalid_product_code
-11681;INVALID_CODE;Flex Longsleeve;5;3;3;1;223.79;1;true;invalid_product_code
-13077;INVALID_CODE;Storm Sweatpants;4;6;2;4;235.91;3;true;invalid_product_code
-13289;INVALID_CODE;Alpine Coat;5;4;6;5;232.9;2;true;invalid_product_code
-12159;10516320;;1;10;4;5;123.87;2;true;missing_required_field
-6698;12234282;Summit Sneakers;2;10;4;1;188.51;3;;missing_required_field
-3909;13328704;Active Coat;5;8;1;3;75.31;3;;missing_required_field
-238;13632221;Pulse Boots;5;10;6;5;239.26;1;;missing_required_field
-7182;14359552;Urban Shell;4;8;6;3;21.98;1;;missing_required_field
-7031;16450700;;5;1;6;2;79.24;3;true;missing_required_field
-493;19649976;;5;3;3;5;106.39;1;true;missing_required_field
-5133;19733752;Mountain Tights;2;6;9;5;96.63;1;;missing_required_field
-9526;20015729;;1;9;2;4;236.18;2;true;missing_required_field
-1995;20367352;Flex Underwear;2;1;7;2;191.85;2;;missing_required_field
-7567;20586607;Summit Ankle Socks;2;9;2;1;230.13;2;;missing_required_field
-8414;22746806;Mountain Windbreaker;3;4;5;2;207.16;1;;missing_required_field
-5794;23396566;Summit Tights;1;6;3;5;209.8;2;;missing_required_field
-8888;23981611;Storm Polo;2;3;6;5;44.57;1;;missing_required_field
-710;25320394;Alpine Windbreaker;5;8;8;2;58.68;2;;missing_required_field
-8925;28182564;Storm Polo;2;3;9;2;44.57;2;;missing_required_field
-10084;29072401;Trail Sneakers;1;10;9;5;273.76;2;;missing_required_field
-9089;30608102;Flex Tee;5;2;10;2;256.8;1;;missing_required_field
-8351;30936116;Mountain Windbreaker;3;4;1;1;207.16;1;;missing_required_field
-9795;30951349;Flex T-Shirt;1;2;10;4;169.51;1;;missing_required_field
-10366;31690264;Velocity Coat;3;8;8;4;115.89;2;;missing_required_field
-11361;31830080;Summit Boardshorts;5;5;1;4;112.51;2;;missing_required_field
-4641;32102768;Storm Shell;1;8;7;1;118.04;1;;missing_required_field
-5797;32532581;;1;6;4;1;209.8;2;true;missing_required_field
-13143;32638580;;4;6;7;1;235.91;3;true;missing_required_field
-8091;32666432;;2;4;3;4;227.72;2;true;missing_required_field
-8404;32741406;Mountain Windbreaker;3;4;4;3;207.16;3;;missing_required_field
-12641;36069960;;1;1;7;1;28.75;1;true;missing_required_field
-3202;36392748;Blaze Sweatpants;2;6;7;4;246.66;3;;missing_required_field
-12553;36981906;;1;1;1;1;28.75;3;true;missing_required_field
-10939;38601583;Urban Polo;5;3;6;5;135.52;2;;missing_required_field
-1612;41507987;;2;1;5;1;178.9;2;true;missing_required_field
-2491;50758136;;2;5;10;2;104.2;3;true;missing_required_field
-12628;52589139;Blaze Briefs;1;1;6;1;28.75;3;;missing_required_field
-5540;53047109;;2;1;6;5;262.29;3;true;missing_required_field
-1710;53241412;;3;4;1;4;261.33;1;true;missing_required_field
-1796;54792145;Urban Windbreaker;3;4;7;2;261.33;3;;missing_required_field
-2197;55136362;;4;10;10;4;294.6;3;true;missing_required_field
-6706;56145275;;2;10;4;4;188.51;2;true;missing_required_field
-5570;56286695;Urban Underwear;2;1;8;5;262.29;3;;missing_required_field
-1863;57371721;Pulse Skort;3;7;3;3;24.14;2;;missing_required_field
-4544;57923008;Skyline Skirt;4;7;9;4;142.32;2;;missing_required_field
-12484;58901815;Flex Sneakers;2;10;6;3;170.34;3;;missing_required_field
-8198;59550834;;2;4;10;5;227.72;1;true;missing_required_field
-11260;61529444;Alpine Boots;2;10;4;5;197.33;3;;missing_required_field
-13741;61543552;Core Tee;4;2;7;1;118.4;1;;missing_required_field
-12084;62083200;Core Boardshorts;4;5;9;5;106.89;2;;missing_required_field
-701;63412730;Alpine Windbreaker;5;8;7;4;58.68;2;;missing_required_field
-5165;65029975;Flex T-Shirt;1;2;1;5;53.37;3;;missing_required_field
-9315;65165611;Pulse Boxers;3;1;8;4;67.03;1;;missing_required_field
-8345;65556569;;2;10;10;4;179.41;1;true;missing_required_field
-6373;65769491;;5;9;2;3;183.17;2;true;missing_required_field
-8737;67335209;Sprint Coat;4;4;6;4;217.56;3;;missing_required_field
-3700;69017544;Flex Shell;5;4;10;5;144.87;3;;missing_required_field
-3495;70065067;;4;8;7;2;91.24;2;true;missing_required_field
-9987;70455172;Trail Sneakers;1;10;3;3;273.76;1;;missing_required_field
-5468;70804915;Urban Underwear;2;1;2;1;262.29;3;;missing_required_field
-9391;71568059;Glacier Windbreaker;1;4;3;4;243.53;2;;missing_required_field
-13665;72641395;;4;2;1;5;118.4;3;true;missing_required_field
-7704;72681047;;5;6;1;2;239.03;1;true;missing_required_field
-11395;72875379;Summit Boardshorts;5;5;3;5;112.51;3;;missing_required_field
-3;73164924;;2;7;1;3;229.26;2;true;missing_required_field
-3587;73242901;Flex Shell;5;4;3;3;144.87;1;;missing_required_field
-6274;75684692;Urban Tee;2;2;5;5;144.44;2;;missing_required_field
-2533;76615898;Mountain Sneakers;5;10;3;1;73.67;3;;missing_required_field
-5213;76761750;;1;2;5;1;53.37;3;true;missing_required_field
-13603;77720322;;2;2;7;5;157.49;1;true;missing_required_field
-574;78531145;;5;3;9;2;106.39;1;true;missing_required_field
-6004;81261563;Alpine Shorts;3;5;7;5;84.77;2;;missing_required_field
-8957;81611035;;5;2;1;3;256.8;1;true;missing_required_field
-590;81946797;Velocity Longsleeve;5;3;10;2;106.39;2;;missing_required_field
-2815;83485705;Sprint Tee;1;2;1;5;282.81;3;;missing_required_field
-10454;84379798;Core Sweatpants;2;6;4;3;51.46;3;;missing_required_field
-2129;85113718;Mountain Shoes;4;10;6;2;294.6;1;;missing_required_field
-6524;85641964;Alpine Wool Socks;4;9;2;3;51.0;3;;missing_required_field
-2391;86381784;Summit Shorts;2;5;3;4;104.2;2;;missing_required_field
-942;86404411;Velocity Windbreaker;4;4;3;4;204.26;3;;missing_required_field
-12379;87049251;;2;6;9;3;114.45;3;true;missing_required_field
-809;87127298;;5;5;4;5;81.19;2;true;missing_required_field
-13451;87556695;Urban Coat;3;8;7;4;135.3;2;;missing_required_field
-3711;87916380;;4;7;3;1;58.18;2;true;missing_required_field
-6268;90377524;Urban Tee;2;2;5;3;144.44;2;;missing_required_field
-13051;90703512;;4;6;1;1;235.91;1;true;missing_required_field
-623;91103207;Alpine Windbreaker;5;8;2;3;58.68;2;;missing_required_field
-3681;93282696;Flex Shell;5;4;9;4;144.87;2;;missing_required_field
-9999;95415628;;1;10;4;2;273.76;1;true;missing_required_field
-1121;96030112;;3;9;5;4;171.18;2;true;missing_required_field
-962;96081443;Velocity Windbreaker;4;4;5;1;204.26;2;;missing_required_field
-13070;96101866;Storm Sweatpants;4;6;2;2;235.91;2;;missing_required_field
-896;96726959;;5;5;10;4;81.19;2;true;missing_required_field
-3502;98632448;Urban Windbreaker;4;8;7;4;91.24;3;;missing_required_field
-9434;99446811;;1;4;6;3;243.53;3;true;missing_required_field
-11754;99929744;Flex Longsleeve;5;3;7;5;223.79;2;;missing_required_field
-12537;31082563;;2;10;10;0;170.34;2;true;missing_required_field|invalid_foreign_key
-9956;51398057;Trail Sneakers;1;10;1;2;273.76;9999;;missing_required_field|invalid_foreign_key
+7190;10003241;Sprint Shell;1;4;10;0;114.53;2;true;invalid_foreign_key
+1722;10550726;Pulse Shell;4;4;0;3;158.77;1;true;invalid_foreign_key
+2868;11966692;Blaze Ankle Socks;2;9;5;3;268.57;0;true;invalid_foreign_key
+10532;12192105;Velocity Skort;0;7;7;2;64.13;2;true;invalid_foreign_key
+10040;12540215;Active Windbreaker;4;4;9999;2;124.13;2;true;invalid_foreign_key
+10393;12832916;Summit Jacket;9999;4;3;5;219.26;1;true;invalid_foreign_key
+9359;13546052;Trail Briefs;3;1;-1;5;273.36;2;true;invalid_foreign_key
+2050;13818772;Sprint Tee;4;2;4;9999;279.02;2;true;invalid_foreign_key
+14032;13939898;Velocity Top;1;0;6;3;230.3;1;true;invalid_foreign_key
+11956;14080012;Pulse Tights;1;6;-1;4;254.12;2;true;invalid_foreign_key
+9457;14495043;Core Longsleeve;5;3;0;3;271.65;1;true;invalid_foreign_key
+14148;15367170;Trail Tights;1;-1;4;1;170.61;3;true;invalid_foreign_key
+11045;15429752;Summit Shell;1;8;0;5;57.8;3;true;invalid_foreign_key
+1942;15490453;Summit Longsleeve;1;3;0;1;226.63;2;true;invalid_foreign_key
+5507;16111647;Blaze Shirt;5;0;8;1;262.44;2;true;invalid_foreign_key
+10844;16371752;Velocity Boots;4;10;10;3;74.05;0;true;invalid_foreign_key
+3790;17132949;Velocity Boots;4;10;6;9999;128.63;3;true;invalid_foreign_key
+13570;18004683;Active Polo;5;3;9999;5;276.23;3;true;invalid_foreign_key
+8191;19343120;Summit Underwear;4;1;7;0;111.78;1;true;invalid_foreign_key
+13150;20017358;Active Skort;4;0;10;5;96.28;2;true;invalid_foreign_key
+4953;20305400;Velocity T-Shirt;-1;2;4;3;208.94;2;true;invalid_foreign_key
+9703;22325689;Flex Longsleeve;1;3;7;5;247.65;-1;true;invalid_foreign_key
+4210;22487056;Flex Tee;0;2;4;5;134.02;3;true;invalid_foreign_key
+9338;22902299;Trail Briefs;3;9999;3;3;273.36;2;true;invalid_foreign_key
+7215;23576500;Sprint Tights;-1;6;1;5;236.56;3;true;invalid_foreign_key
+4906;24011713;Velocity T-Shirt;3;2;1;2;208.94;0;true;invalid_foreign_key
+10429;24470371;Summit Jacket;3;-1;6;2;219.26;1;true;invalid_foreign_key
+11474;26026399;Skyline Sneakers;4;10;-1;3;287.87;3;yes;invalid_foreign_key
+3756;26098888;Velocity Boots;4;10;-1;4;128.63;2;true;invalid_foreign_key
+9275;26172428;Blaze Top;0;2;9;2;246.6;2;true;invalid_foreign_key
+5082;26460304;Sprint Wool Socks;2;-1;3;1;167.55;2;true;invalid_foreign_key
+6801;26517956;Blaze Shorts;0;5;4;2;110.88;3;true;invalid_foreign_key
+11462;26562404;Skyline Sneakers;4;10;1;9999;287.87;3;F;invalid_foreign_key
+7605;28267178;Alpine Windbreaker;9999;4;7;5;289.24;3;true;invalid_foreign_key
+10321;28690371;Blaze Boxers;4;9999;9;1;236.95;1;true;invalid_foreign_key
+1911;29132523;Summit Longsleeve;1;9999;5;1;226.63;1;true;invalid_foreign_key
+13441;29431841;Sprint Briefs;4;1;10;2;31.23;0;true;invalid_foreign_key
+5728;29444347;Core Top;3;2;2;5;162.85;0;true;invalid_foreign_key
+7488;29457037;Mountain Shirt;3;3;10;-1;102.23;3;true;invalid_foreign_key
+5390;29557554;Urban Briefs;1;1;10;2;186.72;9999;true;invalid_foreign_key
+7820;29558630;Sprint Coat;3;4;2;9999;234.66;2;true;invalid_foreign_key
+4020;29581006;Summit Coat;0;8;2;2;232.76;2;true;invalid_foreign_key
+8898;29671403;Storm Sweatpants;4;6;4;1;28.83;9999;true;invalid_foreign_key
+9363;30395877;Trail Briefs;9999;1;5;1;273.36;3;true;invalid_foreign_key
+7808;30728934;Sprint Coat;3;4;1;3;234.66;9999;true;invalid_foreign_key
+10017;31235727;Active Windbreaker;4;4;8;4;124.13;-1;true;invalid_foreign_key
+12197;31355631;Skyline Shoes;2;10;9999;4;121.87;3;true;invalid_foreign_key
+768;32191384;Pulse Briefs;2;1;2;1;66.62;-1;true;invalid_foreign_key
+3179;34415580;Blaze Underwear;4;9999;6;2;64.84;1;true;invalid_foreign_key
+6119;35082237;Core Tee;2;2;8;-1;163.16;2;true;invalid_foreign_key
+6396;35438987;Sprint Coat;2;8;9999;2;83.11;3;true;invalid_foreign_key
+13122;36461062;Active Skort;0;7;5;2;96.28;2;true;invalid_foreign_key
+5141;37121472;Sprint Wool Socks;2;0;7;1;167.55;1;true;invalid_foreign_key
+640;38012709;Storm Coat;-1;8;3;4;281.22;1;true;invalid_foreign_key
+8389;38134126;Blaze Shell;2;4;10;9999;290.75;1;true;invalid_foreign_key
+8374;39572027;Blaze Shell;2;4;9;2;290.75;9999;true;invalid_foreign_key
+1921;40349557;Summit Longsleeve;1;3;5;0;226.63;2;true;invalid_foreign_key
+10208;40669391;Blaze Boxers;4;1;9999;3;236.95;2;true;invalid_foreign_key
+10178;40975071;Trail Windbreaker;9999;4;9;3;138.33;2;true;invalid_foreign_key
+13403;41014068;Sprint Briefs;4;1;0;5;31.23;1;true;invalid_foreign_key
+3018;41200058;Urban Ankle Socks;1;9;0;3;215.17;2;true;invalid_foreign_key
+4756;41858396;Blaze Jacket;2;4;1;2;65.61;-1;true;invalid_foreign_key
+978;42689563;Trail Boots;0;10;6;1;111.73;3;true;invalid_foreign_key
+11418;42740158;Active Jacket;1;4;8;5;281.15;9999;true;invalid_foreign_key
+4368;42952447;Core Shorts;5;5;5;3;246.25;0;true;invalid_foreign_key
+5;43043761;Pulse Pants;-1;6;1;2;222.42;2;true;invalid_foreign_key
+9658;43355421;Flex Longsleeve;0;3;4;5;247.65;1;true;invalid_foreign_key
+8377;43623817;Blaze Shell;2;4;9;3;290.75;0;true;invalid_foreign_key
+2056;43711597;Sprint Tee;4;2;-1;4;279.02;2;true;invalid_foreign_key
+4283;44045272;Flex Tee;3;2;9;-1;134.02;1;true;invalid_foreign_key
+9404;44466834;Trail Briefs;3;1;7;0;273.36;2;true;invalid_foreign_key
+6173;44857038;Core Shirt;4;3;2;3;174.36;-1;true;invalid_foreign_key
+6601;44990994;Active Socks;3;9999;1;1;154.03;1;true;invalid_foreign_key
+4725;46312665;Trail Top;2;2;9;0;116.24;2;true;invalid_foreign_key
+10741;46701665;Velocity Boots;4;10;3;-1;74.05;2;true;invalid_foreign_key
+8394;46726691;Blaze Shell;-1;4;10;3;290.75;3;true;invalid_foreign_key
+5682;47756387;Storm Boardshorts;-1;5;9;4;231.72;-1;true;invalid_foreign_key
+9707;48422107;Flex Longsleeve;1;3;8;1;247.65;-1;true;invalid_foreign_key
+14044;50032573;Velocity Top;0;2;7;2;230.3;1;true;invalid_foreign_key
+14265;50837318;Velocity Boxers;4;9999;1;5;246.92;3;true;invalid_foreign_key
+184;50940366;Summit Ankle Socks;1;9;3;2;88.99;-1;true;invalid_foreign_key
+6371;51240670;Sprint Coat;2;8;5;4;83.11;-1;true;invalid_foreign_key
+12490;51715788;Flex Socks;-1;9;10;2;237.55;2;true;invalid_foreign_key
+8583;51812464;Mountain Boardshorts;4;5;3;-1;20.1;3;true;invalid_foreign_key
+6725;52362717;Active Socks;-1;9;9;2;154.03;2;true;invalid_foreign_key
+5406;52976977;Blaze Shirt;5;3;1;9999;262.44;3;true;invalid_foreign_key
+9266;53393363;Blaze Top;2;-1;8;4;246.6;2;true;invalid_foreign_key
+5537;53878638;Blaze Shirt;5;-1;10;1;262.44;2;true;invalid_foreign_key
+8715;54092202;Velocity Tights;4;9999;1;5;237.93;3;true;invalid_foreign_key
+1727;54641008;Pulse Shell;4;4;2;4;158.77;9999;true;invalid_foreign_key
+1634;54744679;Sprint Pants;2;0;6;3;34.97;3;true;invalid_foreign_key
+5523;54967826;Blaze Shirt;5;3;9;-1;262.44;3;true;invalid_foreign_key
+2755;55013008;Alpine Coat;9999;8;7;5;142.68;3;true;invalid_foreign_key
+3799;55316326;Velocity Boots;4;-1;7;3;128.63;3;true;invalid_foreign_key
+6183;55381534;Core Shirt;4;9999;3;1;174.36;3;true;invalid_foreign_key
+1868;55609056;Summit Longsleeve;-1;3;2;1;226.63;3;true;invalid_foreign_key
+12862;56108446;Glacier Jacket;5;9999;5;1;180.65;2;true;invalid_foreign_key
+12869;56440665;Glacier Jacket;-1;4;5;3;180.65;3;true;invalid_foreign_key
+4348;57342402;Core Shorts;5;5;-1;1;246.25;3;true;invalid_foreign_key
+8481;58327959;Alpine Ankle Socks;0;9;6;2;278.2;3;true;invalid_foreign_key
+8742;58616519;Velocity Tights;4;6;3;9999;237.93;3;true;invalid_foreign_key
+6488;59457678;Storm Sweatpants;-1;6;3;3;22.47;2;true;invalid_foreign_key
+12504;59823817;Mountain Shoes;5;-1;1;2;171.24;1;true;invalid_foreign_key
+7789;59959556;Pulse Tee;2;2;-1;2;150.93;1;true;invalid_foreign_key
+13767;60570641;Active Skirt;2;7;4;0;275.16;2;true;invalid_foreign_key
+5214;61049346;Active Skirt;3;-1;3;4;77.25;2;true;invalid_foreign_key
+8550;61241076;Alpine Ankle Socks;3;9;10;0;278.2;3;true;invalid_foreign_key
+706;61336489;Storm Coat;5;8;-1;1;281.22;1;true;invalid_foreign_key
+3636;61416383;Sprint Briefs;9999;1;6;4;39.3;2;true;invalid_foreign_key
+8667;61976682;Mountain Boardshorts;4;5;8;0;20.1;3;true;invalid_foreign_key
+3779;62879931;Velocity Boots;4;10;6;9999;128.63;1;true;invalid_foreign_key
+10867;63778173;Flex Socks;3;9;-1;1;53.72;2;true;invalid_foreign_key
+11198;63884603;Mountain Shell;4;4;4;1;74.23;0;true;invalid_foreign_key
+5899;63885993;Urban Windbreaker;1;4;0;2;138.92;1;1;invalid_foreign_key
+463;65001856;Urban Shirt;2;0;1;5;67.6;1;true;invalid_foreign_key
+9453;65525987;Core Longsleeve;5;0;1;1;271.65;3;true;invalid_foreign_key
+10501;66108540;Velocity Skort;2;7;1;0;64.13;2;no;invalid_foreign_key
+4672;66351975;Trail Top;2;2;5;4;116.24;9999;true;invalid_foreign_key
+13126;67015154;Active Skort;9999;7;6;1;96.28;2;true;invalid_foreign_key
+6780;68153789;Blaze Shorts;4;5;9999;5;110.88;0;true;invalid_foreign_key
+6533;69705405;Storm Sweatpants;4;6;0;3;22.47;2;true;invalid_foreign_key
+13645;70011003;Glacier Jacket;3;8;-1;5;92.62;3;true;invalid_foreign_key
+2179;70452372;Glacier Sweatpants;4;6;2;9999;297.07;2;true;invalid_foreign_key
+12099;70503083;Skyline Shoes;2;10;4;2;121.87;9999;true;invalid_foreign_key
+7185;70896066;Sprint Shell;-1;4;9;5;114.53;3;true;invalid_foreign_key
+3911;71478990;Core Tee;5;2;9999;1;203.5;1;F;invalid_foreign_key
+13575;71537451;Active Polo;5;0;9;2;276.23;2;true;invalid_foreign_key
+6830;71600409;Blaze Shorts;4;5;6;2;110.88;-1;true;invalid_foreign_key
+6379;72569483;Sprint Coat;2;9999;6;2;83.11;1;true;invalid_foreign_key
+3042;73004549;Urban Ankle Socks;1;9;7;9999;215.17;2;true;invalid_foreign_key
+9973;73582751;Active Windbreaker;4;4;9999;5;124.13;1;true;invalid_foreign_key
+3328;74338862;Mountain Sweatpants;2;6;6;9999;288.72;3;true;invalid_foreign_key
+8213;74652058;Summit Underwear;4;0;8;3;111.78;2;true;invalid_foreign_key
+10458;74666883;Summit Jacket;3;4;-1;1;219.26;3;true;invalid_foreign_key
+10984;74974132;Flex Socks;-1;9;9;5;53.72;2;true;invalid_foreign_key
+5647;75310243;Storm Boardshorts;1;5;9999;3;231.72;1;true;invalid_foreign_key
+14012;76196467;Velocity Top;1;2;-1;1;230.3;2;true;invalid_foreign_key
+2564;76417534;Mountain Ankle Socks;3;0;5;2;275.94;1;true;invalid_foreign_key
+9604;76952552;Flex Longsleeve;1;3;1;-1;247.65;1;1;invalid_foreign_key
+5677;77313675;Storm Boardshorts;9999;5;9;3;231.72;1;true;invalid_foreign_key
+12048;77641874;Pulse Tights;1;-1;10;5;254.12;1;true;invalid_foreign_key
+10126;77841665;Trail Windbreaker;0;4;6;1;138.33;1;true;invalid_foreign_key
+7390;78039711;Mountain Shirt;3;3;3;9999;102.23;1;true;invalid_foreign_key
+7921;78863689;Sprint Coat;3;4;9;1;234.66;9999;true;invalid_foreign_key
+4885;78923329;Blaze Jacket;2;4;9;9999;65.61;3;true;invalid_foreign_key
+1145;79641646;Blaze Sweatpants;2;6;7;-1;108.62;2;true;invalid_foreign_key
+4883;80701359;Blaze Jacket;2;-1;9;5;65.61;1;true;invalid_foreign_key
+1526;80751981;Velocity Shorts;2;5;9;0;61.77;3;true;invalid_foreign_key
+7490;80762023;Mountain Shirt;3;-1;10;2;102.23;2;true;invalid_foreign_key
+11038;80766563;Summit Shell;1;8;3;-1;57.8;2;true;invalid_foreign_key
+87;80961852;Pulse Pants;9999;6;6;4;222.42;3;true;invalid_foreign_key
+3852;81253425;Core Tee;5;0;1;1;203.5;0;true;invalid_foreign_key
+3280;81683366;Mountain Sweatpants;2;6;-1;5;288.72;3;true;invalid_foreign_key
+1016;83032223;Trail Boots;2;10;8;4;111.73;0;true;invalid_foreign_key
+7519;83405477;Alpine Windbreaker;5;4;2;2;289.24;9999;true;invalid_foreign_key
+1160;83570465;Blaze Sweatpants;2;6;8;-1;108.62;2;true;invalid_foreign_key
+376;84406126;Glacier Jacket;2;8;6;1;283.37;-1;true;invalid_foreign_key
+12520;84421553;Mountain Shoes;5;0;2;2;171.24;2;true;invalid_foreign_key
+11277;84424895;Mountain Shell;4;0;9;3;74.23;1;true;invalid_foreign_key
+5200;84570995;Sprint Wool Socks;9999;9;10;5;167.55;3;true;invalid_foreign_key
+7716;84590766;Pulse Tee;2;2;5;2;150.93;0;true;invalid_foreign_key
+13186;85351837;Skyline Jacket;3;4;3;-1;235.47;3;true;invalid_foreign_key
+3110;85671669;Blaze Underwear;4;1;1;4;64.84;9999;true;invalid_foreign_key
+10136;85729829;Trail Windbreaker;5;-1;6;4;138.33;2;true;invalid_foreign_key
+1370;85896360;Blaze Skort;5;0;4;5;232.28;2;true;invalid_foreign_key
+11005;86366201;Summit Shell;1;8;1;2;57.8;-1;true;invalid_foreign_key
+11611;86563853;Alpine Polo;4;3;1;4;46.67;9999;true;invalid_foreign_key
+10422;87107030;Summit Jacket;3;4;5;-1;219.26;3;true;invalid_foreign_key
+11897;87439332;Alpine Wool Socks;5;9;9999;4;294.61;3;true;invalid_foreign_key
+497;87753033;Urban Shirt;2;0;4;1;67.6;2;true;invalid_foreign_key
+12310;88130960;Sprint Jacket;9999;8;8;2;197.75;2;true;invalid_foreign_key
+2669;88539044;Alpine Coat;2;8;2;2;142.68;9999;true;invalid_foreign_key
+2303;89344061;Flex Skirt;3;7;0;3;181.96;2;true;invalid_foreign_key
+3455;89372445;Pulse Jacket;-1;4;4;4;155.59;1;true;invalid_foreign_key
+5752;89534181;Core Top;3;2;9999;3;162.85;1;true;invalid_foreign_key
+9936;89733907;Active Windbreaker;4;4;3;2;124.13;-1;true;invalid_foreign_key
+6055;90223529;Core Tee;2;0;4;4;163.16;1;true;invalid_foreign_key
+7597;90411474;Alpine Windbreaker;9999;4;7;3;289.24;1;true;invalid_foreign_key
+7322;90522672;Sprint Tights;3;9999;9;1;236.56;2;true;invalid_foreign_key
+3080;90604286;Urban Ankle Socks;1;9;0;4;215.17;1;true;invalid_foreign_key
+3144;91250405;Blaze Underwear;4;1;3;9999;64.84;2;true;invalid_foreign_key
+12798;91263116;Glacier T-Shirt;1;2;0;5;230.23;1;true;invalid_foreign_key
+215;91398877;Summit Ankle Socks;1;9999;5;2;88.99;2;true;invalid_foreign_key
+11032;91591830;Summit Shell;1;8;3;0;57.8;2;true;invalid_foreign_key
+11777;91868906;Alpine Wool Socks;5;9;2;4;294.61;-1;false;invalid_foreign_key
+6030;91989760;Core Tee;9999;2;2;5;163.16;3;true;invalid_foreign_key
+12547;92314558;Mountain Shoes;5;-1;4;1;171.24;2;true;invalid_foreign_key
+8729;92479623;Velocity Tights;4;6;2;5;237.93;0;true;invalid_foreign_key
+297;92554560;Summit Ankle Socks;1;9;10;4;88.99;0;true;invalid_foreign_key
+11748;92974026;Alpine Polo;4;3;10;5;46.67;-1;F;invalid_foreign_key
+10870;93141904;Flex Socks;3;9;2;2;53.72;-1;true;invalid_foreign_key
+4770;93183313;Blaze Jacket;2;4;0;2;65.61;2;true;invalid_foreign_key
+5708;93563549;Core Top;3;2;1;-1;162.85;2;true;invalid_foreign_key
+13067;94242018;Summit Tights;3;0;8;4;97.53;3;true;invalid_foreign_key
+3152;94388292;Blaze Underwear;4;1;4;0;64.84;1;true;invalid_foreign_key
+7577;95183756;Alpine Windbreaker;5;4;6;9999;289.24;2;true;invalid_foreign_key
+11867;95533703;Alpine Wool Socks;5;0;8;4;294.61;3;true;invalid_foreign_key
+453;96316617;Urban Shirt;2;-1;1;1;67.6;3;true;invalid_foreign_key
+1268;96509076;Pulse Boxers;4;1;5;-1;28.56;2;true;invalid_foreign_key
+13965;96803059;Velocity Top;1;2;1;5;230.3;-1;true;invalid_foreign_key
+8363;96832945;Blaze Shell;2;4;8;3;290.75;0;true;invalid_foreign_key
+11786;97016562;Alpine Wool Socks;9999;9;3;2;294.61;3;true;invalid_foreign_key
+55;97281298;Pulse Pants;3;6;4;-1;222.42;1;true;invalid_foreign_key
+6851;98804220;Blaze Shorts;4;5;7;4;110.88;0;true;invalid_foreign_key
+8162;98933151;Summit Underwear;4;-1;5;1;111.78;2;true;invalid_foreign_key
+11800;99090880;Alpine Wool Socks;5;9;0;2;294.61;2;true;invalid_foreign_key
+11148;99702898;Summit Shell;1;9999;10;5;57.8;1;true;invalid_foreign_key
+13154;14721521;Skyline Jacket;3;4;1;2;-235.47;1;true;invalid_price
+8907;15553333;Storm Sweatpants;4;6;4;4;-28.83;3;true;invalid_price
+5881;17946229;Urban Windbreaker;1;4;3;1;-138.92;1;true;invalid_price
+12861;18453015;Glacier Jacket;5;4;5;1;-180.65;1;true;invalid_price
+4841;20789789;Blaze Jacket;2;4;7;1;-65.61;1;true;invalid_price
+13187;21482699;Skyline Jacket;3;4;3;3;-235.47;1;true;invalid_price
+5252;24742025;Urban Briefs;1;1;1;1;-186.72;2;kanske;invalid_price
+5841;24904742;Core Top;3;2;10;2;-162.85;3;true;invalid_price
+13653;26532350;Glacier Jacket;3;8;4;3;-92.62;2;true;invalid_price
+7343;26793285;Sprint Tights;3;6;10;3;-236.56;2;true;invalid_price
+8096;28365628;Glacier Briefs;1;1;10;4;-250.91;2;true;invalid_price
+8665;28728883;Mountain Boardshorts;4;5;8;4;-20.1;1;true;invalid_price
+2935;34297379;Blaze Ankle Socks;2;9;9;5;-268.57;3;true;invalid_price
+12879;37658794;Glacier Jacket;5;4;6;2;-180.65;1;true;invalid_price
+4860;39459043;Blaze Jacket;2;4;8;2;-65.61;2;true;invalid_price
+14051;43822253;Velocity Top;1;2;7;4;-230.3;2;true;invalid_price
+3174;44344304;Blaze Underwear;4;1;5;5;-64.84;2;true;invalid_price
+5295;44696742;Urban Briefs;1;1;3;5;-186.72;3;0;invalid_price
+4240;45523100;Flex Tee;3;2;6;5;-134.02;3;true;invalid_price
+9202;50358812;Blaze Top;2;2;4;3;-246.6;1;true;invalid_price
+4132;56695594;Summit Coat;4;8;9;4;-232.76;3;true;invalid_price
+5892;57209917;Urban Windbreaker;1;4;3;4;-138.92;3;true;invalid_price
+9911;58072500;Active Windbreaker;4;4;1;4;-124.13;2;true;invalid_price
+3843;58172353;Velocity Boots;4;10;10;3;-128.63;2;true;invalid_price
+8088;59342412;Glacier Briefs;1;1;10;1;-250.91;3;true;invalid_price
+8431;59557612;Alpine Ankle Socks;3;9;3;1;-278.2;1;true;invalid_price
+1238;60856950;Pulse Boxers;4;1;3;3;-28.56;2;true;invalid_price
+2648;62274068;Mountain Ankle Socks;3;9;10;5;-275.94;1;true;invalid_price
+12996;66185823;Summit Tights;3;6;4;1;-97.53;1;true;invalid_price
+12602;66534460;Mountain Shoes;5;10;7;4;-171.24;3;true;invalid_price
+11108;67256845;Summit Shell;1;8;8;1;-57.8;3;true;invalid_price
+4534;68644971;Urban Shirt;3;3;6;3;-264.4;3;true;invalid_price
+455;69588847;Urban Shirt;2;3;1;2;-67.6;2;true;invalid_price
+1351;73107099;Blaze Skort;5;7;1;1;-232.28;2;true;invalid_price
+168;74852048;Summit Ankle Socks;1;9;2;1;-88.99;3;true;invalid_price
+8336;81007519;Blaze Shell;2;4;6;4;-290.75;2;true;invalid_price
+7545;81529699;Alpine Windbreaker;5;4;3;5;-289.24;3;true;invalid_price
+11478;91356472;Skyline Sneakers;4;10;2;5;-287.87;1;true;invalid_price
+1;92197967;Pulse Pants;3;6;1;1;-99.99;1;true;invalid_price
+12506;92640906;Mountain Shoes;5;10;1;2;-171.24;3;true;invalid_price
+8181;93249425;Summit Underwear;4;1;6;2;-111.78;3;true;invalid_price
+2425;37034015;Blaze Socks;1;9;5;-1;-135.84;3;true;invalid_price|invalid_foreign_key
+12923;75872645;Glacier Jacket;5;4;0;1;-180.65;3;true;invalid_price|invalid_foreign_key
+1508;10291845;Velocity Shorts;2;5;8;1;;3;true;invalid_price|missing_required_field
+7947;11704114;Sprint Coat;3;4;10;4;;3;true;invalid_price|missing_required_field
+12756;13082984;Glacier T-Shirt;1;2;8;1;;1;true;invalid_price|missing_required_field
+4413;16022237;Core Shorts;5;5;8;3;;2;true;invalid_price|missing_required_field
+468;18179805;Urban Shirt;2;3;2;1;;3;true;invalid_price|missing_required_field
+11281;23915012;Mountain Shell;4;4;9;4;;2;true;invalid_price|missing_required_field
+9305;29751267;Trail Briefs;3;1;1;2;;2;true;invalid_price|missing_required_field
+11661;32022692;Alpine Polo;4;3;5;1;;1;true;invalid_price|missing_required_field
+8762;38357083;Velocity Tights;4;6;5;1;;2;true;invalid_price|missing_required_field
+11954;42536546;Pulse Tights;1;6;4;3;;3;T;invalid_price|missing_required_field
+3371;45720824;Mountain Sweatpants;2;6;9;1;;1;true;invalid_price|missing_required_field
+8553;48211241;Mountain Boardshorts;4;5;1;1;;3;true;invalid_price|missing_required_field
+8596;51594911;Mountain Boardshorts;4;5;4;1;;1;true;invalid_price|missing_required_field
+8022;58180015;Glacier Briefs;1;1;5;4;;3;true;invalid_price|missing_required_field
+6230;60780774;Core Shirt;4;3;6;2;;2;true;invalid_price|missing_required_field
+11779;61053866;Alpine Wool Socks;5;9;2;5;;2;true;invalid_price|missing_required_field
+2528;64421768;Mountain Ankle Socks;3;9;2;5;;1;true;invalid_price|missing_required_field
+7147;67533036;Sprint Shell;1;4;7;3;;1;yes;invalid_price|missing_required_field
+5429;70881120;Blaze Shirt;5;3;2;5;;2;true;invalid_price|missing_required_field
+2;71721768;Pulse Pants;3;6;1;1;;2;true;invalid_price|missing_required_field
+13861;72627459;Alpine Jacket;4;4;5;1;;1;1;invalid_price|missing_required_field
+10495;84776364;Summit Jacket;3;4;10;4;;1;true;invalid_price|missing_required_field
+5781;85144384;Core Top;3;2;6;2;;3;true;invalid_price|missing_required_field
+7395;86338883;Mountain Shirt;3;3;3;5;;3;true;invalid_price|missing_required_field
+12472;88692470;Flex Socks;2;9;9;1;;2;true;invalid_price|missing_required_field
+12154;94170862;Skyline Shoes;2;10;7;5;;2;true;invalid_price|missing_required_field
+8295;96579325;Blaze Shell;2;4;3;5;;3;true;invalid_price|missing_required_field
+13567;97314763;Active Polo;5;3;8;4;;3;true;invalid_price|missing_required_field
+3434;75180602;Pulse Jacket;3;4;9999;2;;1;true;invalid_price|missing_required_field|invalid_foreign_key
+4;BAD_CODE;Pulse Pants;3;6;1;2;222.42;1;true;invalid_product_code
+704;INVALID_CODE;Storm Coat;5;8;7;5;281.22;2;true;invalid_product_code
+1637;INVALID_CODE;Sprint Pants;2;6;6;4;34.97;3;true;invalid_product_code
+2107;INVALID_CODE;Sprint Tee;4;2;8;1;279.02;2;true;invalid_product_code
+2741;INVALID_CODE;Alpine Coat;2;8;7;1;142.68;1;true;invalid_product_code
+2806;INVALID_CODE;Blaze Ankle Socks;2;9;1;2;268.57;3;true;invalid_product_code
+3017;INVALID_CODE;Urban Ankle Socks;1;9;5;3;215.17;1;true;invalid_product_code
+3884;INVALID_CODE;Core Tee;5;2;3;2;203.5;1;true;invalid_product_code
+3922;INVALID_CODE;Core Tee;5;2;5;4;203.5;3;true;invalid_product_code
+3967;INVALID_CODE;Core Tee;5;2;8;4;203.5;3;1;invalid_product_code
+7052;INVALID_CODE;Sprint Shell;1;4;1;1;114.53;2;true;invalid_product_code
+7289;INVALID_CODE;Sprint Tights;3;6;6;5;236.56;2;true;invalid_product_code
+7460;INVALID_CODE;Mountain Shirt;3;3;8;2;102.23;2;true;invalid_product_code
+7801;INVALID_CODE;Sprint Coat;3;4;1;1;234.66;1;true;invalid_product_code
+8329;INVALID_CODE;Blaze Shell;2;4;6;2;290.75;1;true;invalid_product_code
+8582;INVALID_CODE;Mountain Boardshorts;4;5;3;1;20.1;2;true;invalid_product_code
+8698;INVALID_CODE;Mountain Boardshorts;4;5;10;5;20.1;1;true;invalid_product_code
+8775;INVALID_CODE;Velocity Tights;4;6;5;5;237.93;3;true;invalid_product_code
+10739;INVALID_CODE;Velocity Boots;4;10;3;3;74.05;3;true;invalid_product_code
+10926;INVALID_CODE;Flex Socks;3;9;6;1;53.72;1;true;invalid_product_code
+11521;INVALID_CODE;Skyline Sneakers;4;10;5;4;287.87;2;true;invalid_product_code
+12566;INVALID_CODE;Mountain Shoes;5;10;5;2;171.24;3;true;invalid_product_code
+12632;INVALID_CODE;Mountain Shoes;5;10;9;4;171.24;3;true;invalid_product_code
+13208;INVALID_CODE;Skyline Jacket;3;4;4;5;235.47;1;true;invalid_product_code
+13277;INVALID_CODE;Skyline Jacket;3;4;9;3;235.47;1;true;invalid_product_code
+13279;INVALID_CODE;Skyline Jacket;3;4;9;3;235.47;3;true;invalid_product_code
+13498;INVALID_CODE;Active Polo;5;3;4;1;276.23;3;true;invalid_product_code
+14047;INVALID_CODE;Velocity Top;1;2;7;3;230.3;1;true;invalid_product_code
+4866;INVALID_CODE;Blaze Jacket;2;4;8;-1;65.61;2;F;invalid_product_code|invalid_foreign_key
+7264;INVALID_CODE;Sprint Tights;0;6;5;2;236.56;1;true;invalid_product_code|invalid_foreign_key
+10906;INVALID_CODE;Flex Socks;3;9;4;4;53.72;2;;invalid_product_code|missing_required_field
+7575;11909759;;5;4;5;5;289.24;3;true;missing_required_field
+14146;12257933;Trail Tights;1;6;4;1;170.61;1;;missing_required_field
+13526;12743376;Active Polo;5;3;6;1;276.23;1;;missing_required_field
+10817;17044969;Velocity Boots;4;10;8;4;74.05;3;;missing_required_field
+9559;17280969;Core Longsleeve;5;3;8;2;271.65;1;;missing_required_field
+11534;17401170;;4;10;6;3;287.87;3;true;missing_required_field
+13137;18824139;Active Skort;4;7;8;2;96.28;2;;missing_required_field
+4992;18964319;Velocity T-Shirt;3;2;7;1;208.94;2;;missing_required_field
+1914;20910829;;1;3;5;2;226.63;1;true;missing_required_field
+13228;21151315;;3;4;6;1;235.47;3;true;missing_required_field
+11894;21302568;Alpine Wool Socks;5;9;10;3;294.61;3;;missing_required_field
+11283;22342401;;4;4;9;5;74.23;1;true;missing_required_field
+8882;22693593;Storm Sweatpants;4;6;3;1;28.83;2;;missing_required_field
+9019;23039743;;1;6;2;2;47.46;1;true;missing_required_field
+4562;23221497;;3;3;8;3;264.4;1;true;missing_required_field
+1458;24243945;Velocity Shorts;2;5;4;5;61.77;1;;missing_required_field
+7394;24451497;Mountain Shirt;3;3;3;5;102.23;2;;missing_required_field
+13875;24539901;Alpine Jacket;4;4;5;5;215.83;3;;missing_required_field
+8554;25338654;Mountain Boardshorts;4;5;1;2;20.1;1;;missing_required_field
+3973;25770492;Core Tee;5;2;9;1;203.5;3;;missing_required_field
+8768;29740715;Velocity Tights;4;6;5;3;237.93;2;;missing_required_field
+3030;33296432;;1;9;6;2;215.17;2;true;missing_required_field
+2144;33416433;Sprint Tee;4;2;10;3;279.02;3;;missing_required_field
+3879;33767790;Core Tee;5;2;2;5;203.5;2;;missing_required_field
+13047;35614439;Summit Tights;3;6;7;3;97.53;1;;missing_required_field
+13904;37009167;Alpine Jacket;4;4;7;5;215.83;2;;missing_required_field
+13321;37043291;Sprint Briefs;4;1;2;2;31.23;3;;missing_required_field
+13907;37187741;Alpine Jacket;4;4;8;1;215.83;2;;missing_required_field
+3;37917619;;3;6;1;1;222.42;3;true;missing_required_field
+13787;37993923;Active Skirt;2;7;8;2;275.16;2;;missing_required_field
+3824;38390298;Velocity Boots;4;10;9;2;128.63;1;;missing_required_field
+950;39722342;Trail Boots;2;10;4;2;111.73;2;;missing_required_field
+13657;41554426;Glacier Jacket;3;8;4;4;92.62;3;;missing_required_field
+4568;42124369;Urban Shirt;3;3;8;5;264.4;1;;missing_required_field
+6560;43111208;Storm Sweatpants;4;6;8;2;22.47;2;;missing_required_field
+11069;44056026;;1;8;5;3;57.8;3;true;missing_required_field
+10318;44104424;;4;1;8;5;236.95;1;true;missing_required_field
+720;45411952;Storm Coat;5;8;8;5;281.22;3;;missing_required_field
+6847;45940141;Blaze Shorts;4;5;7;3;110.88;1;;missing_required_field
+7756;46094367;Pulse Tee;2;2;8;1;150.93;1;;missing_required_field
+981;46475241;;2;10;6;2;111.73;3;true;missing_required_field
+457;46551017;;2;3;1;3;67.6;1;true;missing_required_field
+10524;46778901;;2;7;5;4;64.13;2;true;missing_required_field
+5582;48446332;Storm Boardshorts;1;5;3;1;231.72;2;;missing_required_field
+6064;50157428;Core Tee;2;2;5;2;163.16;1;;missing_required_field
+7074;51125019;Sprint Shell;1;4;2;3;114.53;3;;missing_required_field
+2489;51570105;Blaze Socks;1;9;10;2;135.84;1;;missing_required_field
+4844;51907363;Blaze Jacket;2;4;7;2;65.61;1;;missing_required_field
+4889;51915060;Blaze Jacket;2;4;10;2;65.61;1;;missing_required_field
+2941;52057518;;2;9;10;2;268.57;3;true;missing_required_field
+10473;54150067;;3;4;9;1;219.26;3;true;missing_required_field
+7572;54198247;Alpine Windbreaker;5;4;5;4;289.24;3;;missing_required_field
+5555;56786068;Storm Boardshorts;1;5;1;2;231.72;2;;missing_required_field
+10273;56956166;Blaze Boxers;4;1;5;5;236.95;1;;missing_required_field
+12642;57760168;Mountain Shoes;5;10;10;3;171.24;1;;missing_required_field
+9469;58384079;Core Longsleeve;5;3;2;2;271.65;1;;missing_required_field
+7806;58485066;Sprint Coat;3;4;1;2;234.66;3;;missing_required_field
+1846;58733952;Pulse Shell;4;4;10;4;158.77;2;;missing_required_field
+9348;59873338;Trail Briefs;3;1;4;1;273.36;3;;missing_required_field
+12158;61021309;Skyline Shoes;2;10;8;1;121.87;3;;missing_required_field
+5963;62761553;Urban Windbreaker;1;4;8;3;138.92;2;;missing_required_field
+11697;63005629;Alpine Polo;4;3;7;3;46.67;1;;missing_required_field
+274;64061153;Summit Ankle Socks;1;9;9;2;88.99;1;;missing_required_field
+840;64174324;Pulse Briefs;2;1;6;5;66.62;3;;missing_required_field
+2339;64458507;Flex Skirt;3;7;8;4;181.96;2;;missing_required_field
+7606;67409220;;5;4;8;1;289.24;1;true;missing_required_field
+7030;67979656;;1;5;9;4;113.29;1;true;missing_required_field
+7765;68034515;Pulse Tee;2;2;8;4;150.93;1;;missing_required_field
+14104;68041437;;1;6;1;2;170.61;1;true;missing_required_field
+12067;69536919;Skyline Shoes;2;10;2;1;121.87;2;;missing_required_field
+782;69879652;;2;1;3;1;66.62;2;true;missing_required_field
+7634;72344205;Alpine Windbreaker;5;4;9;5;289.24;2;;missing_required_field
+4162;72672094;Flex Tee;3;2;1;4;134.02;3;;missing_required_field
+246;72779186;Summit Ankle Socks;1;9;7;2;88.99;3;;missing_required_field
+8990;72923506;Storm Sweatpants;4;6;10;2;28.83;2;;missing_required_field
+12761;75026539;Glacier T-Shirt;1;2;8;2;230.23;3;;missing_required_field
+7651;76354661;;2;2;1;1;150.93;1;true;missing_required_field
+14155;76369144;Trail Tights;1;6;4;4;170.61;1;;missing_required_field
+12860;76961131;Glacier Jacket;5;4;4;5;180.65;3;;missing_required_field
+13855;79265233;;4;4;4;4;215.83;1;true;missing_required_field
+7138;81052295;Sprint Shell;1;4;6;5;114.53;1;;missing_required_field
+8144;81884173;;4;1;3;5;111.78;2;true;missing_required_field
+5551;82044618;Storm Boardshorts;1;5;1;1;231.72;1;;missing_required_field
+6217;82437018;;4;3;5;3;174.36;1;true;missing_required_field
+13673;82493698;;3;8;5;5;92.62;1;true;missing_required_field
+13840;86866670;Alpine Jacket;4;4;3;4;215.83;1;;missing_required_field
+14143;87646202;Trail Tights;1;6;3;5;170.61;1;;missing_required_field
+10197;91518418;;5;4;10;4;138.33;3;true;missing_required_field
+1576;92641819;;2;6;2;4;34.97;2;true;missing_required_field
+10499;92979192;Summit Jacket;3;4;10;5;219.26;2;;missing_required_field
+1147;93525523;Blaze Sweatpants;2;6;7;3;108.62;1;;missing_required_field
+3818;93902585;Velocity Boots;4;10;8;5;128.63;1;;missing_required_field
+8425;95406829;;3;9;2;4;278.2;1;true;missing_required_field
+1432;96410672;Velocity Shorts;2;5;3;1;61.77;2;;missing_required_field
+6975;98980689;Mountain Boardshorts;1;5;5;5;113.29;3;;missing_required_field
+5723;99346100;Core Top;3;2;2;3;162.85;2;;missing_required_field
+4311;99751951;;5;5;1;4;246.25;2;true;missing_required_field
+3203;99906118;Blaze Underwear;4;1;7;5;64.84;1;;missing_required_field
+10574;50004123;Active Windbreaker;5;0;2;3;38.05;3;;missing_required_field|invalid_foreign_key
+870;95532143;Pulse Briefs;-1;1;8;5;66.62;3;;missing_required_field|invalid_foreign_key

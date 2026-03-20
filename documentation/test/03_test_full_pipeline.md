@@ -1,4 +1,7 @@
-## Run `generate_dirty_csv.md`'
+# Extract
+
+## Run `generate_dirty_csv.md` inside scripts
+- Don't run Docker here yet.
 `products_dirty.csv` is created.
 
 Expected Output:
@@ -10,6 +13,7 @@ Done! Created DIRTY dataset with 13800 rows.
 Saved to: data/raw/products_dirty.csv
 ```
 
+# Transform
 
 ## Run `transform.py`
 Dirty data csv is transformed and cleaned.
@@ -23,6 +27,7 @@ ETL complete: 13800 input → 13388 valid → 412 rejected
 ETL complete. Data saved to CSV. (Skipping database load)
 ```
 
+# Generate events from company history and receipts
 
 ## Run `generate_sales_csv.py`
 Create the sales events

@@ -2,7 +2,7 @@
 # 🧪 End-to-End Persistence Test Guide
 
 ## ⚡ Thunder Client Setup (IMPORTANT)
-This guide starts **after** you have already done the following successfully: Everything in `03_test_full_pipeline.md`
+#### This guide starts **after** you have already done the following successfully: Everything in `03_test_full_pipeline.md`
 
 
 
@@ -70,7 +70,7 @@ docker compose logs app --tail=50
 ## 3. Connect to PostgreSQL in psql
 
 Always check Kafka logs when testing:
-If you want to verify everything from the terminal:
+**If you want to verify everything from the terminal:**
 
 ```bash
 docker compose logs -f consumer
@@ -180,6 +180,9 @@ Check the sale event in the database
 ```sql
 SELECT * FROM staging.orders;
 SELECT * FROM staging.items;
+```
+
+```sql
 SELECT 'brands' AS table_name, COUNT(*) AS row_count FROM staging.brands
 UNION ALL
 SELECT 'categories', COUNT(*) FROM staging.categories
@@ -290,31 +293,40 @@ UNION ALL
 SELECT 'inventories', COUNT(*) FROM refined.inventories
 UNION ALL
 SELECT 'items', COUNT(*) FROM refined.items
+UNION ALL
+SELECT 'orders', COUNT(*) FROM refined.orders
 ORDER BY view_name;
 ```
+
+```sql
 SELECT *
 FROM staging.products
 ORDER BY product_id DESC
 LIMIT 10;
+```
 
 ### 6.2 Compare staging vs refined counts
 
 ```sql
 SELECT 'products' AS entity,
-       (SELECT COUNT(*) FROM staging.products) AS staging_count,
-       (SELECT COUNT(*) FROM refined.products) AS refined_count
+        (SELECT COUNT(*) FROM staging.products) AS staging_count,
+        (SELECT COUNT(*) FROM refined.products) AS refined_count
 UNION ALL
 SELECT 'stores',
-       (SELECT COUNT(*) FROM staging.stores),
-       (SELECT COUNT(*) FROM refined.stores)
+        (SELECT COUNT(*) FROM staging.stores),
+        (SELECT COUNT(*) FROM refined.stores)
 UNION ALL
 SELECT 'inventories',
-       (SELECT COUNT(*) FROM staging.inventories),
-       (SELECT COUNT(*) FROM refined.inventories)
+        (SELECT COUNT(*) FROM staging.inventories),
+        (SELECT COUNT(*) FROM refined.inventories)
 UNION ALL
 SELECT 'items',
-       (SELECT COUNT(*) FROM staging.items),
-       (SELECT COUNT(*) FROM refined.items);
+        (SELECT COUNT(*) FROM staging.items),
+        (SELECT COUNT(*) FROM refined.items)
+UNION ALL
+SELECT 'orders',
+        (SELECT COUNT(*) FROM staging.orders),
+        (SELECT COUNT (*) FROM refined.orders);
 ```
 
 Validate Specific Batch
@@ -349,18 +361,8 @@ SELECT * FROM refined.items ORDER BY item_id DESC LIMIT 10;
 ---
 
 ### 📦 InventoryEvent (IMPORTANT)
-http://localhost:8000/api/inventory-events
-```json
-{
-  "event_id": 20001,
-  "event_type": "restock",
-  "timestamp": "2026-03-18T08:44:02.011Z",
-  "store_id": 1,
-  "product_id": 1,
-  "quantity_change": 10,
-  "stock_after_event": 50
-}
-```
+**We do NOT have and not need an endpoint for SINGLE inventory events.**
+
 ## 7. Validate That the Refresh Job Exists
 
 http://localhost:8000/api/inventory-events/batch
