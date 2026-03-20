@@ -1,13 +1,8 @@
-# Product_Finder
+# About our Product: Product_Finder
 **Product_Finder is an inventory management platform prototype for a retail company (SportsWear AB). Our platform brings together sales and inventory data so businesses can clearly see what’s happening in their operations. This enables them to avoid costly mistakes, optimize stock levels, and make confident decisions based on real data.**
 
 ## Project Overview
 This system captures real-time inventory events, such as **sales**, **inventory events updates** and **restocks**. It stores them durably in a PostgreSQL database. Events are produced by a FastAPI application, transmitted through an Apache Kafka topic (`inventory_events`), and consumed by a dedicated database consumer that persists each event. A base dataset of products, stores, categories, and other reference data is pre-loaded from CSV files into the database at startup.
-
-### Basically, we have:
-- a **batch ETL layer** that cleans synthetic product master data,
-- a **streaming/event layer** built with **FastAPI + Kafka**,
-- a **PostgreSQL warehouse-style database** with `staging` and `refined` schemas, and a set of **SQL queries** intended to power analytics, reporting, and future dashboards.
 
 ---
 
