@@ -112,10 +112,18 @@ services:
     ports:
       - "8000:8000"
     command: ["uv", "run", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
-
-
-
-
+  
+  evidence:
+    build:
+      context: .
+      dockerfile: Dockerfile.evidence
+    container_name: SportWear_Evidence
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./evidence_app:/app
+    depends_on:
+      - postgres
 
 volumes:
   postgres_data:
