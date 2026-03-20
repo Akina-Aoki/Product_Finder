@@ -24,7 +24,7 @@ This page is made to see how sales goes.
     SELECT
         product_name AS product,
         sum(item_price) AS Sale
-    FROM sportwear.data_sales
+    FROM sportwear.meta_stores
     WHERE 
         ('${inputs.stores.value}' = 'true' OR '${inputs.stores.value}' = '') 
         OR store_name = '${inputs.stores.value}'
