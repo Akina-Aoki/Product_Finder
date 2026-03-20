@@ -60,3 +60,7 @@ Thumbs.db
 # Local data files (generated/imported datasets)
 *.jsonl
 *.jsonl.gz
+
+# data
+data/raw/*
+data/processed/*
