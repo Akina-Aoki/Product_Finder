@@ -19,13 +19,97 @@
 
 -- Query 1:
 -- Current stock per product across all stores
+WITH jackets AS (
+    SELECT *
+    FROM refined.products
+    WHERE category_name ILIKE '%jacket%'
+)
+
 SELECT
-    i.product_id,
-    i.product_name,
-    SUM(i.amount) AS current_total_stock
-FROM refined.inventories i
-GROUP BY i.product_id, i.product_name
-ORDER BY current_total_stock DESC, i.product_name;
+    j.product_name,
+
+    SUM(i.amount) AS total_stock,
+
+    -- Size distribution
+    SUM(i.amount) FILTER (WHERE j.size_name = 'XS') AS stock_xs,
+    SUM(i.amount) FILTER (WHERE j.size_name = 'S')  AS stock_s,
+    SUM(i.amount) FILTER (WHERE j.size_name = 'M')  AS stock_m,
+    SUM(i.amount) FILTER (WHERE j.size_name = 'L')  AS stock_l,
+    SUM(i.amount) FILTER (WHERE j.size_name = 'XL') AS stock_xl,
+
+    -- Gender distribution
+    SUM(i.amount) FILTER (WHERE j.gender_name = 'Male')   AS stock_male,
+    SUM(i.amount) FILTER (WHERE j.gender_name = 'Female') AS stock_female,
+    SUM(i.amount) FILTER (WHERE j.gender_name = 'Unisex') AS stock_unisex
+
+FROM jackets j
+JOIN refined.inventories i
+    ON i.product_id = j.product_id
+
+GROUP BY j.product_name
+ORDER BY total_stock DESC;
+
+
+
+
+
+-- Now divide it into smaller views per store
+WITH jackets AS (
+    SELECT *
+    FROM refined.products
+    WHERE category_name ILIKE '%jacket%'
+)
+
+SELECT
+    i.store_name,
+    j.product_name,
+
+    SUM(i.amount) AS total_stock,
+
+    -- Size distribution
+    SUM(i.amount) FILTER (WHERE j.size_name = 'XS') AS stock_xs,
+    SUM(i.amount) FILTER (WHERE j.size_name = 'S')  AS stock_s,
+    SUM(i.amount) FILTER (WHERE j.size_name = 'M')  AS stock_m,
+    SUM(i.amount) FILTER (WHERE j.size_name = 'L')  AS stock_l,
+    SUM(i.amount) FILTER (WHERE j.size_name = 'XL') AS stock_xl,
+
+    -- Gender distribution
+    SUM(i.amount) FILTER (WHERE j.gender_name = 'Male')   AS stock_male,
+    SUM(i.amount) FILTER (WHERE j.gender_name = 'Female') AS stock_female,
+    SUM(i.amount) FILTER (WHERE j.gender_name = 'Unisex') AS stock_unisex
+
+FROM jackets j
+JOIN refined.inventories i
+    ON i.product_id = j.product_id
+
+WHERE i.store_name = 'Gallerian_Centrum'   -- adjust to actual name
+
+GROUP BY i.store_name, j.product_name
+ORDER BY total_stock DESC;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 -- Query 2:
