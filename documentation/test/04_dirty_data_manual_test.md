@@ -363,6 +363,34 @@ SELECT * FROM refined.items ORDER BY item_id DESC LIMIT 10;
 ### 📦 InventoryEvent (IMPORTANT)
 **We do NOT have and not need an endpoint for SINGLE inventory events.**
 
+### Add new product first in the products
+POST: http://localhost:8000/api/products/new
+**DOUBLE CHECK THE PRODUCT_ID**
+
+```json
+{
+  "event_id": 10001,
+  "event_type": "new_product",
+  "timestamp": "2026-03-18T08:00:00Z",
+  "product": {
+    "product_code": 11111111,
+    "product_name": "Test Shirt",
+    "brand_id": 1,
+    "category_id": 1,
+    "colour_id": 1,
+    "size_id": 1,
+    "gender_id": 1,
+    "price": 29.99
+  }
+}
+```
+Check in staging
+```sql
+-- SELECT * FROM staging.products;
+SELECT * FROM staging.products WHERE product_id = 14401;
+```
+
+
 ## 7. Validate That the Refresh Job Exists
 
 http://localhost:8000/api/inventory-events/batch
@@ -373,7 +401,7 @@ http://localhost:8000/api/inventory-events/batch
     "event_type": "restock",
     "timestamp": "2026-03-18T08:44:02.011Z",
     "store_id": 1,
-    "product_id": 1,
+    "product_id": 14401,
     "quantity_change": 10,
     "stock_after_event": 50
   },
@@ -381,30 +409,23 @@ http://localhost:8000/api/inventory-events/batch
     "event_id": 20002,
     "event_type": "restock",
     "timestamp": "2026-03-18T08:50:00.000Z",
-    "store_id": 1,
-    "product_id": 2,
+    "store_id": 2,
+    "product_id": 14401,
     "quantity_change": 5,
     "stock_after_event": 30
-  },
-  {
-    "event_id": 20003,
-    "event_type": "restock",
-    "timestamp": "2026-03-18T09:00:00.000Z",
-    "store_id": 2,
-    "product_id": 1,
-    "quantity_change": 20,
-    "stock_after_event": 70
   }
 ]
 ```
 This confirms that `pg_cron` scheduled the periodic refresh job.
 
 Validate the inventory events
-```
+```sql
 SELECT *
 FROM staging.inventories
-WHERE product_id IN (1, 2)
+WHERE product_id = 14401
 ORDER BY update_date DESC;
+```
+
 ```sql
 SELECT jobid, schedule, command, active
 FROM cron.job
@@ -518,15 +539,13 @@ WHERE product_id = (
 
 ```json
 {
-  "event_id": 10001,
   "event_id": 920001,
   "event_type": "sale",
-  "timestamp": "2026-01-10T12:30:00Z",
   "timestamp": "2026-03-19T10:15:00Z",
   "store_id": 1,
   "items": [
     {
-      "product_id": 1,
+      "product_id": 14401,
       "price": 49.99,
       "quantity": 2
     }
@@ -538,8 +557,12 @@ WHERE product_id = (
 ### Validate in `staging`
 
 ```sql
-SELECT * FROM staging.orders ORDER BY order_id DESC;
-SELECT * FROM staging.items ORDER BY item_id DESC;
+SELECT * FROM staging.orders WHERE order_id = 1476 ORDER BY order_id;
+SELECT * FROM staging.items WHERE order_id = 1476 ORDER BY item_id;
+```
+
+Check in the orders and items tables
+```sql
 SELECT *
 FROM staging.orders
 WHERE source_event_id = '920001';
@@ -548,7 +571,9 @@ SELECT i.*
 FROM staging.items i
 JOIN staging.orders o ON o.order_id = i.order_id
 WHERE o.source_event_id = '920001';
+```
 
+```sql
 SELECT *
 FROM staging.inventories
 WHERE product_id = 1 AND store_id = 1;
@@ -590,13 +615,11 @@ WHERE order_id = (
 ```json
 [
   {
-    "event_id": 20001,
     "event_id": 930001,
     "event_type": "restock",
-    "timestamp": "2026-03-18T08:44:02.011Z",
     "timestamp": "2026-03-19T10:30:00Z",
     "store_id": 1,
-    "product_id": 1,
+    "product_id": 14401,
     "quantity_change": 10,
     "stock_after_event": 50
   }
@@ -607,10 +630,10 @@ WHERE order_id = (
 ### Validate in `staging`
 
 ```sql
-SELECT * FROM staging.inventories
 SELECT *
 FROM staging.inventories
-WHERE product_id = 1 AND store_id = 1;
+WHERE product_id = 14401
+ORDER BY update_date DESC;
 ```
 
 ### Expected
@@ -622,77 +645,22 @@ WHERE product_id = 1 AND store_id = 1;
 
 ```sql
 SELECT refined.refresh_refined();
+```
 
+
+```sql
 SELECT *
 FROM refined.inventories
-WHERE product_id = 1
+WHERE product_id = 14401
   AND store_name = (
-    SELECT store_name FROM staging.stores WHERE store_id = 1
+    SELECT store_name 
+    FROM staging.stores 
+    WHERE store_id = 1
   );
 ```
 
 ---
 
-## 🧪 6. Test: Inventory (Stock Update)
-http://localhost:8000/api/inventory-events/batch
-## 12. Test a Stock Update Event
-
-### Endpoint
-
-`POST http://localhost:8000/api/inventory-events/batch`
-
-### JSON body
-
-```json
-[
-  {
-    "event_id": 20002,
-    "event_id": 930002,
-    "event_type": "stock_update",
-    "timestamp": "2026-03-18T08:45:00.000Z",
-    "timestamp": "2026-03-19T10:45:00Z",
-    "store_id": 1,
-    "product_id": 1,
-    "quantity_change": 0,
-    "stock_after_event": 30
-  }
-]
-```
-
-### ✅ Validate
-### Validate in `staging`
-
-```sql
-SELECT * FROM staging.inventories
-SELECT *
-FROM staging.inventories
-WHERE product_id = 1 AND store_id = 1;
-```
-
----
-### Expected
-
-## 🔍 7. Kafka Validation
-- the inventory amount is set to `30`
-- no negative amount is possible because the consumer uses `GREATEST(..., 0)`
-
-Open:
-```
-http://localhost:8080
-### Validate in `refined`
-
-```sql
-SELECT refined.refresh_refined();
-
-SELECT *
-FROM refined.inventories
-WHERE product_id = 1
-  AND store_name = (
-    SELECT store_name FROM staging.stores WHERE store_id = 1
-  );
-```
-
----
 
 ## 13. Validate Kafka Delivery
 
@@ -718,17 +686,7 @@ You can also verify from logs:
 docker compose logs -f consumer
 docker compose logs -f app
 ```
-sql SELECT * FROM staging.inventories WHERE amount < 0; ``` 
-✔ Expect: **0 rows**
 
-### Expected consumer log patterns
-
-- `Caught sale event from Kafka!`
-- `Restock event saved`
-- `New product event saved`
-- `The sale has been saved to the database and inventory has been updated!`
-
----
 
 ### Ensure referential integrity (products exist) 
 ## 14. Data Integrity Checks for PostgreSQL / pgAdmin
@@ -758,7 +716,7 @@ sql SELECT i.* FROM staging.inventories i LEFT JOIN staging.products p ON i.prod
 
 ✔ Expect: **0 rows**
 ---
-**Expected:** `0 rows`
+
 
 ### Ensure orders link to items correctly
  ```
@@ -775,7 +733,6 @@ WHERE o.order_id IS NULL;
 ```
 
 ----
-**Expected:** `0 rows`
 
 ### Ensure referential integrity (products exist)
 ### 14.4 Every order has at least one item
@@ -831,49 +788,3 @@ SELECT
 **Expected:** counts should align for the entities that are materialized from staging.
 
 ---
-
-## 15. What Is the Next Step After Docker Is Running?
-
-After Docker is running and the two-year sales history has already been generated, your next checklist should be:
-
-1. **Confirm initial CSV seed data is loaded into `staging`.**
-2. **Confirm materialized views exist in `refined`.**
-3. **Run `SELECT refined.refresh_refined();` and validate refined contents.**
-4. **Send at least one event of each type:**
-   - `new_product`
-   - `sale`
-   - `restock`
-   - `stock_update`
-5. **Verify consumer logs for successful processing.**
-6. **Verify `staging` changed correctly.**
-7. **Refresh refined and verify `refined` changed correctly.**
-8. **Run integrity checks in PostgreSQL / pgAdmin.**
-9. **Capture screenshots or exported query results for your test evidence.**
-
-That gives you a complete end-to-end persistence test for:
-
-- products
-- stores
-- orders
-- items
-- inventories
-- refined analytical views
-- Kafka delivery
-- consumer persistence
-
----
-
-## 16. Recommended Evidence to Save in Your Test Report
-
-To make your pipeline test documentation complete, capture:
-
-- `docker compose ps`
-- `docker compose logs consumer --tail=50`
-- row counts from all staging tables
-- row counts from all refined materialized views
-- one screenshot of pgAdmin showing `staging` tables
-- one screenshot of pgAdmin showing `refined` materialized views
-- one screenshot or copy of a successful `new_product` test
-- one screenshot or copy of a successful `sale` test
-- one screenshot or copy of a successful `restock` / `stock_update` test
-- one screenshot or copy of the integrity queries returning `0 rows`
