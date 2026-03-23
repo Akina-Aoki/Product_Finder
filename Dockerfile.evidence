@@ -1,7 +1,0 @@
-FROM node:20-slim
-
-WORKDIR /app
-
-RUN apt-get update && apt-get install -y git
-
-CMD sh -c "if [ ! -f package.json ]; then git clone --depth 1 https://github.com/evidence-dev/template.git . && rm -rf .git && npm install; else npm install; fi && npx evidence dev --host 0.0.0.0"

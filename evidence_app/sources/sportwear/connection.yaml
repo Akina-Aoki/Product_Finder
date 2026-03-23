@@ -1,7 +1,7 @@
 name: sportwear
 type: postgres
 options:
-  host: localhost
+  host: 127.0.0.1
   port: 5439
   database: SportWearDB
   user: postgres
