@@ -3,7 +3,7 @@
 -- ==========================================
 CREATE SCHEMA IF NOT EXISTS staging;
 CREATE SCHEMA IF NOT EXISTS refined;
-CREATE SCHEMA IF NOT EXISTS sportwear;
+
 
 -- ==========================================
 -- 2. CREATE STAGING TABLES
@@ -161,31 +161,6 @@ FROM staging.orders o
 JOIN staging.stores s ON s.store_id = o.store_id;
 
 CREATE UNIQUE INDEX idx_refined_orders_id ON refined.orders(order_id);
-
-
-CREATE OR REPLACE VIEW sportwear.query_2_sales AS
-SELECT
-    i.item_id,
-    i.order_id,
-    i.order_date,
-    DATE(i.order_date) AS order_day,
-    DATE_TRUNC('week', i.order_date)::DATE AS order_week,
-    DATE_TRUNC('month', i.order_date)::DATE AS order_month,
-    i.store_name,
-    i.city,
-    i.product_id,
-    i.product_name,
-    p.category_name,
-    p.colour_name,
-    p.size_name,
-    p.gender_name,
-    i.quantity,
-    i.item_price,
-    i.quantity * i.item_price AS line_revenue
-FROM refined.items i
-LEFT JOIN refined.products p
-    ON i.product_id = p.product_id;
-
 
 
 -- ==========================================

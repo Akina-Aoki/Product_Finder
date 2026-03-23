@@ -81,11 +81,12 @@ UNION ALL SELECT 'Unisex', 'Unisex'
 WITH filtered_sales AS (
     SELECT *
     FROM sportwear.query_2_sales
-    WHERE ('${inputs.sales_store.value}' = '' OR store_name = '${inputs.sales_store.value}')
-      AND ('${inputs.sales_category.value}' = '' OR category_name = '${inputs.sales_category.value}')
-      AND ('${inputs.sales_product.value}' = '' OR product_name = '${inputs.sales_product.value}')
-      AND ('${inputs.sales_city.value}' = '' OR city = '${inputs.sales_city.value}')
-      AND ('${inputs.sales_gender.value}' = '' OR gender_name = '${inputs.sales_gender.value}')
+    WHERE
+      (COALESCE('${inputs.sales_store.value}', '') = '' OR store_name = '${inputs.sales_store.value}')
+      AND (COALESCE('${inputs.sales_category.value}', '') = '' OR category_name = '${inputs.sales_category.value}')
+      AND (COALESCE('${inputs.sales_product.value}', '') = '' OR product_name = '${inputs.sales_product.value}')
+      AND (COALESCE('${inputs.sales_city.value}', '') = '' OR city = '${inputs.sales_city.value}')
+      AND (COALESCE('${inputs.sales_gender.value}', '') = '' OR gender_name = '${inputs.sales_gender.value}')
 )
 SELECT
     SUM(line_revenue) AS total_revenue_sek,
