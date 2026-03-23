@@ -11,6 +11,44 @@ This system captures real-time inventory events, such as **sales**, **inventory 
 - [Spin up Docker Container with Host Services](documentation/kafka_and_etl/connect_docker_psql_kafka.md)
 - [Connecting events pipeline](documentation/kafka_and_etl/events_pipeline_guide.md)
 
+## Repository Structure
+```
+Product_Finder/
+├── README.md                           # Main overview, architecture, and links
+├── docker-compose.yml                  # Starts the full platform stack
+├── pyproject.toml                      # Python dependencies and project config
+│
+├── app/
+│   ├── main.py                         # FastAPI API that sends events to Kafka
+│   ├── consumer/
+│   │   └── db_consumer.py              # Kafka consumer that writes events to PostgreSQL
+│   └── schema/
+│       └── product.py                  # Validation/data models for products and events
+│
+├── scripts/
+│   ├── transform.py                    # ETL cleaning/validation step
+│   ├── load_products.py                # Loads cleaned product data into PostgreSQL
+│   ├── generate_clean_csv.py           # Creates valid mock CSV data
+│   ├── generate_dirty_csv.py           # Creates invalid test CSV data
+│   └── generate_sales_csv.py           # Creates mock sales CSV data
+│
+├── sql/
+│   ├── init.sql                        # Initializes database schema
+│   └── user_story_queries.sql          # Example business/analytics queries
+│
+├── evidence_app/
+│   ├── package.json                    # Evidence dashboard app config
+│   ├── pages/                          # Dashboard pages
+│   └── sources/                        # SQL/data sources used by dashboards
+│
+├── documentation/
+│   ├── MVP.md                          # MVP and user stories
+│   ├── kafka_and_etl/                  # Setup + pipeline documentation
+│   └── test/                           # Manual/system test documentation
+│
+└── assets/                             # Images used in README/docs
+```
+
 ---
 
 ## User Stories for Business
