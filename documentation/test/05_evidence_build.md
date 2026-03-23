@@ -5,20 +5,40 @@ This guide explains **what to run, when to run it, and why it is needed** for yo
 🧩 Quick cheat sheet
 ```
 Start system:
-→ docker compose up -d
+→ docker compose up -d --build
 → docker exec -it SportWear_Evidence npm run sources
 
-Edit pages:
+Wait until everything loads. Expected output:
+```
+  [Processing] sportwear
+  data_inventories ✔ Finished, wrote 27984 rows.
+  data_products ✔ Finished, wrote 13992 rows.
+  data_sales ✔ Finished, wrote 2959 rows.
+  meta_brands ✔ Finished, wrote 5 rows.
+  meta_colours ✔ Finished, wrote 10 rows.
+  meta_genders ✔ Finished, wrote 3 rows.
+  meta_orders ✔ Finished, wrote 1474 rows.
+  meta_sizes ✔ Finished, wrote 5 rows.
+  meta_stores ✔ Finished, wrote 2 rows.
+-----
+[INFO]:    Evaluated sources, saving manifest
+[INFO]:    ✅ Done!
+(Product_Finder) 
+```
+
+
+
+#### Edit pages:
 → refresh browser
 → if needed: docker compose restart evidence
 
-Edit sources:
+#### Edit sources:
 → docker exec -it SportWear_Evidence npm run sources
 
-Fix errors:
+#### Fix errors:
 → docker exec -it SportWear_Evidence npm run sources
 
-Reset:
+#### Reset:
 → docker compose down
 → docker compose up -d --build
 → docker exec -it SportWear_Evidence npm run sources
@@ -100,7 +120,7 @@ Then
 - Data layer missing
 
 ✅ Fix
--`docker exec -it SportWear_Evidence npm run sources`
+- `docker exec -it SportWear_Evidence npm run sources`
 - Then refresh browser
 
 ❌ Error: manifest.json not found

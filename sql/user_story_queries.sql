@@ -71,17 +71,20 @@ SELECT
 
     SUM(i.amount) AS total_stock,
 
+    
+    COALESCE(SUM(i.amount), 0) AS total_stock,
+
     -- Size distribution
-    SUM(i.amount) FILTER (WHERE j.size_name = 'XS') AS stock_xs,
-    SUM(i.amount) FILTER (WHERE j.size_name = 'S')  AS stock_s,
-    SUM(i.amount) FILTER (WHERE j.size_name = 'M')  AS stock_m,
-    SUM(i.amount) FILTER (WHERE j.size_name = 'L')  AS stock_l,
-    SUM(i.amount) FILTER (WHERE j.size_name = 'XL') AS stock_xl,
+    COALESCE(SUM(i.amount) FILTER (WHERE j.size_name = 'XS'), 0) AS stock_xs,
+    COALESCE(SUM(i.amount) FILTER (WHERE j.size_name = 'S'), 0)  AS stock_s,
+    COALESCE(SUM(i.amount) FILTER (WHERE j.size_name = 'M'), 0)  AS stock_m,
+    COALESCE(SUM(i.amount) FILTER (WHERE j.size_name = 'L'), 0)  AS stock_l,
+    COALESCE(SUM(i.amount) FILTER (WHERE j.size_name = 'XL'), 0) AS stock_xl,
 
     -- Gender distribution
-    SUM(i.amount) FILTER (WHERE j.gender_name = 'Male')   AS stock_male,
-    SUM(i.amount) FILTER (WHERE j.gender_name = 'Female') AS stock_female,
-    SUM(i.amount) FILTER (WHERE j.gender_name = 'Unisex') AS stock_unisex
+    COALESCE(SUM(i.amount) FILTER (WHERE j.gender_name = 'Male'), 0)   AS stock_male,
+    COALESCE(SUM(i.amount) FILTER (WHERE j.gender_name = 'Female'), 0) AS stock_female,
+    COALESCE(SUM(i.amount) FILTER (WHERE j.gender_name = 'Unisex'), 0) AS stock_unisex
 
 FROM jackets j
 JOIN refined.inventories i
@@ -131,10 +134,10 @@ ORDER BY total_stock DESC;
 
 
 -- Or BY COLOR
-WITH jackets AS (
+WITH jackets AS (                       ----- adjust category name here
     SELECT *
     FROM refined.products
-    WHERE category_name ILIKE '%jacket%'
+    WHERE category_name ILIKE '%jacket%'       -- adjust to actual name
 )
 
 SELECT
@@ -156,7 +159,7 @@ SELECT
     SUM(i.amount) FILTER (WHERE j.gender_name = 'Female') AS female,
     SUM(i.amount) FILTER (WHERE j.gender_name = 'Unisex') AS unisex
 
-FROM jackets j
+FROM jackets j                              -- adjust to actual name
 JOIN refined.inventories i
     ON i.product_id = j.product_id
 
@@ -171,10 +174,10 @@ ORDER BY
 
 
 --- WITH STOCK STATUS
-WITH jackets AS (
+WITH jackets AS (               -- adjust to actual name
     SELECT *
     FROM refined.products
-    WHERE category_name ILIKE '%jacket%'
+    WHERE category_name ILIKE '%jacket%'        -- adjust to actual name
 )
 
 SELECT
@@ -197,12 +200,12 @@ SELECT
     COUNT(DISTINCT j.gender_name) AS gender_variants,
 
     CASE
-        WHEN SUM(i.amount) = 0 THEN 'OUT_OF_STOCK'
-        WHEN SUM(i.amount) < 10 THEN 'LOW_STOCK'
+        WHEN SUM(i.amount) = 0 THEN 'OUT OF STOCK'
+        WHEN SUM(i.amount) < 10 THEN 'LOW STOCK'
         ELSE 'OK'
     END AS stock_health
 
-FROM jackets j
+FROM jackets j              -- adjust to actual name
 JOIN refined.inventories i
     ON i.product_id = j.product_id
 
