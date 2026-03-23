@@ -48,7 +48,7 @@ SELECT * FROM staging.inventories;
 ```
 
 
-## 📦 2. Schema Reference (API Contracts)
+## 👉 2. Schema Reference (API Contracts)
 http://localhost:8000/api/sales
 ### 🧾 SaleEvent
 ```json
@@ -112,7 +112,7 @@ SELECT * FROM staging.items;
 ```
 ---
 
-### 🆕 NewProductEvent
+### 👉 NewProductEvent
 http://localhost:8000/api/products/new
 ```json
 {
@@ -132,7 +132,7 @@ http://localhost:8000/api/products/new
 }
 ```
 
-http://localhost:8000/api/products/new/batch
+👉 http://localhost:8000/api/products/new/batch
 ```json
 [
   {
@@ -184,19 +184,7 @@ WHERE product_code IN (999001, 999002);
 ```
 ---
 
-### 📦 InventoryEvent (IMPORTANT)
-http://localhost:8000/api/inventory-events
-```json
-{
-  "event_id": 20001,
-  "event_type": "restock",
-  "timestamp": "2026-03-18T08:44:02.011Z",
-  "store_id": 1,
-  "product_id": 1,
-  "quantity_change": 10,
-  "stock_after_event": 50
-}
-```
+### 👉 InventoryEvent (IMPORTANT)
 
 http://localhost:8000/api/inventory-events/batch
 ```
@@ -241,7 +229,7 @@ ORDER BY update_date DESC;
 
 ---
 
-## 🧪 3. Test: New Product
+## 👉 3. Test: New Product
 
 **POST**
 ```

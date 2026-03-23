@@ -224,7 +224,7 @@ SELECT * FROM staging.inventories ORDER BY inventory_id DESC LIMIT 10;
 
 ---
 
-### 🆕 NewProductEvent
+### 👉 NewProductEvent
 http://localhost:8000/api/products/new
 ```json
 {
@@ -243,7 +243,7 @@ http://localhost:8000/api/products/new
   }
 }
 ```
-## 6. Validate That `refined` Exists and Contains Data
+## 6.  👉 Validate That `refined` Exists and Contains Data
 
 http://localhost:8000/api/products/new/batch
 ```json
@@ -360,7 +360,7 @@ SELECT * FROM refined.items ORDER BY item_id DESC LIMIT 10;
 
 ---
 
-### 📦 InventoryEvent (IMPORTANT)
+### 👉 InventoryEvent (IMPORTANT)
 **We do NOT have and not need an endpoint for SINGLE inventory events.**
 
 ### Add new product first in the products
@@ -391,7 +391,7 @@ SELECT * FROM staging.products WHERE product_id = 14401;
 ```
 
 
-## 7. Validate That the Refresh Job Exists
+## 7.👉  Validate That the Refresh Job Exists
 
 http://localhost:8000/api/inventory-events/batch
 ```
@@ -459,7 +459,7 @@ docker compose logs -f consumer
 
 ---
 
-## 9. Test a New Product Event
+## 9. 👉 Test a New Product Event
 
 ### Endpoint
 
@@ -529,7 +529,7 @@ WHERE product_id = (
 
 ---
 
-## 10. Test a Sale Event
+## 10. 👉 Test a Sale Event
 
 ### Endpoint
 
@@ -582,7 +582,7 @@ WHERE product_id = 1 AND store_id = 1;
 ---
 ### Expected
 
-## 🧪 5. Test: Inventory (Restock)
+## 🧪 👉 Test: Inventory (Restock)
 - a new row is inserted into `staging.orders`
 - one or more rows are inserted into `staging.items`
 - inventory for the sold product decreases in `staging.inventories`
@@ -604,7 +604,7 @@ WHERE order_id = (
 
 ---
 
-## 11. Test a Restock Event
+## 11. 👉 Test a Restock Event
 
 ### Endpoint
 

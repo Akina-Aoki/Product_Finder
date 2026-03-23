@@ -33,6 +33,8 @@ This page is made to see how sales goes.
     LIMIT 5;
 ```
 
+<DataTable data={product_revenue_by_product}/>
+
 <BarChart 
     data={product_revenue_by_product}
     x=product
