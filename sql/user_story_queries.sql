@@ -237,7 +237,7 @@ ORDER BY total_stock DESC;
 
 
 
--- Query 2:
+-- Query 2: OK
 -- Current stock by product and store
 SELECT
     i.inventory_id,
@@ -251,7 +251,7 @@ FROM refined.inventories i
 ORDER BY i.store_name, i.product_name;
 
 
--- Query 3:
+-- Query 3: OK
 -- Low-stock products across all stores
 -- Adjust threshold as needed
 SELECT
@@ -264,7 +264,7 @@ HAVING SUM(i.amount) < 10
 ORDER BY current_total_stock ASC, i.product_name;
 
 
--- Query 4:
+-- Query 4: 
 -- Out-of-stock products across all stores
 SELECT
     i.product_id,
@@ -276,7 +276,7 @@ HAVING SUM(i.amount) = 0
 ORDER BY i.product_name;
 
 
--- Query 5:
+-- Query 5: OK
 -- Total inventory quantity by store
 SELECT
     i.store_name,
@@ -315,7 +315,7 @@ GROUP BY p.product_id, p.product_name, p.price
 ORDER BY inventory_value_remaining DESC, p.product_name;
 
 
--- Query 8:
+-- Query 8: 
 -- Estimated inventory value remaining by store
 SELECT
     s.store_id,
