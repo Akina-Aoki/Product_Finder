@@ -1,1 +1,0 @@
-SELECT * FROM sportwear.query_2_sales;
