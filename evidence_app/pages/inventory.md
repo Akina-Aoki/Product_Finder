@@ -147,3 +147,46 @@ ORDER BY store_name, product_name, total_stock DESC, colour_name
   series=store_name
   title="Jacket stock by product and store"
 />
+
+```sql query_1_stock_outliers
+WITH stock_base AS (
+    SELECT
+        store_name,
+        product_name,
+        SUM(total_stock) AS total_stock
+    FROM sportwear.query_1_jacket_inventory
+    WHERE ('${inputs.inventory_store.value}' = 'true' OR '${inputs.inventory_store.value}' = '')
+       OR store_name = '${inputs.inventory_store.value}'
+    GROUP BY store_name, product_name
+),
+stock_stats AS (
+    SELECT
+        AVG(total_stock) AS avg_stock
+    FROM stock_base
+)
+SELECT
+    b.store_name,
+    b.product_name,
+    b.total_stock,
+    ROUND(s.avg_stock, 2) AS average_stock,
+    ROUND(b.total_stock - s.avg_stock, 2) AS stock_change_from_average,
+    ROUND(ABS(b.total_stock - s.avg_stock), 2) AS absolute_change
+FROM stock_base b
+CROSS JOIN stock_stats s
+ORDER BY absolute_change DESC, b.total_stock DESC, b.product_name
+LIMIT 5
+```
+
+## Biggest outliers in stock level
+
+This highlights the store-product combinations with the largest change versus the average stock level in the current chart selection.
+
+<DataTable data={query_1_stock_outliers} />
+
+<BarChart
+  data={query_1_stock_outliers}
+  x=product_name
+  y=stock_change_from_average
+  series=store_name
+  title="Biggest stock outliers vs average"
+/>
