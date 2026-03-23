@@ -1,39 +1,42 @@
-WITH jackets AS (
+WITH product_inventory AS (
     SELECT
-        product_id,
-        product_name,
-        category_name,
-        colour_name,
-        size_name,
-        gender_name
-    FROM refined.products
-    WHERE category_name ILIKE '%jacket%'
+        i.store_name,
+        p.product_name,
+        p.category_name,
+        p.colour_name,
+        p.size_name,
+        p.gender_name,
+        i.amount
+    FROM refined.inventories i
+    JOIN refined.products p
+        ON i.product_id = p.product_id
 ),
 stock_by_variant AS (
     SELECT
-        i.store_name,
-        j.product_name,
-        j.colour_name,
-        COALESCE(SUM(i.amount), 0) AS total_stock,
-        COALESCE(SUM(i.amount) FILTER (WHERE j.size_name = 'XS'), 0) AS xs,
-        COALESCE(SUM(i.amount) FILTER (WHERE j.size_name = 'S'), 0) AS s,
-        COALESCE(SUM(i.amount) FILTER (WHERE j.size_name = 'M'), 0) AS m,
-        COALESCE(SUM(i.amount) FILTER (WHERE j.size_name = 'L'), 0) AS l,
-        COALESCE(SUM(i.amount) FILTER (WHERE j.size_name = 'XL'), 0) AS xl,
-        COALESCE(SUM(i.amount) FILTER (WHERE j.gender_name = 'Male'), 0) AS male,
-        COALESCE(SUM(i.amount) FILTER (WHERE j.gender_name = 'Female'), 0) AS female,
-        COALESCE(SUM(i.amount) FILTER (WHERE j.gender_name = 'Unisex'), 0) AS unisex
-    FROM jackets j
-    JOIN refined.inventories i
-        ON i.product_id = j.product_id
+        store_name,
+        product_name,
+        category_name,
+        colour_name,
+        COALESCE(SUM(amount), 0) AS total_stock,
+        COALESCE(SUM(amount) FILTER (WHERE size_name = 'XS'), 0) AS xs,
+        COALESCE(SUM(amount) FILTER (WHERE size_name = 'S'), 0) AS s,
+        COALESCE(SUM(amount) FILTER (WHERE size_name = 'M'), 0) AS m,
+        COALESCE(SUM(amount) FILTER (WHERE size_name = 'L'), 0) AS l,
+        COALESCE(SUM(amount) FILTER (WHERE size_name = 'XL'), 0) AS xl,
+        COALESCE(SUM(amount) FILTER (WHERE gender_name = 'Male'), 0) AS male,
+        COALESCE(SUM(amount) FILTER (WHERE gender_name = 'Female'), 0) AS female,
+        COALESCE(SUM(amount) FILTER (WHERE gender_name = 'Unisex'), 0) AS unisex
+    FROM product_inventory
     GROUP BY
-        i.store_name,
-        j.product_name,
-        j.colour_name
+        store_name,
+        product_name,
+        category_name,
+        colour_name
 )
 SELECT
     store_name,
     product_name,
+    category_name,
     colour_name,
     total_stock,
     xs,
@@ -55,4 +58,4 @@ SELECT
         ELSE 'NO_SIZE_COVERAGE'
     END AS size_coverage_status
 FROM stock_by_variant
-ORDER BY store_name, product_name, colour_name;
+ORDER BY category_name, store_name, product_name, colour_name;
