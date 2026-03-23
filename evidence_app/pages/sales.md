@@ -22,9 +22,9 @@ This page is made to see how sales goes.
 
 ```sql product_revenue_by_product
     SELECT
-        product_name AS product,
+        item_id AS product,
         sum(item_price) AS Sale
-    FROM sportwear.meta_stores
+    FROM sportwear.data_sales
     WHERE 
         ('${inputs.stores.value}' = 'true' OR '${inputs.stores.value}' = '') 
         OR store_name = '${inputs.stores.value}'
