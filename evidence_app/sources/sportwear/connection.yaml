@@ -1,8 +1,8 @@
 name: sportwear
 type: postgres
 options:
-  host: 127.0.0.1
-  port: 5439
-  database: SportWearDB
-  user: postgres
-  password: postgres
+  host: aws-1-eu-west-3.pooler.supabase.com
+  port: 6543
+  database: postgres
+  user: postgres.qhhfcxrhaubzbahvvhpq
+  password: ${SUPABASE_PASSWORD}
