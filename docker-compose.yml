@@ -1,83 +1,39 @@
 services:
-
-  postgres:
-    build:
-      context: .
-      dockerfile: Dockerfile.postgres
-    container_name: SportWear_Postgres
-
-    environment:
-      POSTGRES_USER: ${DB_USER:-postgres}
-      POSTGRES_PASSWORD: ${DB_PASSWORD:-postgres}
-      POSTGRES_DB: ${DB_NAME:-SportWearDB}
-
-    command: >
-      postgres -c shared_preload_libraries=pg_cron
-               -c cron.database_name=${DB_NAME:-SportWearDB}
-
-    ports:
-      - "${DB_HOST_PORT:-5439}:5432"
-
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-      - ./sql/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
-      - ./sql:/src_sql:ro
-      - ./data:/data:ro
-
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-postgres} -d ${DB_NAME:-SportWearDB}"]
-      interval: 10s
-      timeout: 5s
-      retries: 10
-
-
   kafka:
     image: apache/kafka:4.1.1
     container_name: SportWear_Kafka
-
     ports:
       - "9092:9092"
       - "29092:29092"
-
     environment:
       KAFKA_NODE_ID: 1
       KAFKA_PROCESS_ROLES: broker,controller
       KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka:9093
-
       KAFKA_LISTENERS: PLAINTEXT://:9092,CONTROLLER://:9093,EXTERNAL://:29092
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,EXTERNAL://localhost:29092
-
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,EXTERNAL:PLAINTEXT
       KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
-
       CLUSTER_ID: MkU3OEVBNTcwNTJENDM2Qk
-
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
-
     volumes:
       - kafka_data:/var/lib/kafka/data
-
     healthcheck:
       test: ["CMD-SHELL", "/opt/kafka/bin/kafka-topics.sh --bootstrap-server localhost:9092 --list >/dev/null 2>&1"]
       interval: 15s
       timeout: 10s
       retries: 10
 
-
   kafka-ui:
     image: provectuslabs/kafka-ui:latest
     container_name: SportWear_Kafka_UI
-
     depends_on:
       kafka:
         condition: service_healthy
-
     ports:
       - "8080:8080"
-
     environment:
       KAFKA_CLUSTERS_0_NAME: SportWear
       KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092
@@ -89,12 +45,10 @@ services:
     environment:
       - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
       - PRODUCTS_TOPIC=inventory_events
-      - DB_URL=postgresql://${DB_USER:-postgres}:${DB_PASSWORD:-postgres}@postgres:5432/${DB_NAME:-SportWearDB}
+      - DB_URL=${DB_URL}
       - PYTHONPATH=/app
     depends_on:
       kafka:
-        condition: service_healthy
-      postgres:
         condition: service_healthy
     command: ["uv", "run", "python", "-u", "app/consumer/db_consumer.py"]
   
@@ -105,8 +59,6 @@ services:
       - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
       - PRODUCTS_TOPIC=inventory_events
     depends_on:
-      postgres:
-        condition: service_healthy
       kafka:
         condition: service_healthy
     ports:
@@ -114,5 +66,4 @@ services:
     command: ["uv", "run", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
 
 volumes:
-  postgres_data:
   kafka_data:

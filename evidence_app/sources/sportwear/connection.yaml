@@ -1,8 +1,10 @@
-name: sportwear
+# This file was automatically generated
 type: postgres
+name: sportwear
 options:
-  host: 127.0.0.1
-  port: 5439
-  database: SportWearDB
-  user: postgres
-  password: postgres
+  database: postgres
+  host: aws-1-eu-west-3.pooler.supabase.com
+  port: 6543
+# Advanced Options, you probably don't want to change this
+buildOptions:
+  batchSize: 1000000
