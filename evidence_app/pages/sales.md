@@ -39,6 +39,7 @@ SELECT DISTINCT
     product_name AS product_label
 FROM sportwear.data_products
 WHERE product_name IS NOT NULL
+  AND ('${inputs.sales_category.value}' = '' OR category_name = '${inputs.sales_category.value}')
 ORDER BY product_label
 ```
 
@@ -54,6 +55,30 @@ WHERE gender_name IS NOT NULL
 ORDER BY gender_label
 ```
 
+
+```sql filter_sales_sizes
+SELECT '' AS size_value, 'All sizes' AS size_label
+UNION ALL
+SELECT DISTINCT
+    size_name AS size_value,
+    size_name AS size_label
+FROM sportwear.data_products
+WHERE size_name IS NOT NULL
+ORDER BY size_label
+```
+
+```sql filter_sales_colors
+SELECT '' AS color_value, 'All colors' AS color_label
+UNION ALL
+SELECT DISTINCT
+    colour_name AS color_value,
+    colour_name AS color_label
+FROM sportwear.data_products
+WHERE colour_name IS NOT NULL
+ORDER BY color_label
+```
+
+
 ---
 
 <div style="display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 20px;">
@@ -61,6 +86,8 @@ ORDER BY gender_label
   <Dropdown data={filter_sales_categories} name="sales_category" value=category_value label=category_label title="Category" />
   <Dropdown data={filter_sales_products} name="sales_product" value=product_value label=product_label title="Product" />
   <Dropdown data={filter_sales_genders} name="sales_gender" value=gender_value label=gender_label title="Gender" />
+  <Dropdown data={filter_sales_sizes} name="sales_size" value=size_value label=size_label title="Size" />
+  <Dropdown data={filter_sales_colors} name="sales_color" value=color_value label=color_label title="Color" />
 </div>
 
 ---
@@ -86,6 +113,8 @@ WITH filtered_sales AS (
     WHERE ('${inputs.sales_store.value}' = '' OR s.store_name = '${inputs.sales_store.value}')
       AND ('${inputs.sales_category.value}' = '' OR p.category_name = '${inputs.sales_category.value}')
       AND ('${inputs.sales_product.value}' = '' OR p.product_name = '${inputs.sales_product.value}')
+      AND ('${inputs.sales_size.value}' = '' OR p.size_name = '${inputs.sales_size.value}')
+      AND ('${inputs.sales_color.value}' = '' OR p.colour_name = '${inputs.sales_color.value}')
       AND ('${inputs.sales_gender.value}' = '' OR p.gender_name = '${inputs.sales_gender.value}')
 )
 SELECT
@@ -127,6 +156,8 @@ WITH filtered_sales AS (
       AND ('${inputs.sales_category.value}' = '' OR p.category_name = '${inputs.sales_category.value}')
       AND ('${inputs.sales_product.value}' = '' OR p.product_name = '${inputs.sales_product.value}')
       AND ('${inputs.sales_gender.value}' = '' OR p.gender_name = '${inputs.sales_gender.value}')
+      AND ('${inputs.sales_size.value}' = '' OR p.size_name = '${inputs.sales_size.value}')
+      AND ('${inputs.sales_color.value}' = '' OR p.colour_name = '${inputs.sales_color.value}')
 )
 SELECT
     COALESCE(SUM(CASE WHEN DATE(order_date) = CURRENT_DATE THEN revenue END), 0) AS revenue_today_sek,
@@ -172,6 +203,8 @@ WITH filtered_sales AS (
       AND ('${inputs.sales_category.value}' = '' OR p.category_name = '${inputs.sales_category.value}')
       AND ('${inputs.sales_product.value}' = '' OR p.product_name = '${inputs.sales_product.value}')
       AND ('${inputs.sales_gender.value}' = '' OR p.gender_name = '${inputs.sales_gender.value}')
+      AND ('${inputs.sales_size.value}' = '' OR p.size_name = '${inputs.sales_size.value}')
+      AND ('${inputs.sales_color.value}' = '' OR p.colour_name = '${inputs.sales_color.value}')
 )
 SELECT
     category_name,
@@ -208,6 +241,8 @@ WITH filtered_sales AS (
       AND ('${inputs.sales_category.value}' = '' OR p.category_name = '${inputs.sales_category.value}')
       AND ('${inputs.sales_product.value}' = '' OR p.product_name = '${inputs.sales_product.value}')
       AND ('${inputs.sales_gender.value}' = '' OR p.gender_name = '${inputs.sales_gender.value}')
+      AND ('${inputs.sales_size.value}' = '' OR p.size_name = '${inputs.sales_size.value}')
+      AND ('${inputs.sales_color.value}' = '' OR p.colour_name = '${inputs.sales_color.value}')
 )
 
 SELECT
@@ -240,6 +275,8 @@ WITH filtered_sales AS (
       AND ('${inputs.sales_category.value}' = '' OR p.category_name = '${inputs.sales_category.value}')
       AND ('${inputs.sales_product.value}' = '' OR p.product_name = '${inputs.sales_product.value}')
       AND ('${inputs.sales_gender.value}' = '' OR p.gender_name = '${inputs.sales_gender.value}')
+      AND ('${inputs.sales_size.value}' = '' OR p.size_name = '${inputs.sales_size.value}')
+      AND ('${inputs.sales_color.value}' = '' OR p.colour_name = '${inputs.sales_color.value}')
 )
 
 SELECT
@@ -271,6 +308,8 @@ WITH filtered_sales AS (
       AND ('${inputs.sales_category.value}' = '' OR p.category_name = '${inputs.sales_category.value}')
       AND ('${inputs.sales_product.value}' = '' OR p.product_name = '${inputs.sales_product.value}')
       AND ('${inputs.sales_gender.value}' = '' OR p.gender_name = '${inputs.sales_gender.value}')
+      AND ('${inputs.sales_size.value}' = '' OR p.size_name = '${inputs.sales_size.value}')
+      AND ('${inputs.sales_color.value}' = '' OR p.colour_name = '${inputs.sales_color.value}')
 )
 
 SELECT
