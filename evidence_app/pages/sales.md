@@ -82,6 +82,15 @@ WHERE colour_name IS NOT NULL
 ORDER BY color_label
 ```
 
+```sql filter_sales_week
+SELECT '' AS week_value, 'All weeks' AS week_label
+UNION ALL
+SELECT DISTINCT
+    DATE_TRUNC('week', DATE(order_date)) AS week_value,
+    DATE_TRUNC('week', DATE(order_date)) AS week_label
+FROM sportwear.data_sales
+ORDER BY week_label DESC
+```
 
 ---
 
@@ -201,17 +210,16 @@ ORDER BY total_revenue_sek DESC
     <Column id=category_name title="Category" />
     <Column id=product_name title="Product" />
     <Column id=total_revenue_sek title="Revenue (SEK)" contentType=bar />
-    <Column id=total_revenue_sek title="Revenue" contentType=bar barColor=#aecfaf/>
-    <Column id=total_revenue_sek title="Revenue" contentType=bar barColor=#ffe08a backgroundColor=#ebebeb/>
 </DataTable>
 ---
 
-## Revenue Trends
+# Daily Revenue
 
-```sql revenue_daily
+
+```sql revenue_daily_1
 WITH filtered_sales AS (
     SELECT
-        s.order_date,
+        DATE(s.order_date) AS day,
         s.quantity * s.item_price AS revenue,
         p.category_name
     FROM sportwear.data_sales s
@@ -219,17 +227,188 @@ WITH filtered_sales AS (
         ON s.product_id = p.product_id
     WHERE ('${inputs.sales_store.value}' = '' OR s.store_name = '${inputs.sales_store.value}')
       AND ('${inputs.sales_category.value}' = '' OR p.category_name = '${inputs.sales_category.value}')
+      AND (
+        '${inputs.sales_week.value}' = ''
+        OR DATE_TRUNC('week', DATE(s.order_date)) = DATE('${inputs.sales_week.value}')
+      )
+),
+
+daily AS (
+    SELECT
+        day,
+        SUM(revenue) AS revenue_sek
+    FROM filtered_sales
+    GROUP BY day
 )
+
 SELECT
-    CAST(order_date AS DATE) AS day,
-    SUM(revenue) AS revenue_sek
-FROM filtered_sales
-GROUP BY day
-ORDER BY day
+    day,
+    revenue_sek,
+
+    -- 🔥 Day-over-day change
+    revenue_sek - LAG(revenue_sek) OVER (
+        ORDER BY day
+    ) AS revenue_change
+
+FROM daily
+ORDER BY day DESC
+LIMIT 30
 ```
 
-<LineChart data={revenue_daily} x=day y=revenue_sek title = "Daily Revenue" />
 
+<DataTable data={revenue_daily_1}>
+    <Column id=day title="Date" />
+    <Column id=revenue_sek title="Revenue (SEK)" />
+    <Column 
+        id=revenue_change 
+        title="Change" 
+        contentType=delta 
+        fmt=currency0 
+    />
+</DataTable>
+
+----
+
+```sql revenue_daily_2
+WITH base AS (
+    SELECT
+        DATE(s.order_date) AS day,
+        p.category_name,
+        p.product_name,
+        s.quantity,
+        s.item_price,
+        s.quantity * s.item_price AS revenue
+    FROM sportwear.data_sales s
+    LEFT JOIN sportwear.data_products p
+        ON s.product_id = p.product_id
+    WHERE ('${inputs.sales_store.value}' = '' OR s.store_name = '${inputs.sales_store.value}')
+      AND ('${inputs.sales_category.value}' = '' OR p.category_name = '${inputs.sales_category.value}')
+),
+
+aggregated AS (
+    SELECT
+        day,
+        category_name,
+        product_name,
+        SUM(quantity) AS units,
+        SUM(revenue) AS revenue
+    FROM base
+    GROUP BY day, category_name, product_name
+),
+
+with_growth AS (
+    SELECT
+        *,
+        revenue - LAG(revenue) OVER (
+            PARTITION BY product_name
+            ORDER BY day
+        ) AS revenue_change
+    FROM aggregated
+)
+
+SELECT *
+FROM with_growth
+ORDER BY day DESC, revenue DESC
+LIMIT 100
+```
+
+
+<DataTable 
+  data={revenue_daily_2} 
+  groupBy=category_name 
+  subtotals=true 
+  totalRow=true
+>
+  <Column id=category_name title="Category" totalAgg="Total"/>
+  <Column id=product_name title="Product"/>
+  <Column id=day title="Date"/>
+  
+  <Column 
+    id=units 
+    title="Units" 
+    contentType=colorscale 
+  />
+
+  <Column 
+    id=revenue 
+    title="Revenue (SEK)" 
+    contentType=bar 
+  />
+
+  <Column 
+    id=revenue_change 
+    title="Growth" 
+    contentType=delta 
+    fmt=currency0 
+  />
+</DataTable>
+
+----
+
+# Weekly Revenue
+
+
+```sql revenue_weekly_detailed
+
+WITH filtered_sales AS (
+    SELECT
+        DATE_TRUNC('week', DATE(s.order_date)) AS week_start,
+        p.category_name,
+        p.product_name,
+        SUM(s.quantity) AS units,
+        SUM(s.quantity * s.item_price) AS revenue
+    FROM sportwear.data_sales s
+    LEFT JOIN sportwear.data_products p
+        ON s.product_id = p.product_id
+    WHERE ('${inputs.sales_store.value}' = '' OR s.store_name = '${inputs.sales_store.value}')
+      AND ('${inputs.sales_category.value}' = '' OR p.category_name = '${inputs.sales_category.value}')
+    GROUP BY 1,2,3
+),
+
+with_growth AS (
+    SELECT
+        *,
+        revenue - LAG(revenue) OVER (
+            PARTITION BY product_name
+            ORDER BY week_start
+        ) AS revenue_change
+    FROM filtered_sales
+)
+
+SELECT
+    category_name,
+    product_name,
+    week_start,
+    units,
+    revenue,
+    revenue_change
+FROM with_growth
+ORDER BY week_start DESC, revenue DESC
+
+```
+
+
+<DataTable 
+  data={revenue_weekly_detailed} 
+  groupBy=category_name 
+  subtotals=true 
+  totalRow=true
+>
+  <Column id=category_name title="Category" totalAgg="Total"/>
+  <Column id=product_name title="Product"/>
+  <Column id=week_start title="Week"/>
+  <Column id=units title="Units" contentType=colorscale />
+  <Column id=revenue title="Revenue (SEK)" contentType=bar />
+  <Column 
+    id=revenue_change 
+    title="Growth" 
+    contentType=delta 
+    fmt=currency0 
+  />
+</DataTable>
+
+
+---
 
 ```sql revenue_weekly
 WITH filtered_sales AS (
@@ -242,16 +421,45 @@ WITH filtered_sales AS (
         ON s.product_id = p.product_id
     WHERE ('${inputs.sales_store.value}' = '' OR s.store_name = '${inputs.sales_store.value}')
       AND ('${inputs.sales_category.value}' = '' OR p.category_name = '${inputs.sales_category.value}')
+),
+
+weekly AS (
+    SELECT
+        DATE_TRUNC('week', DATE(order_date)) AS week_start,
+        SUM(revenue) AS revenue_sek
+    FROM filtered_sales
+    GROUP BY week_start
 )
+
 SELECT
-    DATE_TRUNC('week', CAST(order_date AS DATE)) AS week_start,
-    SUM(revenue) AS revenue_sek
-FROM filtered_sales
-GROUP BY week_start
+    week_start,
+    revenue_sek,
+
+    -- 🔥 smooth trend (VERY important)
+    AVG(revenue_sek) OVER (
+        ORDER BY week_start
+        ROWS BETWEEN 3 PRECEDING AND CURRENT ROW
+    ) AS revenue_trend
+
+FROM weekly
 ORDER BY week_start
 ```
 
-<LineChart data={revenue_weekly} x=week_start y=revenue_sek title="Weekly revenue" />
+**Revenue Sek = This is the actual weekly revenue** <br>
+**Revenue Trend = This is a rolling average of revenue**<br>
+
+<LineChart 
+  data={revenue_weekly} 
+  x=week_start 
+  y=revenue_sek 
+  y2=revenue_trend
+  title="Weekly Revenue Trend"
+/>
+
+----
+
+# Monthly Revenue
+
 
 ```sql revenue_monthly
 WITH filtered_sales AS (
@@ -264,13 +472,158 @@ WITH filtered_sales AS (
         ON s.product_id = p.product_id
     WHERE ('${inputs.sales_store.value}' = '' OR s.store_name = '${inputs.sales_store.value}')
       AND ('${inputs.sales_category.value}' = '' OR p.category_name = '${inputs.sales_category.value}')
+),
+
+monthly AS (
+    SELECT
+        DATE_TRUNC('month', DATE(order_date)) AS month_start,
+        SUM(revenue) AS revenue_sek
+    FROM filtered_sales
+    GROUP BY month_start
 )
+
 SELECT
-    DATE_TRUNC('month', CAST(order_date AS DATE)) AS month_start,
-    SUM(revenue) AS revenue_sek
-FROM filtered_sales
-GROUP BY month_start
+    month_start,
+    revenue_sek,
+
+    -- existing change
+    revenue_sek - LAG(revenue_sek) OVER (
+        ORDER BY month_start
+    ) AS revenue_change,
+
+    -- 🔥 NEW: smoothed trend (3-month rolling)
+    AVG(revenue_sek) OVER (
+        ORDER BY month_start
+        ROWS BETWEEN 2 PRECEDING AND CURRENT ROW
+    ) AS revenue_trend
+
+FROM monthly
 ORDER BY month_start
 ```
 
-<LineChart data={revenue_monthly} x=month_start y=revenue_sek title="Monthly revenue" />
+<LineChart 
+  data={revenue_monthly} 
+  x=month_start 
+  y=revenue_sek 
+  y2=revenue_trend
+  title="Monthly Revenue Trend"
+/>
+
+<DataTable data={revenue_monthly} totalRow=true>
+  <Column id=month_start title="Month" totalAgg="Total"/>
+  <Column id=revenue_sek title="Revenue (SEK)" contentType=bar/>
+  <Column id=revenue_change title="Growth" contentType=delta fmt=currency0/>
+  <Column id=revenue_trend title="Trend" contentType=colorscale/>
+</DataTable>
+
+----
+
+# Yearly Revenue
+
+
+```sql revenue_yearly_1
+WITH filtered_sales AS (
+    SELECT
+        s.order_date,
+        s.quantity * s.item_price AS revenue,
+        p.category_name
+    FROM sportwear.data_sales s
+    LEFT JOIN sportwear.data_products p
+        ON s.product_id = p.product_id
+    WHERE ('${inputs.sales_store.value}' = '' OR s.store_name = '${inputs.sales_store.value}')
+      AND ('${inputs.sales_category.value}' = '' OR p.category_name = '${inputs.sales_category.value}')
+)
+
+SELECT
+    year_start,
+    revenue_sek,
+
+    -- 🔥 growth vs previous year
+    revenue_sek - LAG(revenue_sek) OVER (
+        ORDER BY year_start
+    ) AS revenue_change
+
+FROM (
+    SELECT
+        DATE_TRUNC('year', DATE(order_date)) AS year_start,
+        SUM(revenue) AS revenue_sek
+    FROM filtered_sales
+    GROUP BY year_start
+) yearly
+ORDER BY year_start
+```
+
+<DataTable data={revenue_yearly_1}>
+  <Column id=year_start title="Year"/>
+  <Column id=revenue_sek title="Revenue (SEK)" contentType=bar/>
+  <Column id=revenue_change title="Growth" contentType=delta fmt=currency0/>
+</DataTable>
+
+
+
+<BarChart data={revenue_yearly_1} x=year_start y=revenue_sek title="Yearly Revenue" />
+
+
+----
+
+
+
+```sql revenue_yearly_2
+WITH filtered_sales AS (
+    SELECT
+        DATE_TRUNC('year', DATE(s.order_date)) AS year_start,
+        p.category_name,
+        p.product_name,
+        SUM(s.quantity) AS units,
+        SUM(s.quantity * s.item_price) AS revenue
+    FROM sportwear.data_sales s
+    LEFT JOIN sportwear.data_products p
+        ON s.product_id = p.product_id
+    WHERE
+        ('${inputs.sales_store.value}' = '' OR s.store_name = '${inputs.sales_store.value}')
+        AND (
+            '${inputs.sales_category.value}' = ''
+            OR p.category_name = '${inputs.sales_category.value}'
+        )
+    GROUP BY 1,2,3
+),
+
+with_growth AS (
+    SELECT
+        *,
+        revenue - LAG(revenue) OVER (
+            PARTITION BY product_name
+            ORDER BY year_start
+        ) AS revenue_change
+    FROM filtered_sales
+)
+
+SELECT
+    category_name,
+    product_name,
+    year_start,
+    units,
+    revenue,
+    revenue_change
+FROM with_growth
+ORDER BY year_start DESC, revenue DESC
+```
+
+<DataTable 
+  data={revenue_yearly_2} 
+  groupBy=category_name 
+  subtotals=true 
+  totalRow=true
+>
+  <Column id=category_name title="Category" totalAgg="Total"/>
+  <Column id=product_name title="Product"/>
+  <Column id=year_start title="Year"/>
+  <Column id=units title="Units" contentType=colorscale />
+  <Column id=revenue title="Revenue (SEK)" contentType=bar />
+  <Column 
+    id=revenue_change 
+    title="Growth" 
+    contentType=delta 
+    fmt=currency0 
+  />
+</DataTable>
