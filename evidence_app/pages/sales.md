@@ -31,7 +31,8 @@ WHERE category_name IS NOT NULL
 ORDER BY category_label
 ```
 
-```sql filter_sales_products
+
+```sql filter_sales_products 
 SELECT '' AS product_value, 'All products' AS product_label
 UNION ALL
 SELECT DISTINCT
@@ -39,7 +40,10 @@ SELECT DISTINCT
     product_name AS product_label
 FROM sportwear.data_products
 WHERE product_name IS NOT NULL
-  AND ('${inputs.sales_category.value}' = '' OR category_name = '${inputs.sales_category.value}')
+  AND (
+        '${inputs.sales_category.value}' = ''
+        OR category_name = '${inputs.sales_category.value}'
+      )
 ORDER BY product_label
 ```
 
@@ -105,7 +109,6 @@ WITH filtered_sales AS (
         s.item_price,
         p.product_name,
         p.category_name,
-        p.gender_name,
         s.quantity * s.item_price AS revenue
     FROM sportwear.data_sales s
     LEFT JOIN sportwear.data_products p
@@ -113,9 +116,6 @@ WITH filtered_sales AS (
     WHERE ('${inputs.sales_store.value}' = '' OR s.store_name = '${inputs.sales_store.value}')
       AND ('${inputs.sales_category.value}' = '' OR p.category_name = '${inputs.sales_category.value}')
       AND ('${inputs.sales_product.value}' = '' OR p.product_name = '${inputs.sales_product.value}')
-      AND ('${inputs.sales_size.value}' = '' OR p.size_name = '${inputs.sales_size.value}')
-      AND ('${inputs.sales_color.value}' = '' OR p.colour_name = '${inputs.sales_color.value}')
-      AND ('${inputs.sales_gender.value}' = '' OR p.gender_name = '${inputs.sales_gender.value}')
 )
 SELECT
     COALESCE(SUM(revenue), 0) AS total_revenue_sek,
@@ -145,31 +145,19 @@ WITH filtered_sales AS (
         s.product_id,
         s.quantity,
         s.item_price,
-        p.product_name,
         p.category_name,
-        p.gender_name,
         s.quantity * s.item_price AS revenue
     FROM sportwear.data_sales s
-    JOIN refined.products p
+    LEFT JOIN sportwear.data_products p
         ON s.product_id = p.product_id
     WHERE ('${inputs.sales_store.value}' = '' OR s.store_name = '${inputs.sales_store.value}')
       AND ('${inputs.sales_category.value}' = '' OR p.category_name = '${inputs.sales_category.value}')
-      AND ('${inputs.sales_product.value}' = '' OR p.product_name = '${inputs.sales_product.value}')
-      AND ('${inputs.sales_gender.value}' = '' OR p.gender_name = '${inputs.sales_gender.value}')
-      AND ('${inputs.sales_size.value}' = '' OR p.size_name = '${inputs.sales_size.value}')
-      AND ('${inputs.sales_color.value}' = '' OR p.colour_name = '${inputs.sales_color.value}')
 )
 SELECT
-    COALESCE(SUM(CASE WHEN DATE(order_date) = CURRENT_DATE THEN revenue END), 0) AS revenue_today_sek,
-    COALESCE(SUM(CASE WHEN DATE(order_date) >= DATE_TRUNC('week', CURRENT_DATE)
-                      AND DATE(order_date) < DATE_TRUNC('week', CURRENT_DATE) + INTERVAL '1 week'
-                      THEN revenue END), 0) AS revenue_week_sek,
-    COALESCE(SUM(CASE WHEN DATE(order_date) >= DATE_TRUNC('month', CURRENT_DATE)
-                      AND DATE(order_date) < DATE_TRUNC('month', CURRENT_DATE) + INTERVAL '1 month'
-                      THEN revenue END), 0) AS revenue_month_sek,
-    COALESCE(SUM(CASE WHEN DATE(order_date) >= DATE_TRUNC('year', CURRENT_DATE)
-                      AND DATE(order_date) < DATE_TRUNC('year', CURRENT_DATE) + INTERVAL '1 year'
-                      THEN revenue END), 0) AS revenue_year_sek
+    COALESCE(SUM(CASE WHEN CAST(order_date AS DATE) = CURRENT_DATE THEN revenue END), 0) AS revenue_today_sek,
+    COALESCE(SUM(CASE WHEN DATE_TRUNC('week', order_date) = DATE_TRUNC('week', CURRENT_DATE) THEN revenue END), 0) AS revenue_week_sek,
+    COALESCE(SUM(CASE WHEN DATE_TRUNC('month', order_date) = DATE_TRUNC('month', CURRENT_DATE) THEN revenue END), 0) AS revenue_month_sek,
+    COALESCE(SUM(CASE WHEN DATE_TRUNC('year', order_date) = DATE_TRUNC('year', CURRENT_DATE) THEN revenue END), 0) AS revenue_year_sek
 FROM filtered_sales
 ```
 
@@ -187,24 +175,17 @@ FROM filtered_sales
 ```sql product_revenue
 WITH filtered_sales AS (
     SELECT
-        s.order_date,
-        s.store_name,
         s.product_id,
         s.quantity,
         s.item_price,
         p.product_name,
         p.category_name,
-        p.gender_name,
         s.quantity * s.item_price AS revenue
     FROM sportwear.data_sales s
     LEFT JOIN sportwear.data_products p
         ON s.product_id = p.product_id
     WHERE ('${inputs.sales_store.value}' = '' OR s.store_name = '${inputs.sales_store.value}')
       AND ('${inputs.sales_category.value}' = '' OR p.category_name = '${inputs.sales_category.value}')
-      AND ('${inputs.sales_product.value}' = '' OR p.product_name = '${inputs.sales_product.value}')
-      AND ('${inputs.sales_gender.value}' = '' OR p.gender_name = '${inputs.sales_gender.value}')
-      AND ('${inputs.sales_size.value}' = '' OR p.size_name = '${inputs.sales_size.value}')
-      AND ('${inputs.sales_color.value}' = '' OR p.colour_name = '${inputs.sales_color.value}')
 )
 SELECT
     category_name,
@@ -226,28 +207,17 @@ ORDER BY total_revenue_sek DESC
 WITH filtered_sales AS (
     SELECT
         s.order_date,
-        s.store_name,
-        s.product_id,
-        s.quantity,
-        s.item_price,
-        p.product_name,
-        p.category_name,
-        p.gender_name,
-        s.quantity * s.item_price AS revenue
+        s.quantity * s.item_price AS revenue,
+        p.category_name
     FROM sportwear.data_sales s
     LEFT JOIN sportwear.data_products p
         ON s.product_id = p.product_id
     WHERE ('${inputs.sales_store.value}' = '' OR s.store_name = '${inputs.sales_store.value}')
       AND ('${inputs.sales_category.value}' = '' OR p.category_name = '${inputs.sales_category.value}')
-      AND ('${inputs.sales_product.value}' = '' OR p.product_name = '${inputs.sales_product.value}')
-      AND ('${inputs.sales_gender.value}' = '' OR p.gender_name = '${inputs.sales_gender.value}')
-      AND ('${inputs.sales_size.value}' = '' OR p.size_name = '${inputs.sales_size.value}')
-      AND ('${inputs.sales_color.value}' = '' OR p.colour_name = '${inputs.sales_color.value}')
 )
-
 SELECT
     CAST(order_date AS DATE) AS day,
-    COALESCE(SUM(revenue), 0) AS revenue_sek
+    SUM(revenue) AS revenue_sek
 FROM filtered_sales
 GROUP BY day
 ORDER BY day
@@ -260,28 +230,17 @@ ORDER BY day
 WITH filtered_sales AS (
     SELECT
         s.order_date,
-        s.store_name,
-        s.product_id,
-        s.quantity,
-        s.item_price,
-        p.product_name,
-        p.category_name,
-        p.gender_name,
-        s.quantity * s.item_price AS revenue
+        s.quantity * s.item_price AS revenue,
+        p.category_name
     FROM sportwear.data_sales s
-    JOIN sportwear.data_products p
+    LEFT JOIN sportwear.data_products p
         ON s.product_id = p.product_id
     WHERE ('${inputs.sales_store.value}' = '' OR s.store_name = '${inputs.sales_store.value}')
       AND ('${inputs.sales_category.value}' = '' OR p.category_name = '${inputs.sales_category.value}')
-      AND ('${inputs.sales_product.value}' = '' OR p.product_name = '${inputs.sales_product.value}')
-      AND ('${inputs.sales_gender.value}' = '' OR p.gender_name = '${inputs.sales_gender.value}')
-      AND ('${inputs.sales_size.value}' = '' OR p.size_name = '${inputs.sales_size.value}')
-      AND ('${inputs.sales_color.value}' = '' OR p.colour_name = '${inputs.sales_color.value}')
 )
-
 SELECT
     DATE_TRUNC('week', CAST(order_date AS DATE)) AS week_start,
-    COALESCE(SUM(revenue), 0) AS revenue_sek
+    SUM(revenue) AS revenue_sek
 FROM filtered_sales
 GROUP BY week_start
 ORDER BY week_start
@@ -293,28 +252,17 @@ ORDER BY week_start
 WITH filtered_sales AS (
     SELECT
         s.order_date,
-        s.store_name,
-        s.product_id,
-        s.quantity,
-        s.item_price,
-        p.product_name,
-        p.category_name,
-        p.gender_name,
-        s.quantity * s.item_price AS revenue
+        s.quantity * s.item_price AS revenue,
+        p.category_name
     FROM sportwear.data_sales s
     LEFT JOIN sportwear.data_products p
         ON s.product_id = p.product_id
     WHERE ('${inputs.sales_store.value}' = '' OR s.store_name = '${inputs.sales_store.value}')
       AND ('${inputs.sales_category.value}' = '' OR p.category_name = '${inputs.sales_category.value}')
-      AND ('${inputs.sales_product.value}' = '' OR p.product_name = '${inputs.sales_product.value}')
-      AND ('${inputs.sales_gender.value}' = '' OR p.gender_name = '${inputs.sales_gender.value}')
-      AND ('${inputs.sales_size.value}' = '' OR p.size_name = '${inputs.sales_size.value}')
-      AND ('${inputs.sales_color.value}' = '' OR p.colour_name = '${inputs.sales_color.value}')
 )
-
 SELECT
     DATE_TRUNC('month', CAST(order_date AS DATE)) AS month_start,
-    COALESCE(SUM(revenue), 0) AS revenue_sek
+    SUM(revenue) AS revenue_sek
 FROM filtered_sales
 GROUP BY month_start
 ORDER BY month_start
