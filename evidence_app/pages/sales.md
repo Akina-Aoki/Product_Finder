@@ -26,7 +26,8 @@ UNION ALL
 SELECT DISTINCT
     category_name AS category_value,
     category_name AS category_label
-FROM sportwear.data_sales
+FROM sportwear.data_products
+WHERE category_name IS NOT NULL
 ORDER BY category_label
 ```
 
@@ -36,37 +37,29 @@ UNION ALL
 SELECT DISTINCT
     product_name AS product_value,
     product_name AS product_label
-FROM sportwear.data_sales
+FROM sportwear.data_products
+WHERE product_name IS NOT NULL
 ORDER BY product_label
 ```
 
-```sql filter_sales_cities
-SELECT '' AS city_value, 'All cities' AS city_label
-UNION ALL
-SELECT DISTINCT
-    city AS city_value,
-    city AS city_label
-FROM sportwear.data_sales
-ORDER BY city_label
-```
 
 ```sql filter_sales_genders
 SELECT '' AS gender_value, 'All genders' AS gender_label
-UNION ALL SELECT 'Male', 'Male'
-UNION ALL SELECT 'Female', 'Female'
-UNION ALL SELECT 'Unisex', 'Unisex'
+UNION ALL
+SELECT DISTINCT
+    gender_name AS gender_value,
+    gender_name AS gender_label
+FROM sportwear.data_products
+WHERE gender_name IS NOT NULL
+ORDER BY gender_label
 ```
 
 ---
 
-<div style="display: flex; gap: 20px; flex-wrap: wrap;">
+<div style="display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 20px;">
   <Dropdown data={filter_sales_stores} name="sales_store" value=store_value label=store_label title="Store" />
   <Dropdown data={filter_sales_categories} name="sales_category" value=category_value label=category_label title="Category" />
   <Dropdown data={filter_sales_products} name="sales_product" value=product_value label=product_label title="Product" />
-</div>
-
-<div style="display: flex; gap: 20px; flex-wrap: wrap;">
-  <Dropdown data={filter_sales_cities} name="sales_city" value=city_value label=city_label title="City" />
   <Dropdown data={filter_sales_genders} name="sales_gender" value=gender_value label=gender_label title="Gender" />
 </div>
 
@@ -75,15 +68,85 @@ UNION ALL SELECT 'Unisex', 'Unisex'
 ## KPIs
 
 ```sql sales_kpis
-SELECT COUNT(*) FROM sportwear.data_sales;
+WITH filtered_sales AS (
+    SELECT
+        s.order_id,
+        s.order_date,
+        s.store_name,
+        s.product_id,
+        s.quantity,
+        s.item_price,
+        p.product_name,
+        p.category_name,
+        p.gender_name,
+        s.quantity * s.item_price AS revenue
+    FROM sportwear.data_sales s
+    LEFT JOIN sportwear.data_products p
+        ON s.product_id = p.product_id
+    WHERE ('${inputs.sales_store.value}' = '' OR s.store_name = '${inputs.sales_store.value}')
+      AND ('${inputs.sales_category.value}' = '' OR p.category_name = '${inputs.sales_category.value}')
+      AND ('${inputs.sales_product.value}' = '' OR p.product_name = '${inputs.sales_product.value}')
+      AND ('${inputs.sales_gender.value}' = '' OR p.gender_name = '${inputs.sales_gender.value}')
+)
+SELECT
+    COALESCE(SUM(revenue), 0) AS total_revenue_sek,
+    COALESCE(SUM(quantity), 0) AS total_units_sold,
+    COUNT(DISTINCT order_id) AS total_orders,
+    COUNT(DISTINCT product_id) AS distinct_products,
+    CASE
+        WHEN COUNT(DISTINCT order_id) = 0 THEN 0
+        ELSE ROUND(SUM(revenue) / COUNT(DISTINCT order_id), 2)
+    END AS avg_order_value_sek
+FROM filtered_sales
 ```
 
 <Grid cols=5>
-  <BigValue data={sales_kpis} value=total_revenue_sek title="Total revenue (SEK)" />
+  <BigValue data={sales_kpis} value=total_revenue_sek title="Total revenue (SEK)" fmt=currency0 />
   <BigValue data={sales_kpis} value=total_units_sold title="Units sold" />
   <BigValue data={sales_kpis} value=total_orders title="Orders" />
   <BigValue data={sales_kpis} value=distinct_products title="Products sold" />
-  <BigValue data={sales_kpis} value=avg_order_value_sek title="Avg. order value (SEK)" />
+  <BigValue data={sales_kpis} value=avg_order_value_sek title="Avg. order value (SEK)" fmt=currency0 />
+</Grid>
+
+```sql sales_time_kpis
+WITH filtered_sales AS (
+    SELECT
+        s.order_date,
+        s.store_name,
+        s.product_id,
+        s.quantity,
+        s.item_price,
+        p.product_name,
+        p.category_name,
+        p.gender_name,
+        s.quantity * s.item_price AS revenue
+    FROM sportwear.data_sales s
+    JOIN refined.products p
+        ON s.product_id = p.product_id
+    WHERE ('${inputs.sales_store.value}' = '' OR s.store_name = '${inputs.sales_store.value}')
+      AND ('${inputs.sales_category.value}' = '' OR p.category_name = '${inputs.sales_category.value}')
+      AND ('${inputs.sales_product.value}' = '' OR p.product_name = '${inputs.sales_product.value}')
+      AND ('${inputs.sales_gender.value}' = '' OR p.gender_name = '${inputs.sales_gender.value}')
+)
+SELECT
+    COALESCE(SUM(CASE WHEN DATE(order_date) = CURRENT_DATE THEN revenue END), 0) AS revenue_today_sek,
+    COALESCE(SUM(CASE WHEN DATE(order_date) >= DATE_TRUNC('week', CURRENT_DATE)
+                      AND DATE(order_date) < DATE_TRUNC('week', CURRENT_DATE) + INTERVAL '1 week'
+                      THEN revenue END), 0) AS revenue_week_sek,
+    COALESCE(SUM(CASE WHEN DATE(order_date) >= DATE_TRUNC('month', CURRENT_DATE)
+                      AND DATE(order_date) < DATE_TRUNC('month', CURRENT_DATE) + INTERVAL '1 month'
+                      THEN revenue END), 0) AS revenue_month_sek,
+    COALESCE(SUM(CASE WHEN DATE(order_date) >= DATE_TRUNC('year', CURRENT_DATE)
+                      AND DATE(order_date) < DATE_TRUNC('year', CURRENT_DATE) + INTERVAL '1 year'
+                      THEN revenue END), 0) AS revenue_year_sek
+FROM filtered_sales
+```
+
+<Grid cols=4>
+  <BigValue data={sales_time_kpis} value=revenue_today_sek title="Revenue today (SEK)" fmt=currency0 />
+  <BigValue data={sales_time_kpis} value=revenue_week_sek title="Revenue this week (SEK)" fmt=currency0 />
+  <BigValue data={sales_time_kpis} value=revenue_month_sek title="Revenue this month (SEK)" fmt=currency0 />
+  <BigValue data={sales_time_kpis} value=revenue_year_sek title="Revenue this year (SEK)" fmt=currency0 />
 </Grid>
 
 ---
@@ -91,50 +154,131 @@ SELECT COUNT(*) FROM sportwear.data_sales;
 ## Revenue by product
 
 ```sql product_revenue
-WITH product_attributes AS (
+WITH filtered_sales AS (
     SELECT
-        product_id,
-        MAX(category_name) AS category_name
-    FROM sportwear.data_sales
-    GROUP BY product_id
-),
-
-sales_base AS (
-    SELECT
-        s.product_name,
-        pa.category_name,
+        s.order_date,
+        s.store_name,
+        s.product_id,
         s.quantity,
+        s.item_price,
+        p.product_name,
+        p.category_name,
+        p.gender_name,
         s.quantity * s.item_price AS revenue
     FROM sportwear.data_sales s
-    LEFT JOIN product_attributes pa
-        ON s.product_id = pa.product_id
+    LEFT JOIN sportwear.data_products p
+        ON s.product_id = p.product_id
+    WHERE ('${inputs.sales_store.value}' = '' OR s.store_name = '${inputs.sales_store.value}')
+      AND ('${inputs.sales_category.value}' = '' OR p.category_name = '${inputs.sales_category.value}')
+      AND ('${inputs.sales_product.value}' = '' OR p.product_name = '${inputs.sales_product.value}')
+      AND ('${inputs.sales_gender.value}' = '' OR p.gender_name = '${inputs.sales_gender.value}')
 )
-
 SELECT
     category_name,
     product_name,
     SUM(quantity) AS units_sold,
-    SUM(revenue) AS total_revenue
-FROM sales_base
+    SUM(revenue) AS total_revenue_sek
+FROM filtered_sales
 GROUP BY category_name, product_name
-ORDER BY total_revenue DESC
+ORDER BY total_revenue_sek DESC
 ```
 
 <DataTable data={product_revenue} />
 
 ---
 
-## Daily revenue
+## Revenue Trends
 
 ```sql revenue_daily
+WITH filtered_sales AS (
+    SELECT
+        s.order_date,
+        s.store_name,
+        s.product_id,
+        s.quantity,
+        s.item_price,
+        p.product_name,
+        p.category_name,
+        p.gender_name,
+        s.quantity * s.item_price AS revenue
+    FROM sportwear.data_sales s
+    LEFT JOIN sportwear.data_products p
+        ON s.product_id = p.product_id
+    WHERE ('${inputs.sales_store.value}' = '' OR s.store_name = '${inputs.sales_store.value}')
+      AND ('${inputs.sales_category.value}' = '' OR p.category_name = '${inputs.sales_category.value}')
+      AND ('${inputs.sales_product.value}' = '' OR p.product_name = '${inputs.sales_product.value}')
+      AND ('${inputs.sales_gender.value}' = '' OR p.gender_name = '${inputs.sales_gender.value}')
+)
+
 SELECT
-    DATE(order_date) AS day,
-    SUM(quantity * item_price) AS revenue
-FROM sportwear.data_sales
+    CAST(order_date AS DATE) AS day,
+    COALESCE(SUM(revenue), 0) AS revenue_sek
+FROM filtered_sales
 GROUP BY day
 ORDER BY day
 ```
 
-<LineChart data={revenue_daily} x=day y=revenue />
+<LineChart data={revenue_daily} x=day y=revenue_sek title = "Daily Revenue" />
 
----
+
+```sql revenue_weekly
+WITH filtered_sales AS (
+    SELECT
+        s.order_date,
+        s.store_name,
+        s.product_id,
+        s.quantity,
+        s.item_price,
+        p.product_name,
+        p.category_name,
+        p.gender_name,
+        s.quantity * s.item_price AS revenue
+    FROM sportwear.data_sales s
+    JOIN sportwear.data_products p
+        ON s.product_id = p.product_id
+    WHERE ('${inputs.sales_store.value}' = '' OR s.store_name = '${inputs.sales_store.value}')
+      AND ('${inputs.sales_category.value}' = '' OR p.category_name = '${inputs.sales_category.value}')
+      AND ('${inputs.sales_product.value}' = '' OR p.product_name = '${inputs.sales_product.value}')
+      AND ('${inputs.sales_gender.value}' = '' OR p.gender_name = '${inputs.sales_gender.value}')
+)
+
+SELECT
+    DATE_TRUNC('week', CAST(order_date AS DATE)) AS week_start,
+    COALESCE(SUM(revenue), 0) AS revenue_sek
+FROM filtered_sales
+GROUP BY week_start
+ORDER BY week_start
+```
+
+<LineChart data={revenue_weekly} x=week_start y=revenue_sek title="Weekly revenue" />
+
+```sql revenue_monthly
+WITH filtered_sales AS (
+    SELECT
+        s.order_date,
+        s.store_name,
+        s.product_id,
+        s.quantity,
+        s.item_price,
+        p.product_name,
+        p.category_name,
+        p.gender_name,
+        s.quantity * s.item_price AS revenue
+    FROM sportwear.data_sales s
+    LEFT JOIN sportwear.data_products p
+        ON s.product_id = p.product_id
+    WHERE ('${inputs.sales_store.value}' = '' OR s.store_name = '${inputs.sales_store.value}')
+      AND ('${inputs.sales_category.value}' = '' OR p.category_name = '${inputs.sales_category.value}')
+      AND ('${inputs.sales_product.value}' = '' OR p.product_name = '${inputs.sales_product.value}')
+      AND ('${inputs.sales_gender.value}' = '' OR p.gender_name = '${inputs.sales_gender.value}')
+)
+
+SELECT
+    DATE_TRUNC('month', CAST(order_date AS DATE)) AS month_start,
+    COALESCE(SUM(revenue), 0) AS revenue_sek
+FROM filtered_sales
+GROUP BY month_start
+ORDER BY month_start
+```
+
+<LineChart data={revenue_monthly} x=month_start y=revenue_sek title="Monthly revenue" />
