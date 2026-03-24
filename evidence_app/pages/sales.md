@@ -197,8 +197,13 @@ GROUP BY category_name, product_name
 ORDER BY total_revenue_sek DESC
 ```
 
-<DataTable data={product_revenue} />
-
+<DataTable data={product_revenue}>
+    <Column id=category_name title="Category" />
+    <Column id=product_name title="Product" />
+    <Column id=total_revenue_sek title="Revenue (SEK)" contentType=bar />
+    <Column id=total_revenue_sek title="Revenue" contentType=bar barColor=#aecfaf/>
+    <Column id=total_revenue_sek title="Revenue" contentType=bar barColor=#ffe08a backgroundColor=#ebebeb/>
+</DataTable>
 ---
 
 ## Revenue Trends
