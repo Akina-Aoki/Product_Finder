@@ -79,3 +79,12 @@ plugins:
     "@evidence-dev/sqlite": { }
     "@evidence-dev/trino": { }
     "@evidence-dev/motherduck": { }
+
+datasources:
+  postgres:
+    type: postgres
+    host: localhost
+    port: 5439
+    database: SportWearDB
+    user: postgres
+    password: postgres

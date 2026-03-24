@@ -1,12 +1,26 @@
+# Sportswear AB | Business Dashboard
+ > **ONE SOURCE OF TRUTH FOR OPERATIONS, PLANNING AND PERFORMANCE.**<br>
+ **Welcome to the command center for sales + stock decisions**
+
 ---
-title: SportWear Inc
+
+
+## Start here
+
+### 📈 Sales
+Revenue, units sold, orders, top and low performers, trend lines.
+
+➡️ [Open Sales Overview](./sales)
+
+### 📦 Inventory
+Stock status, size coverage, product mix, and inventory health.
+
+➡️ [Open Inventory Overview](./inventory)
+
+### 🏬 Store views
+Compare stores side by side to see where action is needed first.
+
+➡️ [Göteborg](./stores/gbg)  
+➡️ [Stockholm](./stores/sthlm)
+
 ---
-
-# 🏆 SportWear Inc - BI Portal
-
-Välkommen till vår Data Warehouse Dashboard! 
-
-Använd menyn till vänster för att navigera mellan våra olika affärsområden:
-* **Sales** - Försäljningsdata och trender
-* **Inventory** - Aktuella lagersaldon
-* **Stores** - Butiksspecifik data
