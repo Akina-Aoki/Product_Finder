@@ -9,6 +9,18 @@ User Story & Minimum Viable Product:
 Use the filters below to answer the main KPI question: 
 **Spot Stock Status** across stores, product groups, colours, size coverage, gender mix, and stock health.
 
+```sql low stock_status
+SELECT 
+    store_name AS store,
+    product_name AS product,
+    amount AS inventory,
+FROM sportwear.data_inventories
+WHERE amount < 10
+ORDER BY inventory
+```
+
+<DataTable data={low stock_status} />
+
 ```sql filter_stores
 SELECT '' AS store_value, 'All stores' AS store_label
 UNION ALL
