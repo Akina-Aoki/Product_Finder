@@ -421,6 +421,7 @@ ORDER BY store_name, total_stock ASC, product_name
 WITH normalized_inventory AS (
     SELECT
         store_name,
+        category AS category_name,
         product AS product_name,
         colour AS colour_name,
         product_id,
@@ -437,17 +438,24 @@ store_product_stock AS (
       AND category_name LIKE '${inputs.inventory_category.value}'
       AND product_name LIKE '${inputs.inventory_product.value}'
       AND colour_name LIKE '${inputs.inventory_colour.value}'
-    GROUP BY store_name, product_name, colour_name
+    GROUP BY store_name, product_name
+),
+classified_stock AS (
+    SELECT
+        store_name,
+        product_name,
+        total_stock,
+        CASE
+            WHEN total_stock = 0 THEN 'OUT_OF_STOCK'
+            WHEN total_stock BETWEEN 1 AND 9 THEN 'LOW_STOCK'
+            ELSE 'OK'
+        END AS stock_status_value
+    FROM store_product_stock
 ),
 filtered_stock AS (
     SELECT *
-    FROM store_product_stock
-    WHERE (
-        '${inputs.inventory_stock_status.value}' = ''
-        OR ('${inputs.inventory_stock_status.value}' = 'OUT_OF_STOCK' AND total_stock = 0)
-        OR ('${inputs.inventory_stock_status.value}' = 'LOW_STOCK' AND total_stock BETWEEN 1 AND 9)
-        OR ('${inputs.inventory_stock_status.value}' = 'OK' AND total_stock >= 10)
-    )
+    FROM classified_stock
+    WHERE stock_status_value LIKE '${inputs.inventory_stock_status.value}'
 ),
 stock_stats AS (
     SELECT AVG(total_stock) AS avg_stock
