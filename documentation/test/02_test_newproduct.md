@@ -1,4 +1,4 @@
-````md
+
 # 🧪 Event Pipeline Testing Guide (FastAPI → Kafka → Postgres)
 
 ## ⚡ Thunder Client Setup (IMPORTANT)

@@ -1,5 +1,4 @@
 # 🧪 Event Pipeline Testing Guide (FastAPI → Kafka → Postgres)
-# 🧪 End-to-End Persistence Test Guide
 
 ## ⚡ Thunder Client Setup (IMPORTANT)
 #### This guide starts **after** you have already done the following successfully: Everything in `03_test_full_pipeline.md`
