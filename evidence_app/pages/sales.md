@@ -195,21 +195,41 @@ WITH filtered_sales AS (
         ON s.product_id = p.product_id
     WHERE ('${inputs.sales_store.value}' = '' OR s.store_name = '${inputs.sales_store.value}')
       AND ('${inputs.sales_category.value}' = '' OR p.category_name = '${inputs.sales_category.value}')
+),
+inventory_summary AS (
+    SELECT
+        product_name,
+        SUM(total_stock) AS current_stock,
+        CASE
+            WHEN SUM(total_stock) = 0 THEN 'Out of Stock'
+            WHEN SUM(total_stock) < 10 THEN 'Low Stock'
+            ELSE 'OK'
+        END AS stock_status
+    FROM sportwear.query_1_jacket_inventory
+    WHERE ('${inputs.sales_store.value}' = '' OR store_name = '${inputs.sales_store.value}')
+    GROUP BY product_name
 )
 SELECT
-    category_name,
-    product_name,
-    SUM(quantity) AS units_sold,
-    SUM(revenue) AS total_revenue_sek
-FROM filtered_sales
-GROUP BY category_name, product_name
+    fs.category_name,
+    fs.product_name,
+    SUM(fs.quantity) AS units_sold,
+    SUM(fs.revenue) AS total_revenue_sek,
+    COALESCE(i.current_stock, 0) AS current_stock,
+    COALESCE(i.stock_status, 'Unknown') AS stock_status
+FROM filtered_sales fs
+LEFT JOIN inventory_summary i
+    ON fs.product_name = i.product_name
+GROUP BY fs.category_name, fs.product_name, i.current_stock, i.stock_status
 ORDER BY total_revenue_sek DESC
 ```
 
 <DataTable data={product_revenue}>
     <Column id=category_name title="Category" />
     <Column id=product_name title="Product" />
+    <Column id=units_sold title="Units Sold" />
     <Column id=total_revenue_sek title="Revenue (SEK)" contentType=bar />
+    <Column id=current_stock title="Current Stock" />
+    <Column id=stock_status title="Stock Status" />
 </DataTable>
 ---
 
@@ -219,7 +239,7 @@ ORDER BY total_revenue_sek DESC
 ```sql revenue_daily_1
 WITH filtered_sales AS (
     SELECT
-        DATE(s.order_date) AS day,
+        CAST(s.order_date AS DATE) AS day,
         s.quantity * s.item_price AS revenue,
         p.category_name
     FROM sportwear.data_sales s
@@ -227,10 +247,6 @@ WITH filtered_sales AS (
         ON s.product_id = p.product_id
     WHERE ('${inputs.sales_store.value}' = '' OR s.store_name = '${inputs.sales_store.value}')
       AND ('${inputs.sales_category.value}' = '' OR p.category_name = '${inputs.sales_category.value}')
-      AND (
-        '${inputs.sales_week.value}' = ''
-        OR DATE_TRUNC('week', DATE(s.order_date)) = DATE('${inputs.sales_week.value}')
-      )
 ),
 
 daily AS (
@@ -245,7 +261,6 @@ SELECT
     day,
     revenue_sek,
 
-    -- 🔥 Day-over-day change
     revenue_sek - LAG(revenue_sek) OVER (
         ORDER BY day
     ) AS revenue_change

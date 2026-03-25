@@ -2,6 +2,7 @@
  > **ONE SOURCE OF TRUTH FOR OPERATIONS, PLANNING AND PERFORMANCE.**<br>
  **Welcome to the command center for sales + stock decisions**
 
+
 ---
 
 
@@ -16,11 +17,3 @@ Revenue, units sold, orders, top and low performers, trend lines.
 Stock status, size coverage, product mix, and inventory health.
 
 ➡️ [Open Inventory Overview](./inventory)
-
-### 🏬 Store views
-Compare stores side by side to see where action is needed first.
-
-➡️ [Göteborg](./stores/gbg)  
-➡️ [Stockholm](./stores/sthlm)
-
----
