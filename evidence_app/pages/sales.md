@@ -11,21 +11,13 @@ MVP and user-story questions for sales:
 ## Filters
 
 ```sql filter_sales_stores
-SELECT '' AS store_value, 'All stores' AS store_label
-UNION ALL
-SELECT DISTINCT
-    store_name AS store_value,
-    store_name AS store_label
+SELECT DISTINCT store_name AS store_value, store_name AS store_label
 FROM sportwear.data_sales
 ORDER BY store_label
 ```
 
 ```sql filter_sales_categories
-SELECT '' AS category_value, 'All categories' AS category_label
-UNION ALL
-SELECT DISTINCT
-    category_name AS category_value,
-    category_name AS category_label
+SELECT DISTINCT category_name AS category_value, category_name AS category_label
 FROM sportwear.data_products
 WHERE category_name IS NOT NULL
 ORDER BY category_label
@@ -33,27 +25,16 @@ ORDER BY category_label
 
 
 ```sql filter_sales_products 
-SELECT '' AS product_value, 'All products' AS product_label
-UNION ALL
-SELECT DISTINCT
-    product_name AS product_value,
-    product_name AS product_label
+SELECT DISTINCT product_name AS product_value, product_name AS product_label
 FROM sportwear.data_products
 WHERE product_name IS NOT NULL
-  AND (
-        '${inputs.sales_category.value}' = ''
-        OR category_name = '${inputs.sales_category.value}'
-      )
+  AND category_name LIKE '${inputs.sales_category.value}'
 ORDER BY product_label
 ```
 
 
 ```sql filter_sales_genders
-SELECT '' AS gender_value, 'All genders' AS gender_label
-UNION ALL
-SELECT DISTINCT
-    gender_name AS gender_value,
-    gender_name AS gender_label
+SELECT DISTINCT gender_name AS gender_value, gender_name AS gender_label
 FROM sportwear.data_products
 WHERE gender_name IS NOT NULL
 ORDER BY gender_label
@@ -61,31 +42,21 @@ ORDER BY gender_label
 
 
 ```sql filter_sales_sizes
-SELECT '' AS size_value, 'All sizes' AS size_label
-UNION ALL
-SELECT DISTINCT
-    size_name AS size_value,
-    size_name AS size_label
+SELECT DISTINCT size_name AS size_value, size_name AS size_label
 FROM sportwear.data_products
 WHERE size_name IS NOT NULL
 ORDER BY size_label
 ```
 
 ```sql filter_sales_colors
-SELECT '' AS color_value, 'All colors' AS color_label
-UNION ALL
-SELECT DISTINCT
-    colour_name AS color_value,
-    colour_name AS color_label
+SELECT DISTINCT colour_name AS color_value, colour_name AS color_label
 FROM sportwear.data_products
 WHERE colour_name IS NOT NULL
 ORDER BY color_label
 ```
 
 ```sql filter_sales_week
-SELECT '' AS week_value, 'All weeks' AS week_label
-UNION ALL
-SELECT DISTINCT
+SELECT DISTINCT 
     DATE_TRUNC('week', DATE(order_date)) AS week_value,
     DATE_TRUNC('week', DATE(order_date)) AS week_label
 FROM sportwear.data_sales
@@ -95,12 +66,24 @@ ORDER BY week_label DESC
 ---
 
 <div style="display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 20px;">
-  <Dropdown data={filter_sales_stores} name="sales_store" value=store_value label=store_label title="Store" />
-  <Dropdown data={filter_sales_categories} name="sales_category" value=category_value label=category_label title="Category" />
-  <Dropdown data={filter_sales_products} name="sales_product" value=product_value label=product_label title="Product" />
-  <Dropdown data={filter_sales_genders} name="sales_gender" value=gender_value label=gender_label title="Gender" />
-  <Dropdown data={filter_sales_sizes} name="sales_size" value=size_value label=size_label title="Size" />
-  <Dropdown data={filter_sales_colors} name="sales_color" value=color_value label=color_label title="Color" />
+  <Dropdown data={filter_sales_stores} name="sales_store" value=store_value label=store_label title="Store">
+    <DropdownOption value="%" valueLabel="All Stores" />
+  </Dropdown>
+  <Dropdown data={filter_sales_categories} name="sales_category" value=category_value label=category_label title="Category">
+    <DropdownOption value="%" valueLabel="All Categories" />
+  </Dropdown>
+  <Dropdown data={filter_sales_products} name="sales_product" value=product_value label=product_label title="Product">
+    <DropdownOption value="%" valueLabel="All Products" />
+  </Dropdown>
+  <Dropdown data={filter_sales_genders} name="sales_gender" value=gender_value label=gender_label title="Gender">
+    <DropdownOption value="%" valueLabel="All Genders" />
+  </Dropdown>
+  <Dropdown data={filter_sales_sizes} name="sales_size" value=size_value label=size_label title="Size">
+    <DropdownOption value="%" valueLabel="All Sizes" />
+  </Dropdown>
+  <Dropdown data={filter_sales_colors} name="sales_color" value=color_value label=color_label title="Color">
+    <DropdownOption value="%" valueLabel="All Colors" />
+  </Dropdown>
 </div>
 
 ---
@@ -122,9 +105,12 @@ WITH filtered_sales AS (
     FROM sportwear.data_sales s
     LEFT JOIN sportwear.data_products p
         ON s.product_id = p.product_id
-    WHERE ('${inputs.sales_store.value}' = '' OR s.store_name = '${inputs.sales_store.value}')
-      AND ('${inputs.sales_category.value}' = '' OR p.category_name = '${inputs.sales_category.value}')
-      AND ('${inputs.sales_product.value}' = '' OR p.product_name = '${inputs.sales_product.value}')
+    WHERE s.store_name LIKE '${inputs.sales_store.value}'
+        AND p.category_name LIKE '${inputs.sales_category.value}'
+        AND p.product_name LIKE '${inputs.sales_product.value}'
+        AND p.gender_name LIKE '${inputs.sales_gender.value}'
+        AND p.size_name LIKE '${inputs.sales_size.value}'
+        AND p.colour_name LIKE '${inputs.sales_color.value}'
 )
 SELECT
     COALESCE(SUM(revenue), 0) AS total_revenue_sek,
@@ -159,8 +145,12 @@ WITH filtered_sales AS (
     FROM sportwear.data_sales s
     LEFT JOIN sportwear.data_products p
         ON s.product_id = p.product_id
-    WHERE ('${inputs.sales_store.value}' = '' OR s.store_name = '${inputs.sales_store.value}')
-      AND ('${inputs.sales_category.value}' = '' OR p.category_name = '${inputs.sales_category.value}')
+    WHERE s.store_name LIKE '${inputs.sales_store.value}'
+        AND p.category_name LIKE '${inputs.sales_category.value}'
+        AND p.product_name LIKE '${inputs.sales_product.value}'
+        AND p.gender_name LIKE '${inputs.sales_gender.value}'
+        AND p.size_name LIKE '${inputs.sales_size.value}'
+        AND p.colour_name LIKE '${inputs.sales_color.value}'
 )
 SELECT
     COALESCE(SUM(CASE WHEN CAST(order_date AS DATE) = CURRENT_DATE THEN revenue END), 0) AS revenue_today_sek,
@@ -193,21 +183,30 @@ WITH filtered_sales AS (
     FROM sportwear.data_sales s
     LEFT JOIN sportwear.data_products p
         ON s.product_id = p.product_id
-    WHERE ('${inputs.sales_store.value}' = '' OR s.store_name = '${inputs.sales_store.value}')
-      AND ('${inputs.sales_category.value}' = '' OR p.category_name = '${inputs.sales_category.value}')
+    WHERE s.store_name LIKE '${inputs.sales_store.value}'
+        AND p.category_name LIKE '${inputs.sales_category.value}'
+        AND p.product_name LIKE '${inputs.sales_product.value}'
+        AND p.gender_name LIKE '${inputs.sales_gender.value}'
+        AND p.size_name LIKE '${inputs.sales_size.value}'
+        AND p.colour_name LIKE '${inputs.sales_color.value}'
 ),
 inventory_summary AS (
     SELECT
-        product_name,
-        SUM(total_stock) AS current_stock,
+        product AS product_name,
+        SUM(COALESCE(amount, 0)) AS current_stock,
         CASE
-            WHEN SUM(total_stock) = 0 THEN 'Out of Stock'
-            WHEN SUM(total_stock) < 10 THEN 'Low Stock'
+            WHEN SUM(COALESCE(amount, 0)) = 0 THEN 'Out of Stock'
+            WHEN SUM(COALESCE(amount, 0)) < 10 THEN 'Low Stock'
             ELSE 'OK'
         END AS stock_status
-    FROM sportwear.query_1_jacket_inventory
-    WHERE ('${inputs.sales_store.value}' = '' OR store_name = '${inputs.sales_store.value}')
-    GROUP BY product_name
+    FROM sportwear.data_inventories
+    WHERE store_name LIKE '${inputs.sales_store.value}'
+      AND category LIKE '${inputs.sales_category.value}'
+      AND product LIKE '${inputs.sales_product.value}'
+      AND gender LIKE '${inputs.sales_gender.value}'
+      AND size LIKE '${inputs.sales_size.value}'
+      AND colour LIKE '${inputs.sales_color.value}'
+    GROUP BY product
 )
 SELECT
     fs.category_name,
@@ -245,8 +244,12 @@ WITH filtered_sales AS (
     FROM sportwear.data_sales s
     LEFT JOIN sportwear.data_products p
         ON s.product_id = p.product_id
-    WHERE ('${inputs.sales_store.value}' = '' OR s.store_name = '${inputs.sales_store.value}')
-      AND ('${inputs.sales_category.value}' = '' OR p.category_name = '${inputs.sales_category.value}')
+    WHERE s.store_name LIKE '${inputs.sales_store.value}'
+        AND p.category_name LIKE '${inputs.sales_category.value}'
+        AND p.product_name LIKE '${inputs.sales_product.value}'
+        AND p.gender_name LIKE '${inputs.sales_gender.value}'
+        AND p.size_name LIKE '${inputs.sales_size.value}'
+        AND p.colour_name LIKE '${inputs.sales_color.value}'
 ),
 
 daily AS (
@@ -296,8 +299,12 @@ WITH base AS (
     FROM sportwear.data_sales s
     LEFT JOIN sportwear.data_products p
         ON s.product_id = p.product_id
-    WHERE ('${inputs.sales_store.value}' = '' OR s.store_name = '${inputs.sales_store.value}')
-      AND ('${inputs.sales_category.value}' = '' OR p.category_name = '${inputs.sales_category.value}')
+    WHERE s.store_name LIKE '${inputs.sales_store.value}'
+        AND p.category_name LIKE '${inputs.sales_category.value}'
+        AND p.product_name LIKE '${inputs.sales_product.value}'
+        AND p.gender_name LIKE '${inputs.sales_gender.value}'
+        AND p.size_name LIKE '${inputs.sales_size.value}'
+        AND p.colour_name LIKE '${inputs.sales_color.value}'
 ),
 
 aggregated AS (
@@ -363,6 +370,58 @@ LIMIT 100
 # Weekly Revenue
 
 
+```sql revenue_weekly
+WITH filtered_sales AS (
+    SELECT
+        s.order_date,
+        s.quantity * s.item_price AS revenue,
+        p.category_name
+    FROM sportwear.data_sales s
+    LEFT JOIN sportwear.data_products p
+        ON s.product_id = p.product_id
+    WHERE s.store_name LIKE '${inputs.sales_store.value}'
+        AND p.category_name LIKE '${inputs.sales_category.value}'
+        AND p.product_name LIKE '${inputs.sales_product.value}'
+        AND p.gender_name LIKE '${inputs.sales_gender.value}'
+        AND p.size_name LIKE '${inputs.sales_size.value}'
+        AND p.colour_name LIKE '${inputs.sales_color.value}'
+),
+
+weekly AS (
+    SELECT
+        DATE_TRUNC('week', DATE(order_date)) AS week_start,
+        SUM(revenue) AS revenue_sek
+    FROM filtered_sales
+    GROUP BY week_start
+)
+
+SELECT
+    week_start,
+    revenue_sek,
+
+    -- 🔥 smooth trend (VERY important)
+    AVG(revenue_sek) OVER (
+        ORDER BY week_start
+        ROWS BETWEEN 3 PRECEDING AND CURRENT ROW
+    ) AS revenue_trend
+
+FROM weekly
+ORDER BY week_start
+```
+
+**Revenue Sek = This is the actual weekly revenue** <br>
+**Revenue Trend = This is a rolling average of revenue**<br>
+
+<LineChart 
+  data={revenue_weekly} 
+  x=week_start 
+  y=revenue_sek 
+  y2=revenue_trend
+  title="Weekly Revenue Trend"
+/>
+
+---
+
 ```sql revenue_weekly_detailed
 
 WITH filtered_sales AS (
@@ -375,8 +434,12 @@ WITH filtered_sales AS (
     FROM sportwear.data_sales s
     LEFT JOIN sportwear.data_products p
         ON s.product_id = p.product_id
-    WHERE ('${inputs.sales_store.value}' = '' OR s.store_name = '${inputs.sales_store.value}')
-      AND ('${inputs.sales_category.value}' = '' OR p.category_name = '${inputs.sales_category.value}')
+    WHERE s.store_name LIKE '${inputs.sales_store.value}'
+        AND p.category_name LIKE '${inputs.sales_category.value}'
+        AND p.product_name LIKE '${inputs.sales_product.value}'
+        AND p.gender_name LIKE '${inputs.sales_gender.value}'
+        AND p.size_name LIKE '${inputs.sales_size.value}'
+        AND p.colour_name LIKE '${inputs.sales_color.value}'
     GROUP BY 1,2,3
 ),
 
@@ -423,53 +486,6 @@ ORDER BY week_start DESC, revenue DESC
 </DataTable>
 
 
----
-
-```sql revenue_weekly
-WITH filtered_sales AS (
-    SELECT
-        s.order_date,
-        s.quantity * s.item_price AS revenue,
-        p.category_name
-    FROM sportwear.data_sales s
-    LEFT JOIN sportwear.data_products p
-        ON s.product_id = p.product_id
-    WHERE ('${inputs.sales_store.value}' = '' OR s.store_name = '${inputs.sales_store.value}')
-      AND ('${inputs.sales_category.value}' = '' OR p.category_name = '${inputs.sales_category.value}')
-),
-
-weekly AS (
-    SELECT
-        DATE_TRUNC('week', DATE(order_date)) AS week_start,
-        SUM(revenue) AS revenue_sek
-    FROM filtered_sales
-    GROUP BY week_start
-)
-
-SELECT
-    week_start,
-    revenue_sek,
-
-    -- 🔥 smooth trend (VERY important)
-    AVG(revenue_sek) OVER (
-        ORDER BY week_start
-        ROWS BETWEEN 3 PRECEDING AND CURRENT ROW
-    ) AS revenue_trend
-
-FROM weekly
-ORDER BY week_start
-```
-
-**Revenue Sek = This is the actual weekly revenue** <br>
-**Revenue Trend = This is a rolling average of revenue**<br>
-
-<LineChart 
-  data={revenue_weekly} 
-  x=week_start 
-  y=revenue_sek 
-  y2=revenue_trend
-  title="Weekly Revenue Trend"
-/>
 
 ----
 
@@ -485,8 +501,12 @@ WITH filtered_sales AS (
     FROM sportwear.data_sales s
     LEFT JOIN sportwear.data_products p
         ON s.product_id = p.product_id
-    WHERE ('${inputs.sales_store.value}' = '' OR s.store_name = '${inputs.sales_store.value}')
-      AND ('${inputs.sales_category.value}' = '' OR p.category_name = '${inputs.sales_category.value}')
+    WHERE s.store_name LIKE '${inputs.sales_store.value}'
+        AND p.category_name LIKE '${inputs.sales_category.value}'
+        AND p.product_name LIKE '${inputs.sales_product.value}'
+        AND p.gender_name LIKE '${inputs.sales_gender.value}'
+        AND p.size_name LIKE '${inputs.sales_size.value}'
+        AND p.colour_name LIKE '${inputs.sales_color.value}'
 ),
 
 monthly AS (
@@ -545,8 +565,12 @@ WITH filtered_sales AS (
     FROM sportwear.data_sales s
     LEFT JOIN sportwear.data_products p
         ON s.product_id = p.product_id
-    WHERE ('${inputs.sales_store.value}' = '' OR s.store_name = '${inputs.sales_store.value}')
-      AND ('${inputs.sales_category.value}' = '' OR p.category_name = '${inputs.sales_category.value}')
+    WHERE s.store_name LIKE '${inputs.sales_store.value}'
+        AND p.category_name LIKE '${inputs.sales_category.value}'
+        AND p.product_name LIKE '${inputs.sales_product.value}'
+        AND p.gender_name LIKE '${inputs.sales_gender.value}'
+        AND p.size_name LIKE '${inputs.sales_size.value}'
+        AND p.colour_name LIKE '${inputs.sales_color.value}'
 )
 
 SELECT
@@ -594,13 +618,12 @@ WITH filtered_sales AS (
     FROM sportwear.data_sales s
     LEFT JOIN sportwear.data_products p
         ON s.product_id = p.product_id
-    WHERE
-        ('${inputs.sales_store.value}' = '' OR s.store_name = '${inputs.sales_store.value}')
-        AND (
-            '${inputs.sales_category.value}' = ''
-            OR p.category_name = '${inputs.sales_category.value}'
-        )
-    GROUP BY 1,2,3
+    WHERE s.store_name LIKE '${inputs.sales_store.value}'
+        AND p.category_name LIKE '${inputs.sales_category.value}'
+        AND p.product_name LIKE '${inputs.sales_product.value}'
+        AND p.gender_name LIKE '${inputs.sales_gender.value}'
+        AND p.size_name LIKE '${inputs.sales_size.value}'
+        AND p.colour_name LIKE '${inputs.sales_color.value}'    GROUP BY 1,2,3
 ),
 
 with_growth AS (
