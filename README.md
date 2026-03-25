@@ -53,7 +53,7 @@ Product_Finder/
 
 ## User Stories for Business
 [Minimum Viable Product and User Stories](documentation/MVP.md)
-![User Story for Business](assets/User_Story_2.png)
+![User Story for Business](assets/key_mvp.png)
 
 ## User Stories for Developers
 ![User Story for Developers](assets/User_Story_1.jpeg)
@@ -117,6 +117,7 @@ Product_Finder/
             │ → Final interface used by customers for decision-making    │
             └────────────────────────────────────────────────────────────┘
 ```
+![Data Architecture](assets/data_architecture.png)
 
 
 
@@ -167,12 +168,23 @@ POST /api/sales       (producer)          (topic)             (consumer)        
 
 ## Other Documentations
 - [Run Supabase](documentation/test/05_evidence_build.md)
-- [Sprint_2](documentation/kafka_and_etl/sprint2.md)
-- [Sprint_3](documentation/kafka_and_etl/sprint3.md)
-- [Sprint_4](documentation/kafka_and_etl/sprint4.md)
 - [Validation Summary](documentation/kafka_and_etl/validations.md)
 - [Database Schema](documentation/kafka_and_etl/schema.md)
 - [Test 1: Event Endpoints](documentation/test/01_test_event_endpoint.md)
 - [Test 2: New Product Feature](documentation/test/02_test_newproduct.md)
 - [Test 3: Full Pipeline](documentation/test/03_test_full_pipeline.md)
 - [Test 4: Dirty Mock Data Transformation](documentation/test/04_dirty_data_manual_test.md)
+
+
+## Sprint Documentations
+- [Sprint_2](documentation/kafka_and_etl/sprint2.md)
+![Sprint 2](assets/sprint2.1.png)
+
+
+- [Sprint_3](documentation/kafka_and_etl/sprint3.md)
+![Sprint 3](assets/sprint3.png)
+
+
+- [Sprint_4](documentation/kafka_and_etl/sprint4.md)
+![Sprint 4](assets/sprint4.png)
+
