@@ -6,6 +6,11 @@ This system captures real-time inventory events, such as **sales**, **inventory 
 
 ---
 
+## Full Runbook
+This guide is the **full end-to-end flow** for a new person opening the project for the first time.
+- [Full Runbook](documentation/full_runbook.md)
+
+
 ## Repository Setup
 - [Repository Setup](documentation/kafka_and_etl/setup.md)
 - [Spin up Docker Container with Host Services](documentation/kafka_and_etl/connect_docker_psql_kafka.md)
